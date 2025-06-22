@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+
+    // Sense defaults
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    // Allow absolute imports
+    "baseUrl": "./",
+    "paths": {
+      "~/app/*": ["./src/app/*"],
+      "~/assets/*": ["./src/assets/*"],
+      "~/api/*": ["./src/api/*"],
+      "~/components/*": ["./src/components/*"],
+      "~/lib/*": ["./src/lib/*"],
+      "~/pages/*": ["./src/pages/*"],
+      "~/providers/*": ["./src/providers/*"],
+      "~/constants/*": ["./src/constants/*"]
+    },
+
+    // Strict checks
+    "strict": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+
+    // Linter checks
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
