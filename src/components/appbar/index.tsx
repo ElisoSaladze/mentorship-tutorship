@@ -75,7 +75,7 @@ const AppBar = () => {
     { label: t.appBar.aboutProject, path: "/home" },
     { label: t.appBar.registration, path: "#registration", hasDropdown: true },
     { label: t.appBar.gallery, path: "/gallery" },
-    { label: t.appBar.contact, path: "#contact" },
+    { label: t.appBar.contact, path: "/contact" },
   ];
 
   // Desktop Menu

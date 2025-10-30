@@ -18,6 +18,11 @@ export const routes = [
         state: "unauthenticated",
         factory: () => import("~/pages/gallery"),
       },
+      {
+        path: paths.contact,
+        state: "unauthenticated",
+        factory: () => import("~/pages/contact"),
+      },
     ],
   }),
   buildRoute({

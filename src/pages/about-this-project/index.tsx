@@ -15,41 +15,33 @@ import {
   Business,
   TrendingUp,
 } from "@mui/icons-material";
+import { useLanguage } from "../../providers/language-provider";
 
 const AboutProjectPage = () => {
+  const { t } = useLanguage();
+
   const roles = [
     {
-      title: "მენტორი",
-      description:
-        "გამოცდილი და სანდო მასწავლებელი ან კონსულტანტი, რომელიც მიმაგრებულ სტუდენტებს (მაძიებლებს) ასწავლის ან უწევს დახმარებას, რჩევებსა და პირად მხარდაჭერას",
+      title: t.aboutProject.rolesSection.mentor.title,
+      description: t.aboutProject.rolesSection.mentor.description,
       icon: <Psychology sx={{ fontSize: 40 }} />,
       color: "#03a9f3",
     },
     {
-      title: "ტუტორი",
-      description:
-        "- გარკვეული გამოცდილების მქონე სტუდენტი, რომელიც ეხმარება დამწყებ სტუდენტებს (მაძიებლებს) მოერგონ უნივერსიტეტის სასწავლო გარემოს და სრულყოფილად ჩაერთონ სასწავლო პროცესში.",
+      title: t.aboutProject.rolesSection.tutor.title,
+      description: t.aboutProject.rolesSection.tutor.description,
       icon: <Group sx={{ fontSize: 40 }} />,
       color: "#F57C00",
     },
     {
-      title: "მაძიებელი",
-      description:
-        "უნივერსიტეტის სტუდენტი, რომელიც მონაწილეობს T&M პროგრამაში, რათა მიიღოს მხარდაჭერა საუნივერსიტეტო გარემოსთან ადაპტაციისთვის ან მიიღოს დამატებითი ცოდნა, გამოცდილება და კომპეტენციები,  პროფესიული განვითარებისა და ახალი ამბიციური მიზნების მისაღწევად.",
+      title: t.aboutProject.rolesSection.seeker.title,
+      description: t.aboutProject.rolesSection.seeker.description,
       icon: <EmojiEvents sx={{ fontSize: 40 }} />,
       color: "#7B1FA2",
     },
   ];
 
-  const activities = [
-    "T&M პროგრამაში ჩართული პერსონალისა და სტუდენტებისთვის პროფესიული ზრდისა და განვითარების ინსტრუმენტების შემუშავება, დანერგვა და გაუმჯობესება",
-    "სტუდენტზე ორიენტირებული მექანიზმების დანერგვა უნივერსიტეტში",
-    "უნივერსიტეტსა და დაინტერესებულ მხარეებს (ეკონომიკის სექტორი, სამოქალაქო საზოგადოება) შორის  თანამშრომლობის გაძლიერება და წახალისება",
-    "პრაქტიკული გამოცდილების ექსპერტების ჩართვა სასწავლო პროცესში,  სტუდენტთა მოქნილი უნარებისთვის საგანმანათლებლო რესურსების შექმნა და გაზიარება",
-    "აკადემიურ და არააკადემიურ გარემოს შორის ეფექტური ურთიერთქმედების დამყარების ალგორითმების შექმნა, სტუდენტი ახალგაზრდების დასაქმებისა და თვითრეალიზაციის გასაუმჯობესებლად",
-    "პროექტის ხარისხის უზრუნველყოფა და შეფასება",
-    "აქტიური და მიზანმიმართული სტუდენტი ახალგაზრდების გამოვლენა და მათი ჩართვა სამეცნიერო მუშაობასა და სოციალურ საქმიანობაში",
-  ];
+  const activities = t.aboutProject.activities.items;
 
   //   const consortium = [
   //     { name: "ლვოვის პოლიტექნიკური ეროვნული უნივერსიტეტი", abbr: "LPNU" },
@@ -105,7 +97,7 @@ const AboutProjectPage = () => {
                 fontSize: { xs: "2rem", md: "3.5rem" },
               }}
             >
-              ჩვენს პროექტზე
+              {t.aboutProject.heroTitle}
             </Typography>
             <Typography
               variant="h6"
@@ -117,8 +109,7 @@ const AboutProjectPage = () => {
                 lineHeight: 1.8,
               }}
             >
-              პროფესიული განვითარების პლატფორმა, რომელიც აერთიანებს მენტორებს,
-              სტუდენტებს და პროფესიონალებს ერთ საზოგადოებაში
+              {t.aboutProject.heroSubtitle}
             </Typography>
           </motion.div>
         </Container>
@@ -144,31 +135,19 @@ const AboutProjectPage = () => {
                 variant="body1"
                 sx={{ mb: 3, lineHeight: 1.9, fontSize: "1.1rem" }}
               >
-                ტუტორინგისა და მენტორინგის პროგრამა (T&M პროგრამა) არის
-                მეთოდების, პროცედურების, უნივერსიტეტის სტრუქტურების/სერვისების
-                და მონაწილეების (სათანადო კომპეტენციის მქონე პერსონალი,
-                სტუდენტები, მენტორები და ტუტორები) ერთობლიობა, რათა
-                უნივერსიტეტმა ხელი შეუწყოს სტუდენტზე ორიენტირებულ
-                საგანმანათლებლო პროცესს. პროგრამის მიზანია სტუდენტების სოციალური
-                აქტივობის, მათი პროფესიული უნარების განვითარებისა და კარიერული
-                წინსვლის ხელშეწყობა.
+                {t.aboutProject.mainDescription.paragraph1}
               </Typography>
               <Typography
                 variant="body1"
                 sx={{ mb: 3, lineHeight: 1.9, fontSize: "1.1rem" }}
               >
-                პლატფორმაზე შესაძლებელია ექსპერტებთან დაკავშირება, ონლაინ
-                შეხვედრების დაგეგმვა, ცოდნის გაზიარება და გამოცდილების მიღება.
-                ჩვენი მიზანია შევქმნათ უსაფრთხო და ინოვაციური სივრცე, სადაც
-                ადამიანები იზრდებიან და ერთმანეთისგან ისწავლიან.
+                {t.aboutProject.mainDescription.paragraph2}
               </Typography>
               <Typography
                 variant="body1"
                 sx={{ mb: 4, lineHeight: 1.9, fontSize: "1.1rem" }}
               >
-                <strong>ProMent</strong> არ არის მხოლოდ მენტორობის პლატფორმა —
-                ეს არის საზოგადოება, რომელიც აერთიანებს ადამიანებს, ვისაც სურს
-                განვითარება, დახმარება და ინსპირაციის პოვნა.
+                {t.aboutProject.mainDescription.paragraph3}
               </Typography>
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <Button
@@ -176,7 +155,7 @@ const AboutProjectPage = () => {
                   size="large"
                   sx={{ px: 5, py: 1.5 }}
                 >
-                  გაეცანი მეტს
+                  {t.aboutProject.mainDescription.learnMoreButton}
                 </Button>
               </Box>
             </CardContent>
@@ -193,7 +172,7 @@ const AboutProjectPage = () => {
             variant="h3"
             sx={{ fontWeight: 700, mb: 5, textAlign: "center" }}
           >
-            როლები
+            {t.aboutProject.rolesSection.title}
           </Typography>
           <Box
             sx={{
@@ -265,27 +244,20 @@ const AboutProjectPage = () => {
             <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
               <Business sx={{ fontSize: 40, color: "#03a9f3", mr: 2 }} />
               <Typography variant="h4" sx={{ fontWeight: 600 }}>
-                პროექტის ფონზე
+                {t.aboutProject.background.title}
               </Typography>
             </Box>
             <Typography
               variant="body1"
               sx={{ mb: 3, lineHeight: 1.9, fontSize: "1.05rem" }}
             >
-              უნივერსიტეტების T&M სისტემა მუშაობს ინტეგრირებული მეთოდების,
-              ალგორითმებისა და პროცედურების საფუძველზე, გაძლიერებული IT
-              პლატფორმით, სტრუქტურირებული ორგანიზაციით, მომზადებული პერსონალით
-              და აქტიური სტუდენტებით.
+              {t.aboutProject.background.paragraph1}
             </Typography>
             <Typography
               variant="body1"
               sx={{ lineHeight: 1.9, fontSize: "1.05rem" }}
             >
-              აქტივობები მოიცავს: მენტორობისა და ტუტორობის სისტემის
-              განვითარებას, T&M ცენტრების შექმნას, საგანმანათლებლო მასალების
-              განვითარებას, აკადემიური პერსონალის, სტუდენტებისა და ინდუსტრიის
-              მენტორების ტრენინგს და HEI-ს პარტნიორებს შორის საერთაშორისო
-              გამოცდილების გაზიარებას.
+              {t.aboutProject.background.paragraph2}
             </Typography>
           </Card>
         </motion.div>
@@ -300,18 +272,14 @@ const AboutProjectPage = () => {
             <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
               <TrendingUp sx={{ fontSize: 40, color: "#2E7D32", mr: 2 }} />
               <Typography variant="h4" sx={{ fontWeight: 600 }}>
-                T&M ცენტრები
+                {t.aboutProject.tmCenters.title}
               </Typography>
             </Box>
             <Typography
               variant="body1"
               sx={{ lineHeight: 1.9, fontSize: "1.05rem" }}
             >
-              უნივერსიტეტში T&M ცენტრების შექმნა უზრუნველყოფს სწავლის და
-              განვითარების პროცესის სისტემატიზაციას. ცენტრები ანალიზირებენ
-              მონაწილეთა გამოხმაურებებს, აუმჯობესებენ სასწავლო მასალებს,
-              აფასებენ პროგრამის ეფექტურობას და აძლიერებენ პარტნიორ HEI-სთან
-              თანამშრომლობას.
+              {t.aboutProject.tmCenters.description}
             </Typography>
           </Card>
         </motion.div>
@@ -326,7 +294,7 @@ const AboutProjectPage = () => {
             variant="h3"
             sx={{ fontWeight: 700, mb: 5, textAlign: "center" }}
           >
-            აქტივობები
+            {t.aboutProject.activities.title}
           </Typography>
           <Box
             sx={{

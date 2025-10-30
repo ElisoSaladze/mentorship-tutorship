@@ -4,6 +4,7 @@ export const paths = {
   register: "/register",
   'about-this-project': "/about-this-project",
   gallery: "/gallery",
+  contact: "/contact",
 };
 
 export type PathKey = keyof typeof paths;

@@ -1,8 +1,10 @@
 import { Box, Container, Typography, Link, useTheme, IconButton } from "@mui/material";
 import { Email, Phone, LocationOn, Facebook, Instagram, LinkedIn } from "@mui/icons-material";
+import { useLanguage } from "../../providers/language-provider";
 
 const Footer = () => {
   const theme = useTheme();
+  const { t } = useLanguage();
 
   return (
     <Box
@@ -48,7 +50,7 @@ const Footer = () => {
                   color: theme.palette.primary.main,
                 }}
               >
-                Mentorship & Tutorship
+                {t.footer.aboutSection.title}
               </Typography>
             </Box>
             <Typography
@@ -56,7 +58,7 @@ const Footer = () => {
               color="text.secondary"
               sx={{ mb: 2, lineHeight: 1.7 }}
             >
-              Platform for finding mentors and tutors
+              {t.footer.aboutSection.description}
             </Typography>
             <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
               <IconButton
@@ -117,7 +119,7 @@ const Footer = () => {
               gutterBottom
               sx={{ fontWeight: 600, mb: 2 }}
             >
-              Quick Links
+              {t.footer.quickLinks.title}
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
               <Link
@@ -148,7 +150,7 @@ const Footer = () => {
                   },
                 }}
               >
-                About Project
+                {t.footer.quickLinks.aboutProject}
               </Link>
               <Link
                 href="#registration"
@@ -178,7 +180,7 @@ const Footer = () => {
                   },
                 }}
               >
-                Registration
+                {t.footer.quickLinks.registration}
               </Link>
               <Link
                 href="/gallery"
@@ -208,10 +210,10 @@ const Footer = () => {
                   },
                 }}
               >
-                Gallery
+                {t.footer.quickLinks.gallery}
               </Link>
               <Link
-                href="#contact"
+                href="/contact"
                 color="text.secondary"
                 underline="none"
                 sx={{
@@ -238,7 +240,7 @@ const Footer = () => {
                   },
                 }}
               >
-                Contact
+                {t.footer.quickLinks.contact}
               </Link>
             </Box>
           </Box>
@@ -250,7 +252,7 @@ const Footer = () => {
               gutterBottom
               sx={{ fontWeight: 600, mb: 2 }}
             >
-              Contact
+              {t.footer.contact.title}
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <Link
@@ -278,7 +280,7 @@ const Footer = () => {
                   }}
                 />
                 <Typography variant="body2">
-                  info@bsuproject.ge
+                  {t.footer.contact.email}
                 </Typography>
               </Link>
               <Link
@@ -306,7 +308,7 @@ const Footer = () => {
                   }}
                 />
                 <Typography variant="body2">
-                  +995 XXX XX XX XX
+                  {t.footer.contact.phone}
                 </Typography>
               </Link>
               <Box
@@ -319,7 +321,7 @@ const Footer = () => {
               >
                 <LocationOn fontSize="small" />
                 <Typography variant="body2">
-                  Batumi, Georgia
+                  {t.footer.contact.location}
                 </Typography>
               </Box>
             </Box>
@@ -336,7 +338,7 @@ const Footer = () => {
           }}
         >
           <Typography variant="body2" color="text.secondary">
-            &copy; {new Date().getFullYear()} Mentorship & Tutorship. All rights reserved.
+            &copy; {new Date().getFullYear()} {t.footer.aboutSection.title}. {t.footer.copyright}
           </Typography>
         </Box>
       </Container>
