@@ -18,7 +18,6 @@
     "jsx": "react-jsx",
 
     // Allow absolute imports
-    "baseUrl": "./",
     "paths": {
       "~/app/*": ["./src/app/*"],
       "~/assets/*": ["./src/assets/*"],
