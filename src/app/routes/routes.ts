@@ -13,6 +13,11 @@ export const routes = [
         state: "unauthenticated",
         factory: () => import("~/pages/about-this-project"),
       },
+      {
+        path: paths.gallery,
+        state: "unauthenticated",
+        factory: () => import("~/pages/gallery"),
+      },
     ],
   }),
   buildRoute({

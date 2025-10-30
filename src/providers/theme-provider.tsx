@@ -81,6 +81,13 @@ const ThemeProvider = ({ children }: Props) => {
       styleOverrides: {
         root: {
           borderRadius: 12,
+          transition: "all 0.3s ease",
+          "&:hover": {
+            boxShadow: "0 2px 8px rgba(3, 169, 243, 0.15)",
+          },
+          "&.Mui-focused": {
+            boxShadow: "0 4px 12px rgba(3, 169, 243, 0.2)",
+          },
         },
       },
     },
@@ -91,6 +98,14 @@ const ThemeProvider = ({ children }: Props) => {
           borderRadius: "100px",
           boxShadow: "none",
           fontWeight: 500,
+          transition: "all 0.3s ease",
+          "&:hover": {
+            transform: "translateY(-2px)",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+          },
+          "&:active": {
+            transform: "translateY(0)",
+          },
         },
         containedPrimary: {
           backgroundColor: "#03a9f3",
@@ -185,6 +200,11 @@ const ThemeProvider = ({ children }: Props) => {
         root: {
           borderRadius: 12,
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            transform: "translateY(-4px)",
+            boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
+          },
         },
       },
     },
@@ -192,6 +212,10 @@ const ThemeProvider = ({ children }: Props) => {
       styleOverrides: {
         root: {
           borderRadius: 8,
+          transition: "all 0.3s ease",
+          "&:hover": {
+            transform: "scale(1.05)",
+          },
         },
         colorPrimary: {
           backgroundColor: "rgba(3, 169, 243, 0.1)",
@@ -200,6 +224,26 @@ const ThemeProvider = ({ children }: Props) => {
         colorSecondary: {
           backgroundColor: "rgba(46, 125, 50, 0.1)",
           color: "#2E7D32",
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          transition: "all 0.3s ease",
+          "&:hover": {
+            transform: "scale(1.1)",
+          },
+        },
+      },
+    },
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          transition: "all 0.3s ease",
+          "&:hover": {
+            backgroundColor: "rgba(3, 169, 243, 0.05)",
+          },
         },
       },
     },
@@ -240,34 +284,77 @@ const ThemeProvider = ({ children }: Props) => {
       },
       divider: "rgba(0, 0, 0, 0.12)",
     },
+    spacing: 8,
+    shadows: [
+      "none",
+      "0 1px 3px rgba(0, 0, 0, 0.06)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 4px 12px rgba(0, 0, 0, 0.1)",
+      "0 8px 16px rgba(0, 0, 0, 0.12)",
+      "0 12px 24px rgba(0, 0, 0, 0.14)",
+      "0 16px 32px rgba(0, 0, 0, 0.16)",
+      "0 20px 40px rgba(0, 0, 0, 0.18)",
+      "0 24px 48px rgba(0, 0, 0, 0.2)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "0 2px 8px rgba(0, 0, 0, 0.08)",
+    ],
     typography: {
       fontFamily: "Marmelad, Arial, sans-serif",
       h1: {
         fontWeight: 600,
         color: "#212121",
+        lineHeight: 1.2,
+        letterSpacing: "-0.02em",
       },
       h2: {
         fontWeight: 600,
         color: "#212121",
+        lineHeight: 1.3,
+        letterSpacing: "-0.01em",
       },
       h3: {
         fontWeight: 600,
         color: "#212121",
+        lineHeight: 1.4,
       },
       h4: {
         fontWeight: 600,
         color: "#424242",
+        lineHeight: 1.5,
       },
       h5: {
         fontWeight: 600,
         color: "#424242",
+        lineHeight: 1.5,
       },
       h6: {
         fontWeight: 600,
         color: "#424242",
+        lineHeight: 1.6,
+      },
+      body1: {
+        lineHeight: 1.7,
+      },
+      body2: {
+        lineHeight: 1.7,
       },
       button: {
         fontWeight: 500,
+        letterSpacing: "0.02em",
       },
     },
     components: sharedComponentOverrides,
@@ -308,34 +395,77 @@ const ThemeProvider = ({ children }: Props) => {
       },
       divider: "rgba(255, 255, 255, 0.12)",
     },
+    spacing: 8,
+    shadows: [
+      "none",
+      "0 1px 3px rgba(0, 0, 0, 0.3)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 4px 12px rgba(0, 0, 0, 0.5)",
+      "0 8px 16px rgba(0, 0, 0, 0.6)",
+      "0 12px 24px rgba(0, 0, 0, 0.7)",
+      "0 16px 32px rgba(0, 0, 0, 0.8)",
+      "0 20px 40px rgba(0, 0, 0, 0.85)",
+      "0 24px 48px rgba(0, 0, 0, 0.9)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+      "0 2px 8px rgba(0, 0, 0, 0.4)",
+    ],
     typography: {
       fontFamily: "Marmelad, Arial, sans-serif",
       h1: {
         fontWeight: 600,
         color: "#FFFFFF",
+        lineHeight: 1.2,
+        letterSpacing: "-0.02em",
       },
       h2: {
         fontWeight: 600,
         color: "#FFFFFF",
+        lineHeight: 1.3,
+        letterSpacing: "-0.01em",
       },
       h3: {
         fontWeight: 600,
         color: "#FFFFFF",
+        lineHeight: 1.4,
       },
       h4: {
         fontWeight: 600,
         color: "#E0E0E0",
+        lineHeight: 1.5,
       },
       h5: {
         fontWeight: 600,
         color: "#E0E0E0",
+        lineHeight: 1.5,
       },
       h6: {
         fontWeight: 600,
         color: "#E0E0E0",
+        lineHeight: 1.6,
+      },
+      body1: {
+        lineHeight: 1.7,
+      },
+      body2: {
+        lineHeight: 1.7,
       },
       button: {
         fontWeight: 500,
+        letterSpacing: "0.02em",
       },
     },
     components: {
@@ -477,6 +607,17 @@ const ThemeProvider = ({ children }: Props) => {
     <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
+        <style>
+          {`
+            * {
+              transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            html {
+              scroll-behavior: smooth;
+            }
+          `}
+        </style>
         {children}
       </MuiThemeProvider>
     </ThemeContext.Provider>

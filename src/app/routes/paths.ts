@@ -3,6 +3,7 @@ export const paths = {
   login: "/login",
   register: "/register",
   'about-this-project': "/about-this-project",
+  gallery: "/gallery",
 };
 
 export type PathKey = keyof typeof paths;

@@ -23,18 +23,29 @@ import {
   Brightness4,
   Brightness7,
 } from "@mui/icons-material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useThemeContext } from "~/providers/theme-provider";
+import { useLanguage } from "~/providers/language-provider";
 import { useNavigate } from "react-router-dom";
 const AppBar = () => {
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode } = useThemeContext();
+  const { language, setLanguage, t } = useLanguage();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileRegistrationOpen, setMobileRegistrationOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const registrationOpen = Boolean(anchorEl);
 
@@ -55,17 +66,16 @@ const AppBar = () => {
   };
 
   const registrationOptions = [
-    { label: "მენტორისთვის", value: "mentor" },
-    { label: "ტუტორისთვის", value: "tutor" },
-    { label: "მენტისთვის", value: "mentee" },
-    { label: "ტუტისთვის", value: "tutee" },
+    { label: t.appBar.mentor, value: "mentor" },
+    { label: t.appBar.tutor, value: "tutor" },
+    { label: t.appBar.seeker, value: "seeker" },
   ];
 
   const menuItems = [
-    { label: "პროექტის შესახებ", path: "/home" },
-    { label: "რეგისტრაცია", path: "#registration", hasDropdown: true },
-    { label: "გალერეა", path: "#gallery" },
-    { label: "კონტაქტი", path: "#contact" },
+    { label: t.appBar.aboutProject, path: "/home" },
+    { label: t.appBar.registration, path: "#registration", hasDropdown: true },
+    { label: t.appBar.gallery, path: "/gallery" },
+    { label: t.appBar.contact, path: "#contact" },
   ];
 
   // Desktop Menu
@@ -139,15 +149,37 @@ const AppBar = () => {
           </Button>
         )
       )}
-      <Box sx={{ display: "flex", alignItems: "center", ml: 2 }}>
-        <IconButton
-          onClick={toggleDarkMode}
-          color="inherit"
-          sx={{ color: theme.palette.text.primary }}
+      <Box sx={{ display: "flex", alignItems: "center", ml: 2, gap: 2 }}>
+        {/* Language Switcher */}
+        <Button
+          onClick={() => setLanguage(language === "en" ? "ka" : "en")}
+          variant="outlined"
+          size="small"
+          sx={{
+            minWidth: 60,
+            fontWeight: 600,
+            fontSize: "0.875rem",
+            borderRadius: "20px",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              transform: "scale(1.05)",
+            },
+          }}
         >
-          {darkMode ? <Brightness7 /> : <Brightness4 />}
-        </IconButton>
-        <Switch checked={darkMode} onChange={toggleDarkMode} />
+          {language === "en" ? "GEO" : "ENG"}
+        </Button>
+
+        {/* Dark Mode Switch */}
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton
+            onClick={toggleDarkMode}
+            color="inherit"
+            sx={{ color: theme.palette.text.primary }}
+          >
+            {darkMode ? <Brightness7 /> : <Brightness4 />}
+          </IconButton>
+          <Switch checked={darkMode} onChange={toggleDarkMode} />
+        </Box>
       </Box>
     </Box>
   );
@@ -162,19 +194,41 @@ const AppBar = () => {
         sx: {
           width: 280,
           backgroundColor: theme.palette.background.paper,
+          boxShadow: darkMode
+            ? "0 8px 32px rgba(0, 0, 0, 0.6)"
+            : "0 8px 32px rgba(0, 0, 0, 0.15)",
         },
       }}
+      transitionDuration={400}
     >
       <Box sx={{ p: 2 }}>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <IconButton
-            onClick={toggleDarkMode}
-            color="inherit"
-            sx={{ color: theme.palette.text.primary }}
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+          {/* Language Switcher */}
+          <Button
+            onClick={() => setLanguage(language === "en" ? "ka" : "en")}
+            variant="outlined"
+            size="small"
+            sx={{
+              minWidth: 60,
+              fontWeight: 600,
+              fontSize: "0.875rem",
+              borderRadius: "20px",
+            }}
           >
-            {darkMode ? <Brightness7 /> : <Brightness4 />}
-          </IconButton>
-          <Switch checked={darkMode} onChange={toggleDarkMode} />
+            {language === "en" ? "GEO" : "ENG"}
+          </Button>
+
+          {/* Dark Mode Switch */}
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton
+              onClick={toggleDarkMode}
+              color="inherit"
+              sx={{ color: theme.palette.text.primary }}
+            >
+              {darkMode ? <Brightness7 /> : <Brightness4 />}
+            </IconButton>
+            <Switch checked={darkMode} onChange={toggleDarkMode} />
+          </Box>
         </Box>
         <List>
           {menuItems.map((item) =>
@@ -250,22 +304,58 @@ const AppBar = () => {
 
   return (
     <>
-      <MuiAppBar position="static">
-        <Toolbar sx={{ justifyContent: "space-between", py: 1 }}>
-          <Typography
-            variant="h6"
+      <MuiAppBar
+        position="sticky"
+        sx={{
+          transition: "all 0.3s ease",
+          boxShadow: scrolled
+            ? darkMode
+              ? "0 4px 12px rgba(0, 0, 0, 0.5)"
+              : "0 4px 12px rgba(0, 0, 0, 0.1)"
+            : "none",
+        }}
+      >
+        <Toolbar sx={{ justifyContent: "space-between", py: { xs: 1.5, sm: 2 } }}>
+          <Box
             component="a"
             href="/"
             sx={{
-              fontWeight: 700,
-              fontSize: { xs: "1.1rem", sm: "1.3rem" },
-              color: theme.palette.primary.main,
+              display: "flex",
+              alignItems: "center",
+              gap: { xs: 1, sm: 1.5 },
               textDecoration: "none",
-              letterSpacing: "0.5px",
+              transition: "transform 0.3s ease",
+              "&:hover": {
+                transform: "scale(1.03)",
+              },
             }}
           >
-            BSU პროექტი
-          </Typography>
+            <Box
+              component="img"
+              src="/bsu-logo.png"
+              alt="BSU Logo"
+              sx={{
+                height: { xs: 40, sm: 50 },
+                width: "auto",
+                transition: "filter 0.3s ease",
+                "&:hover": {
+                  filter: "brightness(1.1)",
+                },
+              }}
+            />
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 700,
+                fontSize: { xs: "1rem", sm: "1.3rem" },
+                color: theme.palette.primary.main,
+                letterSpacing: "0.5px",
+                transition: "color 0.3s ease",
+              }}
+            >
+              Mentorship & Tutorship
+            </Typography>
+          </Box>
 
           {isMobile ? (
             <IconButton
@@ -273,7 +363,14 @@ const AppBar = () => {
               aria-label="open menu"
               edge="end"
               onClick={handleDrawerToggle}
-              sx={{ color: theme.palette.text.primary }}
+              sx={{
+                color: theme.palette.text.primary,
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  backgroundColor: theme.palette.action.hover,
+                  transform: "rotate(90deg)",
+                },
+              }}
             >
               <MenuIcon />
             </IconButton>
