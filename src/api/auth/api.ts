@@ -3,14 +3,17 @@ import { AuthUserResponse } from "~/providers/auth";
 import Cookies from "universal-cookie";
 
 export type AuthInput = {
-  email: string;
+  username: string;
   password: string;
 };
 
 export type RegisterType = {
-  email: string;
+  username: string;
   password: string;
   repeatPassword: string;
+  roles: string[];
+  programRoles: string[];
+  confirmed: boolean;
 };
 
 const cookies = new Cookies();
@@ -27,6 +30,6 @@ export const reissueToken = async () =>
   });
 
 export const register = async (body: RegisterType) =>
-  await request(`${REACT_APP_API_URL}registration`).post<AuthUserResponse>({
+  await request(`${REACT_APP_API_URL}users`).post<AuthUserResponse>({
     body,
   });
