@@ -27,6 +27,7 @@ import { useState, useEffect } from "react";
 import { useThemeContext } from "~/providers/theme-provider";
 import { useLanguage } from "~/providers/language-provider";
 import { useNavigate } from "react-router-dom";
+
 const AppBar = () => {
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode } = useThemeContext();
@@ -63,6 +64,16 @@ const AppBar = () => {
 
   const handleMobileRegistrationToggle = () => {
     setMobileRegistrationOpen(!mobileRegistrationOpen);
+  };
+
+  const handleRegistrationOptionClick = (type: string) => {
+    navigate("/register", { state: { type } });
+    handleRegistrationClose();
+  };
+
+  const handleMobileRegistrationOptionClick = (type: string) => {
+    navigate("/register", { state: { type } });
+    handleDrawerToggle();
   };
 
   const registrationOptions = [
@@ -119,7 +130,7 @@ const AppBar = () => {
               {registrationOptions.map((option) => (
                 <MenuItem
                   key={option.value}
-                  onClick={handleRegistrationClose}
+                  onClick={() => handleRegistrationOptionClick(option.value)}
                   sx={{
                     py: 1.5,
                     px: 2,
@@ -202,7 +213,14 @@ const AppBar = () => {
       transitionDuration={400}
     >
       <Box sx={{ p: 2 }}>
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 2,
+          }}
+        >
           {/* Language Switcher */}
           <Button
             onClick={() => setLanguage(language === "en" ? "ka" : "en")}
@@ -263,8 +281,11 @@ const AppBar = () => {
                           pl: 4,
                           borderRadius: 1,
                           mb: 0.5,
+                          cursor: "pointer",
                         }}
-                        onClick={handleDrawerToggle}
+                        onClick={() =>
+                          handleMobileRegistrationOptionClick(option.value)
+                        }
                       >
                         <ListItemText
                           primary={option.label}
@@ -281,10 +302,14 @@ const AppBar = () => {
               <ListItem
                 key={item.label}
                 component="a"
-                onClick={handleDrawerToggle}
+                onClick={() => {
+                  navigate(item.path);
+                  handleDrawerToggle();
+                }}
                 sx={{
                   borderRadius: 1,
                   mb: 0.5,
+                  cursor: "pointer",
                 }}
               >
                 <ListItemText
@@ -315,7 +340,9 @@ const AppBar = () => {
             : "none",
         }}
       >
-        <Toolbar sx={{ justifyContent: "space-between", py: { xs: 1.5, sm: 2 } }}>
+        <Toolbar
+          sx={{ justifyContent: "space-between", py: { xs: 1.5, sm: 2 } }}
+        >
           <Box
             component="a"
             href="/"

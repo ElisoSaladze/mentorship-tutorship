@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation } from "react-router-dom";
 import { RegisterType } from "~/api/auth/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -17,17 +18,40 @@ const defaultValues: RegisterType = {
   password: "",
   repeatPassword: "",
   roles: [],
-  programRoles: [],
+  programRoles: ["SEEKER"],
   confirmed: false,
 };
 
 const RegisterPage = () => {
+  const location = useLocation();
+  const registrationType = location.state?.type || null;
+
   const { control } = useForm({
     defaultValues: defaultValues,
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+
+  const getRegistrationTitle = () => {
+    if (!registrationType) return "Create Your Account";
+    return `Register as ${
+      registrationType.charAt(0).toUpperCase() + registrationType.slice(1)
+    }`;
+  };
+
+  const getRegistrationDescription = () => {
+    switch (registrationType) {
+      case "mentor":
+        return "Share your experience and guide students in their career journey";
+      case "tutor":
+        return "Help students excel academically by providing tutoring services";
+      case "seeker":
+        return "Find mentors and tutors to support your academic and career goals";
+      default:
+        return "Find mentors and tutors to support your academic and career goals";
+    }
+  };
 
   return (
     <Box
@@ -38,11 +62,13 @@ const RegisterPage = () => {
       }}
     >
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" fontWeight={600} gutterBottom>
-          Create Your Account
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+          <Typography variant="h4" fontWeight={600}>
+            {getRegistrationTitle()}
+          </Typography>
+        </Box>
         <Typography variant="body1" color="text.secondary">
-          Join us today and get started with your journey
+          {getRegistrationDescription()}
         </Typography>
       </Box>
 
@@ -120,6 +146,11 @@ const RegisterPage = () => {
             Cancel
           </Button>
         </Box>
+
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+          By creating an account, you agree to our Terms of Service and Privacy
+          Policy
+        </Typography>
       </Box>
     </Box>
   );
