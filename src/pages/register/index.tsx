@@ -14,6 +14,7 @@ import { register, RegisterType } from "~/api/auth/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useMutation } from "@tanstack/react-query";
+import UploadImage from "~/components/upload-image";
 
 const defaultValues: RegisterType = {
   email: "",
@@ -163,7 +164,7 @@ const RegisterPage = () => {
         <Typography variant="h6" fontWeight={600}>
           ძირითადი ინფორმაცია
         </Typography>
-
+        <UploadImage />
         <Box
           sx={{
             display: "grid",
