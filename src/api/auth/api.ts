@@ -8,9 +8,25 @@ export type AuthInput = {
 };
 
 export type RegisterType = {
+  email: string;
   username: string;
   password: string;
   repeatPassword: string;
+  userRole: "ADMIN" | "STUDENT" | "TEACHER";
+  year?: string;
+  strengths?: string;
+  motivation?: string;
+  keywords?: string;
+  userFeedback?: string;
+  name: string;
+  surname: string;
+  workingPlace?: string;
+  workingPosition?: string;
+  experience?: string;
+  mentoringCourseName?: string;
+  courseDescription?: string;
+  expectations?: string;
+  hobbies?: string;
   roles: string[];
   programRoles: string[];
   confirmed: boolean;
@@ -20,7 +36,7 @@ const cookies = new Cookies();
 
 const REACT_APP_API_URL = import.meta.env["VITE_API_URL"];
 export const auth = async (body: AuthInput) =>
-  await request(`${REACT_APP_API_URL}login`).post<AuthUserResponse>({
+  await request(`${REACT_APP_API_URL}auth/login`).post<AuthUserResponse>({
     body,
   });
 
@@ -30,6 +46,6 @@ export const reissueToken = async () =>
   });
 
 export const register = async (body: RegisterType) =>
-  await request(`${REACT_APP_API_URL}users`).post<AuthUserResponse>({
+  await request(`${REACT_APP_API_URL}auth/register`).post({
     body,
   });

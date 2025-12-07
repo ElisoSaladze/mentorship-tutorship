@@ -5,18 +5,36 @@ import {
   Typography,
   Button,
   Divider,
+  Alert,
 } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation } from "react-router-dom";
-import { RegisterType } from "~/api/auth/api";
+import { useLocation, useNavigate } from "react-router-dom";
+import { register, RegisterType } from "~/api/auth/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useMutation } from "@tanstack/react-query";
 
 const defaultValues: RegisterType = {
+  email: "",
   username: "",
   password: "",
   repeatPassword: "",
+  userRole: "STUDENT",
+  year: "",
+  strengths: "",
+  motivation: "",
+  keywords: "",
+  userFeedback: "",
+  name: "",
+  surname: "",
+  workingPlace: "",
+  workingPosition: "",
+  experience: "",
+  mentoringCourseName: "",
+  courseDescription: "",
+  expectations: "",
+  hobbies: "",
   roles: [],
   programRoles: ["SEEKER"],
   confirmed: false,
@@ -24,39 +42,95 @@ const defaultValues: RegisterType = {
 
 const RegisterPage = () => {
   const location = useLocation();
-  const registrationType = location.state?.type || null;
+  const navigate = useNavigate();
+  const registrationType = location.state?.type || "seeker"; // tutor, mentor, seeker
 
-  const { control } = useForm({
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
     defaultValues: defaultValues,
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const password = watch("password");
 
   const getRegistrationTitle = () => {
-    if (!registrationType) return "Create Your Account";
-    return `Register as ${
-      registrationType.charAt(0).toUpperCase() + registrationType.slice(1)
-    }`;
+    switch (registrationType) {
+      case "tutor":
+        return "ტუტორის რეგისტრაცია";
+      case "mentor":
+        return "მენტორის რეგისტრაცია";
+      case "seeker":
+        return "მაძიებლის რეგისტრაცია";
+      default:
+        return "რეგისტრაცია";
+    }
   };
 
   const getRegistrationDescription = () => {
     switch (registrationType) {
-      case "mentor":
-        return "Share your experience and guide students in their career journey";
       case "tutor":
-        return "Help students excel academically by providing tutoring services";
+        return "გაუზიარეთ თქვენი ცოდნა სტუდენტებს და დაეხმარეთ მათ აკადემიურ წარმატებაში";
+      case "mentor":
+        return "გახდით მენტორი და დაეხმარეთ სტუდენტებს პროფესიულ განვითარებაში";
       case "seeker":
-        return "Find mentors and tutors to support your academic and career goals";
+        return "იპოვეთ მენტორი ან ტუტორი თქვენი აკადემიური და კარიერული მიზნების მისაღწევად";
       default:
-        return "Find mentors and tutors to support your academic and career goals";
+        return "იპოვეთ მენტორი ან ტუტორი თქვენი აკადემიური და კარიერული მიზნების მისაღწევად";
     }
   };
+
+  const handleCancel = () => {
+    navigate("/login");
+  };
+
+  const registerMutation = useMutation({
+    mutationFn: register,
+    onSuccess: () => {
+      // Store tokens if needed
+      // cookies.set("accessToken", data.accessToken);
+      // cookies.set("refreshToken", data.refreshToken);
+
+      // Redirect to dashboard or home
+      navigate("/dashboard");
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      console.error("Login failed:", error);
+    },
+  });
+
+  const onSubmit = (data: RegisterType) => {
+    setError(null);
+
+    // Validate password match
+    if (data.password !== data.repeatPassword) {
+      setError("პაროლები არ ემთხვევა");
+      return;
+    }
+
+    // Validate password length
+    if (data.password.length < 8) {
+      setError("პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს");
+      return;
+    }
+    registerMutation.mutate(data);
+  };
+
+  const isTutor = registrationType === "tutor";
+  const isMentor = registrationType === "mentor";
+  const isSeeker = registrationType === "seeker";
 
   return (
     <Box
       sx={{
-        maxWidth: 600,
+        maxWidth: 800,
         margin: "0 auto",
         padding: 4,
       }}
@@ -74,62 +148,372 @@ const RegisterPage = () => {
 
       <Divider sx={{ mb: 4 }} />
 
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
+      )}
+
+      <Box
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+        sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+      >
+        {/* Basic Information */}
+        <Typography variant="h6" fontWeight={600}>
+          ძირითადი ინფორმაცია
+        </Typography>
+
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+            gap: 3,
+          }}
+        >
+          <ControlledTextField
+            control={control}
+            name="name"
+            label="სახელი"
+            fullWidth
+            rules={{ required: "სახელი აუცილებელია" }}
+            error={!!errors.name}
+          />
+
+          <ControlledTextField
+            control={control}
+            name="surname"
+            label="გვარი"
+            fullWidth
+            rules={{ required: "გვარი აუცილებელია" }}
+            error={!!errors.surname}
+          />
+        </Box>
+
+        <ControlledTextField
+          control={control}
+          name="email"
+          label="ელ. ფოსტა"
+          type="email"
+          fullWidth
+          rules={{
+            required: "ელ. ფოსტა აუცილებელია",
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: "არასწორი ელ. ფოსტის ფორმატი",
+            },
+          }}
+          error={!!errors.email}
+        />
+
+        {/* Tutor Registration */}
+        {isTutor && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="h6" fontWeight={600}>
+              ტუტორის ინფორმაცია
+            </Typography>
+
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                gap: 3,
+              }}
+            >
+              <ControlledTextField
+                control={control}
+                name="year"
+                label="საგანმანათლებლო პროგრამა და სწავლების წელი"
+                fullWidth
+                helperText="მაგ.: ინფორმატიკა, მე-3 კურსი"
+                rules={{ required: "ეს ველი აუცილებელია" }}
+                error={!!errors.year}
+              />
+
+              <ControlledTextField
+                control={control}
+                name="hobbies"
+                label="ჰობი"
+                fullWidth
+                helperText="თქვენი ინტერესები და ჰობი"
+              />
+            </Box>
+
+            <ControlledTextField
+              control={control}
+              name="strengths"
+              label="ძლიერი მხარეები"
+              fullWidth
+              multiline
+              rows={2}
+              helperText="აღწერეთ თქვენი აკადემიური ძლიერი მხარეები"
+              rules={{ required: "ეს ველი აუცილებელია" }}
+              error={!!errors.strengths}
+            />
+
+            <ControlledTextField
+              control={control}
+              name="motivation"
+              label="მოტივაცია"
+              fullWidth
+              multiline
+              rows={3}
+              helperText="აღწერეთ, რატომ გსურთ ტუტორობის პროგრამაში ჩართვა"
+              rules={{ required: "ეს ველი აუცილებელია" }}
+              error={!!errors.motivation}
+            />
+
+            <ControlledTextField
+              control={control}
+              name="courseDescription"
+              label="რას სთავაზობთ მაძიებელს"
+              fullWidth
+              multiline
+              rows={3}
+              helperText="მაგალითად: შემიძლია დავეხმარო სტუდენტებს უმაღლესი მათემატიკის შესწავლაში"
+              rules={{ required: "ეს ველი აუცილებელია" }}
+              error={!!errors.courseDescription}
+            />
+
+            <ControlledTextField
+              control={control}
+              name="keywords"
+              label="საკვანძო სიტყვები"
+              fullWidth
+              helperText="მიუთითეთ საკვანძო სიტყვები მძიმით გამოყოფილი (მაგ.: მათემატიკა, ფიზიკა, პროგრამირება)"
+              rules={{ required: "ეს ველი აუცილებელია" }}
+              error={!!errors.keywords}
+            />
+
+            <Alert severity="info" sx={{ mb: 2 }}>
+              <Typography variant="body2">
+                <strong>შენიშვნა:</strong> ტუტორობის სტატუსის მოპოვება შეუძლია
+                მხოლოდ იმ სტუდენტს, რომლის საშუალო შეწონილი ქულა 81-ზე მეტია
+              </Typography>
+            </Alert>
+          </>
+        )}
+
+        {/* Mentor Registration */}
+        {isMentor && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="h6" fontWeight={600}>
+              პროფესიული ინფორმაცია
+            </Typography>
+
+            <ControlledTextField
+              control={control}
+              name="workingPlace"
+              label="სამუშაო ადგილი"
+              fullWidth
+              helperText="ორგანიზაცია ან დაწესებულება"
+              rules={{ required: "ეს ველი აუცილებელია" }}
+              error={!!errors.workingPlace}
+            />
+
+            <ControlledTextField
+              control={control}
+              name="workingPosition"
+              label="პოზიცია"
+              fullWidth
+              helperText="თქვენი თანამდებობა"
+              rules={{ required: "ეს ველი აუცილებელია" }}
+              error={!!errors.workingPosition}
+            />
+
+            <ControlledTextField
+              control={control}
+              name="experience"
+              label="გამოცდილება"
+              fullWidth
+              multiline
+              rows={3}
+              helperText="აღწერეთ თქვენი პროფესიული გამოცდილება"
+              rules={{ required: "ეს ველი აუცილებელია" }}
+              error={!!errors.experience}
+            />
+
+            <ControlledTextField
+              control={control}
+              name="strengths"
+              label="ძლიერი მხარეები"
+              fullWidth
+              multiline
+              rows={2}
+              helperText="თქვენი პროფესიული ძლიერი მხარეები"
+              rules={{ required: "ეს ველი აუცილებელია" }}
+              error={!!errors.strengths}
+            />
+
+            <ControlledTextField
+              control={control}
+              name="mentoringCourseName"
+              label="მენტორობის კურსის დასახელება"
+              fullWidth
+              helperText="კურსის ან პროგრამის დასახელება"
+              rules={{ required: "ეს ველი აუცილებელია" }}
+              error={!!errors.mentoringCourseName}
+            />
+
+            <ControlledTextField
+              control={control}
+              name="courseDescription"
+              label="კურსის აღწერა"
+              fullWidth
+              multiline
+              rows={4}
+              helperText="მიზნები, შედეგები, შინაარსი, კურსის დაძლევის პირობები, განრიგი, შეხვედრების ფორმატი"
+              rules={{ required: "ეს ველი აუცილებელია" }}
+              error={!!errors.courseDescription}
+            />
+          </>
+        )}
+
+        {/* Seeker Registration */}
+        {isSeeker && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="h6" fontWeight={600}>
+              მაძიებლის ინფორმაცია
+            </Typography>
+
+            <ControlledTextField
+              control={control}
+              name="year"
+              label="საგანმანათლებლო პროგრამა და სწავლების წელი"
+              fullWidth
+              helperText="მაგ.: ბიზნესის ადმინისტრირება, მე-2 კურსი"
+              rules={{ required: "ეს ველი აუცილებელია" }}
+              error={!!errors.year}
+            />
+
+            <ControlledTextField
+              control={control}
+              name="expectations"
+              label="თქვენი მოლოდინი მენტორისგან/ტუტორისგან"
+              fullWidth
+              multiline
+              rows={3}
+              helperText="აღწერეთ, რა დახმარებას ელოდებით"
+              rules={{ required: "ეს ველი აუცილებელია" }}
+              error={!!errors.expectations}
+            />
+          </>
+        )}
+
+        {/* Feedback Section (visible for tutors only after completion) */}
+        {isTutor && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="h6" fontWeight={600}>
+              მაძიებლის უკუკავშირი
+            </Typography>
+
+            <ControlledTextField
+              control={control}
+              name="userFeedback"
+              label="პროგრამის შეფასება"
+              fullWidth
+              multiline
+              rows={4}
+              helperText="დაასახელეთ პროგრამის პოზიტიური ასპექტები და რეკომენდაციები პროგრამის ეფექტიანობის ასამაღლებლად"
+            />
+          </>
+        )}
+
+        {/* Account Credentials */}
+        <Divider sx={{ my: 2 }} />
+        <Typography variant="h6" fontWeight={600}>
+          ანგარიშის მონაცემები
+        </Typography>
+
         <ControlledTextField
           control={control}
           name="username"
-          label="Username"
+          label="მომხმარებლის სახელი"
           fullWidth
-          helperText="Choose a unique username"
-        />
-
-        <ControlledTextField
-          control={control}
-          name="password"
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          fullWidth
-          helperText="Must be at least 8 characters"
-          slotProps={{
-            input: {
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword((show) => !show)}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+          helperText="აირჩიეთ უნიკალური მომხმარებლის სახელი"
+          rules={{
+            required: "მომხმარებლის სახელი აუცილებელია",
+            minLength: {
+              value: 3,
+              message: "მინიმუმ 3 სიმბოლო",
             },
           }}
+          error={!!errors.username}
         />
 
-        <ControlledTextField
-          control={control}
-          name="repeatPassword"
-          label="Confirm Password"
-          type={showRepeatPassword ? "text" : "password"}
-          fullWidth
-          helperText="Re-enter your password"
-          slotProps={{
-            input: {
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle repeat password visibility"
-                    onClick={() => setShowRepeatPassword((show) => !show)}
-                    edge="end"
-                  >
-                    {showRepeatPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            },
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+            gap: 3,
           }}
-        />
+        >
+          <ControlledTextField
+            control={control}
+            name="password"
+            label="პაროლი"
+            type={showPassword ? "text" : "password"}
+            fullWidth
+            helperText="მინიმუმ 8 სიმბოლო"
+            rules={{
+              required: "პაროლი აუცილებელია",
+              minLength: {
+                value: 8,
+                message: "მინიმუმ 8 სიმბოლო",
+              },
+            }}
+            error={!!errors.password}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="პაროლის ხილვადობა"
+                      onClick={() => setShowPassword((show) => !show)}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+
+          <ControlledTextField
+            control={control}
+            name="repeatPassword"
+            label="გაიმეორეთ პაროლი"
+            type={showRepeatPassword ? "text" : "password"}
+            fullWidth
+            helperText="გაიმეორეთ პაროლი"
+            rules={{
+              required: "გაიმეორეთ პაროლი",
+              validate: (value: string) =>
+                value === password || "პაროლები არ ემთხვევა",
+            }}
+            error={!!errors.repeatPassword}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="პაროლის ხილვადობა"
+                      onClick={() => setShowRepeatPassword((show) => !show)}
+                      edge="end"
+                    >
+                      {showRepeatPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        </Box>
 
         <Box
           sx={{
@@ -139,17 +523,29 @@ const RegisterPage = () => {
             flexDirection: { xs: "column", sm: "row" },
           }}
         >
-          <Button variant="contained" size="large" fullWidth>
-            Create Account
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            fullWidth
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "მიმდინარეობს..." : "რეგისტრაცია"}
           </Button>
-          <Button variant="outlined" size="large" fullWidth>
-            Cancel
+          <Button
+            variant="outlined"
+            size="large"
+            fullWidth
+            onClick={handleCancel}
+            disabled={isSubmitting}
+          >
+            გაუქმება
           </Button>
         </Box>
 
         <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-          By creating an account, you agree to our Terms of Service and Privacy
-          Policy
+          ანგარიშის შექმნით თქვენ ეთანხმებით ჩვენს მომსახურების პირობებს და
+          კონფიდენციალურობის პოლიტიკას
         </Typography>
       </Box>
     </Box>
