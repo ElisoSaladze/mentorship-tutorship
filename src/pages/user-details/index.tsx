@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { updateUserById } from "~/api/users/api";
+import { getUser, updateUserById } from "~/api/users/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
 // import UploadImage from "~/components/upload-image";
 import { Edit, Save, Cancel } from "@mui/icons-material";
@@ -42,30 +42,7 @@ type User = {
   profileImage?: string | null;
 };
 
-// Mock function to get current user - replace with your actual API call
-const getCurrentUser = async (): Promise<User> => {
-  // Replace this with your actual API call
-  // Example: return api.get('/users/me');
-  return {
-    id: "1",
-    email: "user@example.com",
-    username: "username",
-    password: "",
-    repeatPassword: "",
-    userRole: "STUDENT",
-    name: "გიორგი",
-    surname: "მამულაშვილი",
-    year: "ინფორმატიკა, მე-3 კურსი",
-    strengths: "პროგრამირება, ალგორითმები",
-    motivation: "მსურს დავეხმარო სხვებს სწავლაში",
-    keywords: "JavaScript, React, Python",
-    hobbies: "ფეხბურთი, კითხვა",
-    roles: [],
-    programRoles: ["SEEKER"],
-    confirmed: true,
-    profileImage: null,
-  };
-};
+
 
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -79,7 +56,7 @@ const UserProfile = () => {
     error: fetchError,
   } = useQuery({
     queryKey: ["currentUser"],
-    queryFn: getCurrentUser,
+    queryFn: getUser,
   });
 
   const {

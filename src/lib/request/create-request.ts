@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { generatePath, ParamParseKey } from "react-router-dom";
-// import Cookies from "universal-cookie";
+import Cookies from "universal-cookie";
 
 import { createRequestBody } from "./create-request-body";
 
@@ -13,7 +13,7 @@ type RequestInput<Path extends string> = {
   body?: Record<string, any>;
   params?: Record<ParamParseKey<Path>, string>;
   query?: URLSearchParams;
-  withoutAuth?: boolean;
+  withoutAuth: boolean;
   requestInit?: RequestInit;
   type?: RequestType;
 };
@@ -24,12 +24,15 @@ export const createRequest =
     const headers = new Headers(input.headers);
 
     const inputType = input.type ?? "json";
-    // const cookies = new Cookies();
-    // const token = cookies.get("refreshToken");
+    const cookies = new Cookies();
+    const token = cookies.get("refreshToken");
 
     if (inputType === "json") {
       headers.set("Content-Type", "application/json");
-      // headers.set("Authorization", `Bearer ${token}`);
+      console.log("Token:", token);
+      if (!input.withoutAuth) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
     }
 
     const requestInit = {
