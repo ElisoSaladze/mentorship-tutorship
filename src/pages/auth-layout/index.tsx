@@ -16,6 +16,7 @@ import {
   MenuItem,
   useTheme,
   useMediaQuery,
+  Button,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -27,6 +28,7 @@ import {
 } from "@mui/icons-material";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import Cookies from "universal-cookie";
+import { useAuthContext } from "~/providers/auth";
 
 const DRAWER_WIDTH = 260;
 
@@ -42,6 +44,7 @@ const DashboardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const cookies = new Cookies();
+  const { unauthorize } = useAuthContext();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -72,18 +75,29 @@ const DashboardLayout = () => {
   const handleLogout = () => {
     cookies.remove("accessToken");
     cookies.remove("refreshToken");
+    unauthorize();
     navigate("/login");
     handleProfileMenuClose();
   };
 
   const drawer = (
-    <Box>
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       {/* Sidebar Header */}
+      <Box sx={{ p: 2 }}>
+        <Typography
+          variant="h6"
+          fontWeight={700}
+          color="primary.main"
+          sx={{ textAlign: "center" }}
+        >
+          Mentorship & Tutorship
+        </Typography>
+      </Box>
 
       <Divider />
 
       {/* Navigation Items */}
-      <List sx={{ px: 2, py: 2 }}>
+      <List sx={{ px: 2, py: 2, flexGrow: 1 }}>
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
@@ -120,6 +134,32 @@ const DashboardLayout = () => {
       </List>
 
       <Divider />
+
+      {/* Logout Button */}
+      <Box sx={{ p: 2 }}>
+        <Button
+          fullWidth
+          variant="outlined"
+          color="error"
+          startIcon={<Logout />}
+          onClick={handleLogout}
+          sx={{
+            borderRadius: 2,
+            py: 1.2,
+            fontWeight: 600,
+            textTransform: "none",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              bgcolor: "error.main",
+              color: "white",
+              borderColor: "error.main",
+              transform: "scale(1.02)",
+            },
+          }}
+        >
+          გასვლა
+        </Button>
+      </Box>
     </Box>
   );
 
@@ -146,8 +186,22 @@ const DashboardLayout = () => {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" fontWeight={600} sx={{ flexGrow: 1 }}>
-              პლატფორმა
+              Mentorship & Tutorship
             </Typography>
+            {/* Logout button in mobile AppBar */}
+            <IconButton
+              color="error"
+              onClick={handleLogout}
+              sx={{
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  bgcolor: "error.main",
+                  color: "white",
+                },
+              }}
+            >
+              <Logout />
+            </IconButton>
           </Toolbar>
         </AppBar>
       )}

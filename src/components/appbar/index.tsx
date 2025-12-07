@@ -22,6 +22,7 @@ import {
   ExpandLess,
   Brightness4,
   Brightness7,
+  Login,
 } from "@mui/icons-material";
 import { useState, useEffect } from "react";
 import { useThemeContext } from "~/providers/theme-provider";
@@ -75,6 +76,13 @@ const AppBar = () => {
   const handleMobileRegistrationOptionClick = (type: string) => {
     navigate("/register", { state: { type } });
     handleDrawerToggle();
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login");
+    if (isMobile) {
+      handleDrawerToggle();
+    }
   };
 
   const registrationOptions = [
@@ -163,6 +171,26 @@ const AppBar = () => {
         )
       )}
       <Box sx={{ display: "flex", alignItems: "center", ml: 2, gap: 2 }}>
+        {/* Login Button */}
+        <Button
+          onClick={handleLoginClick}
+          variant="contained"
+          startIcon={<Login />}
+          sx={{
+            fontWeight: 600,
+            fontSize: "0.875rem",
+            borderRadius: "20px",
+            px: 2.5,
+            transition: "all 0.3s ease",
+            "&:hover": {
+              transform: "scale(1.05)",
+              boxShadow: theme.shadows[8],
+            },
+          }}
+        >
+          {language === "en" ? "Login" : "შესვლა"}
+        </Button>
+
         {/* Language Switcher */}
         <Button
           onClick={() => setLanguage(language === "en" ? "ka" : "en")}
@@ -250,6 +278,28 @@ const AppBar = () => {
             <Switch checked={darkMode} onChange={toggleDarkMode} />
           </Box>
         </Box>
+
+        {/* Login Button in Mobile */}
+        <Button
+          onClick={handleLoginClick}
+          variant="contained"
+          startIcon={<Login />}
+          fullWidth
+          sx={{
+            fontWeight: 600,
+            fontSize: "0.95rem",
+            borderRadius: "20px",
+            py: 1.2,
+            mb: 2,
+            transition: "all 0.3s ease",
+            "&:hover": {
+              transform: "scale(1.02)",
+            },
+          }}
+        >
+          {language === "en" ? "Login" : "შესვლა"}
+        </Button>
+
         <List>
           {menuItems.map((item) =>
             item.hasDropdown ? (
