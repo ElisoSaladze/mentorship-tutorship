@@ -42,13 +42,18 @@ export const routes = [
   }),
 
   buildRoute({
-    path: paths.userDetails,
+    path: paths.main,
     factory: () => import("~/pages/auth-layout"),
     state: "authenticated",
     children: [
       {
         path: paths.userDetails,
         factory: () => import("~/pages/user-details"),
+        state: "authenticated",
+      },
+      {
+        path: paths.main,
+        factory: () => import("~/pages/manage-schemes"),
         state: "authenticated",
       },
     ],

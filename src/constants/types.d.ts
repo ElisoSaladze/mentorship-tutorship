@@ -4,15 +4,10 @@ declare namespace TYPES {
     id: string;
     title: string;
     description: string;
-    createdAt: string;
-    userProgramRoleToUserMap: {
-      tutor: string[];
-      mentor: string[];
-      seeker: string[];
-    };
+    userProgramRoleToUserMap: string;
   };
   type user = {
-    id: string;
+    id?: string;
     email: string;
     username: string;
     password: string;
@@ -33,7 +28,7 @@ declare namespace TYPES {
     expectations?: string;
     hobbies?: string;
     roles: string[];
-    programRoles: string[];
+    programRole: string;
     confirmed: boolean;
   };
 }

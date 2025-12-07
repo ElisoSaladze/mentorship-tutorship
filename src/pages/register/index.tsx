@@ -10,14 +10,14 @@ import {
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import { register, RegisterType } from "~/api/auth/api";
+import { register } from "~/api/auth/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useMutation } from "@tanstack/react-query";
 // import UploadImage from "~/components/upload-image";
 import { useAuthContext } from "~/providers/auth";
 
-const defaultValues: RegisterType = {
+const defaultValues: TYPES.user = {
   email: "",
   username: "",
   password: "",
@@ -38,7 +38,7 @@ const defaultValues: RegisterType = {
   expectations: "",
   hobbies: "",
   roles: [],
-  programRoles: ["SEEKER"],
+  programRole: "SEEKER",
   confirmed: false,
 };
 
@@ -105,7 +105,7 @@ const RegisterPage = () => {
     },
   });
 
-  const onSubmit = (data: RegisterType) => {
+  const onSubmit = (data: TYPES.user) => {
     setError(null);
 
     // Validate password match
@@ -119,7 +119,21 @@ const RegisterPage = () => {
       setError("პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს");
       return;
     }
-    registerMutation.mutate(data);
+
+    // Map registration type to programRole
+    const programRoleMap: Record<string, string> = {
+      tutor: "TUTOR",
+      mentor: "MENTOR",
+      seeker: "SEEKER",
+    };
+
+    // Set programRole based on registration type
+    const submissionData = {
+      ...data,
+      programRole: programRoleMap[registrationType] || "SEEKER",
+    };
+
+    registerMutation.mutate(submissionData);
   };
 
   const isTutor = registrationType === "tutor";

@@ -7,7 +7,8 @@ export const paths = {
   contact: "/contact",
   schemes: "/schemes",
   schemeDetails: "/schemes/:id",
-  userDetails: "/dashboard",
+  userDetails: "/dashboard/profile",
+  main: "/dashboard",
 };
 
 export type PathKey = keyof typeof paths;

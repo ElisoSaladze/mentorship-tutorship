@@ -27,7 +27,6 @@ import {
   Logout,
 } from "@mui/icons-material";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import Cookies from "universal-cookie";
 import { useAuthContext } from "~/providers/auth";
 
 const DRAWER_WIDTH = 260;
@@ -43,7 +42,6 @@ const DashboardLayout = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const location = useLocation();
-  const cookies = new Cookies();
   const { unauthorize } = useAuthContext();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -70,14 +68,6 @@ const DashboardLayout = () => {
     if (isMobile) {
       setMobileOpen(false);
     }
-  };
-
-  const handleLogout = () => {
-    cookies.remove("accessToken");
-    cookies.remove("refreshToken");
-    unauthorize();
-    navigate("/login");
-    handleProfileMenuClose();
   };
 
   const drawer = (
@@ -142,7 +132,7 @@ const DashboardLayout = () => {
           variant="outlined"
           color="error"
           startIcon={<Logout />}
-          onClick={handleLogout}
+          onClick={unauthorize}
           sx={{
             borderRadius: 2,
             py: 1.2,
@@ -191,7 +181,7 @@ const DashboardLayout = () => {
             {/* Logout button in mobile AppBar */}
             <IconButton
               color="error"
-              onClick={handleLogout}
+              onClick={unauthorize}
               sx={{
                 transition: "all 0.3s ease",
                 "&:hover": {
@@ -311,7 +301,7 @@ const DashboardLayout = () => {
           პარამეტრები
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleLogout}>
+        <MenuItem onClick={unauthorize}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

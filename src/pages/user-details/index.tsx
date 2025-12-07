@@ -15,35 +15,6 @@ import { ControlledTextField } from "~/components/form/controlled/controlled-tex
 // import UploadImage from "~/components/upload-image";
 import { Edit, Save, Cancel } from "@mui/icons-material";
 
-type User = {
-  id: string;
-  email: string;
-  username: string;
-  password: string;
-  repeatPassword: string;
-  userRole: "ADMIN" | "STUDENT" | "TEACHER";
-  year?: string;
-  strengths?: string;
-  motivation?: string;
-  keywords?: string;
-  userFeedback?: string;
-  name: string;
-  surname: string;
-  workingPlace?: string;
-  workingPosition?: string;
-  experience?: string;
-  mentoringCourseName?: string;
-  courseDescription?: string;
-  expectations?: string;
-  hobbies?: string;
-  roles: string[];
-  programRoles: string[];
-  confirmed: boolean;
-  profileImage?: string | null;
-};
-
-
-
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -64,14 +35,14 @@ const UserProfile = () => {
     handleSubmit,
     reset,
     formState: { errors, isDirty },
-  } = useForm<User>({
+  } = useForm<TYPES.user>({
     defaultValues: user,
     values: user, // This updates form when user data loads
   });
 
   // Update user mutation
   const updateMutation = useMutation({
-    mutationFn: (data: User) => updateUserById(data.id, data),
+    mutationFn: (data: TYPES.user) => updateUserById(data.id!, data),
     onSuccess: () => {
       setSuccessMessage("პროფილი წარმატებით განახლდა");
       setIsEditing(false);
@@ -84,7 +55,7 @@ const UserProfile = () => {
     },
   });
 
-  const onSubmit = (data: User) => {
+  const onSubmit = (data: TYPES.user) => {
     updateMutation.mutate(data);
   };
 
@@ -119,9 +90,9 @@ const UserProfile = () => {
     );
   }
 
-  const isTutor = user?.programRoles?.includes("TUTOR");
-  const isMentor = user?.programRoles?.includes("MENTOR");
-  const isSeeker = user?.programRoles?.includes("SEEKER");
+  const isTutor = user?.programRole?.includes("TUTOR");
+  const isMentor = user?.programRole?.includes("MENTOR");
+  const isSeeker = user?.programRole?.includes("SEEKER");
 
   return (
     <Box
