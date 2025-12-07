@@ -12,11 +12,11 @@ const ProtectedRoutes = ({ state, children }: Props) => {
   const { isAuthenticated, state: currentState } = useAuthContext();
 
   if (isAuthenticated && currentState !== state) {
-    return <Navigate to={paths.home} />;
+    return <Navigate to={paths.userDetails} />;
   }
 
   if (!isAuthenticated && currentState !== state) {
-    return <Navigate to={paths.login} />;
+    return <Navigate to={paths.home} />;
   }
 
   return <>{children}</>;

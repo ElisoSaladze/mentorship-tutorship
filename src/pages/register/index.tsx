@@ -14,7 +14,8 @@ import { register, RegisterType } from "~/api/auth/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useMutation } from "@tanstack/react-query";
-import UploadImage from "~/components/upload-image";
+// import UploadImage from "~/components/upload-image";
+import { useAuthContext } from "~/providers/auth";
 
 const defaultValues: RegisterType = {
   email: "",
@@ -42,6 +43,7 @@ const defaultValues: RegisterType = {
 };
 
 const RegisterPage = () => {
+  const { authorize } = useAuthContext();
   const location = useLocation();
   const navigate = useNavigate();
   const registrationType = location.state?.type || "seeker"; // tutor, mentor, seeker
@@ -93,12 +95,8 @@ const RegisterPage = () => {
 
   const registerMutation = useMutation({
     mutationFn: register,
-    onSuccess: () => {
-      // Store tokens if needed
-      // cookies.set("accessToken", data.accessToken);
-      // cookies.set("refreshToken", data.refreshToken);
-
-      // Redirect to dashboard or home
+    onSuccess: (data) => {
+      authorize(data);
       navigate("/dashboard");
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -164,7 +162,7 @@ const RegisterPage = () => {
         <Typography variant="h6" fontWeight={600}>
           ძირითადი ინფორმაცია
         </Typography>
-        <UploadImage />
+        {/* <UploadImage /> */}
         <Box
           sx={{
             display: "grid",

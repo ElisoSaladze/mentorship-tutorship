@@ -11,3 +11,12 @@ export const addUsersToProgramScheme = async (
 
 export const getProgramSchemeUsers = async (id: string) =>
   await request(`${REACT_APP_API_URL}programScheme/${id}/users`).get({});
+
+export const getAllUsers = async () =>
+  await request(`${REACT_APP_API_URL}users`).get<Array<TYPES.user>>({});
+
+export const getUserById = async (id: string) =>
+  await request(`${REACT_APP_API_URL}users/${id}`).get<TYPES.user>({});
+
+export const updateUserById = async (id: string, body: Partial<TYPES.user>) =>
+  await request(`${REACT_APP_API_URL}users/${id}`).put<TYPES.user>({ body });

@@ -46,6 +46,6 @@ export const reissueToken = async () =>
   });
 
 export const register = async (body: RegisterType) =>
-  await request(`${REACT_APP_API_URL}auth/register`).post({
+  await request(`${REACT_APP_API_URL}auth/register`).post<AuthUserResponse>({
     body,
   });

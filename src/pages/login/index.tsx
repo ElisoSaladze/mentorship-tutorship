@@ -19,6 +19,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
 import { auth, AuthInput } from "~/api/auth/api";
 import { paths } from "~/app/routes/paths";
+import { useAuthContext } from "~/providers/auth";
 
 const signInFormDefaultValues: AuthInput = {
   username: "",
@@ -27,6 +28,7 @@ const signInFormDefaultValues: AuthInput = {
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { authorize } = useAuthContext();
   const {
     control,
     handleSubmit,
@@ -42,13 +44,9 @@ const LoginPage = () => {
 
   const loginMutation = useMutation({
     mutationFn: auth,
-    onSuccess: () => {
-      // Store tokens if needed
-      // cookies.set("accessToken", data.accessToken);
-      // cookies.set("refreshToken", data.refreshToken);
-
-      // Redirect to dashboard or home
-      navigate("/dashboard");
+    onSuccess: (data) => {
+      authorize(data);
+      navigate(paths.userDetails);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {

@@ -4,7 +4,7 @@ import { paths } from "./paths";
 export const routes = [
   buildRoute({
     path: "/",
-    factory: () => import("~/pages/layout"),
+    factory: () => import("~/pages/unauth-layout"),
     state: "unauthenticated",
     defaultNavigation: "home",
     children: [
@@ -37,6 +37,19 @@ export const routes = [
         path: paths.schemes,
         factory: () => import("~/pages/schemes"),
         state: "unauthenticated",
+      },
+    ],
+  }),
+
+  buildRoute({
+    path: paths.userDetails,
+    factory: () => import("~/pages/auth-layout"),
+    state: "authenticated",
+    children: [
+      {
+        path: paths.userDetails,
+        factory: () => import("~/pages/user-details"),
+        state: "authenticated",
       },
     ],
   }),

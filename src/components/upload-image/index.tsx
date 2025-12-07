@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Box,
   Avatar,
@@ -9,14 +9,33 @@ import {
 } from "@mui/material";
 import { PhotoCamera, Delete } from "@mui/icons-material";
 
-const UploadImage = () => {
-  const [image, setImage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+interface UploadImageProps {
+  value?: string | null;
+  onChange?: (value: string | null) => void;
+  error?: boolean;
+  helperText?: string;
+  disabled?: boolean;
+}
+
+const UploadImage = ({
+  value,
+  onChange,
+  error,
+  helperText,
+  disabled = false,
+}: UploadImageProps) => {
+  const [localImage, setLocalImage] = useState<string | null>(value || null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
   const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+  // Sync with external value changes
+  useEffect(() => {
+    setLocalImage(value || null);
+  }, [value]);
 
   const validateFile = (file: File): string | null => {
     if (!ALLOWED_TYPES.includes(file.type)) {
@@ -29,17 +48,21 @@ const UploadImage = () => {
   };
 
   const handleFileChange = (file: File) => {
-    setError(null);
+    if (disabled) return;
 
-    const validationError = validateFile(file);
-    if (validationError) {
-      setError(validationError);
+    setValidationError(null);
+
+    const validationErr = validateFile(file);
+    if (validationErr) {
+      setValidationError(validationErr);
       return;
     }
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setImage(reader.result as string);
+      const result = reader.result as string;
+      setLocalImage(result);
+      onChange?.(result);
     };
     reader.readAsDataURL(file);
   };
@@ -52,6 +75,7 @@ const UploadImage = () => {
   };
 
   const handleDragOver = (event: React.DragEvent) => {
+    if (disabled) return;
     event.preventDefault();
     setIsDragging(true);
   };
@@ -62,6 +86,7 @@ const UploadImage = () => {
   };
 
   const handleDrop = (event: React.DragEvent) => {
+    if (disabled) return;
     event.preventDefault();
     setIsDragging(false);
 
@@ -72,16 +97,23 @@ const UploadImage = () => {
   };
 
   const handleDelete = () => {
-    setImage(null);
-    setError(null);
+    if (disabled) return;
+
+    setLocalImage(null);
+    setValidationError(null);
+    onChange?.(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
   const handleClick = () => {
+    if (disabled) return;
     fileInputRef.current?.click();
   };
+
+  const displayError = validationError || helperText;
+  const hasError = error || !!validationError;
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -92,15 +124,18 @@ const UploadImage = () => {
       <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
         {/* Avatar Preview */}
         <Avatar
-          src={image || undefined}
+          src={localImage || undefined}
           sx={{
             width: 100,
             height: 100,
             bgcolor: "primary.light",
             fontSize: "2rem",
+            border: hasError ? "2px solid" : "none",
+            borderColor: "error.main",
+            opacity: disabled ? 0.6 : 1,
           }}
         >
-          {!image && <PhotoCamera sx={{ fontSize: "2.5rem" }} />}
+          {!localImage && <PhotoCamera sx={{ fontSize: "2.5rem" }} />}
         </Avatar>
 
         {/* Upload Area */}
@@ -113,14 +148,23 @@ const UploadImage = () => {
             flex: 1,
             p: 3,
             textAlign: "center",
-            cursor: "pointer",
+            cursor: disabled ? "not-allowed" : "pointer",
             border: "2px dashed",
-            borderColor: isDragging ? "primary.main" : "divider",
+            borderColor: hasError
+              ? "error.main"
+              : isDragging
+              ? "primary.main"
+              : "divider",
             bgcolor: isDragging ? "action.hover" : "background.paper",
             transition: "all 0.2s",
+            opacity: disabled ? 0.6 : 1,
             "&:hover": {
-              borderColor: "primary.main",
-              bgcolor: "action.hover",
+              borderColor: disabled
+                ? "divider"
+                : hasError
+                ? "error.main"
+                : "primary.main",
+              bgcolor: disabled ? "background.paper" : "action.hover",
             },
           }}
         >
@@ -129,12 +173,13 @@ const UploadImage = () => {
             type="file"
             accept="image/jpeg,image/jpg,image/png,image/webp"
             onChange={handleInputChange}
+            disabled={disabled}
             style={{ display: "none" }}
           />
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
             <Typography variant="body2" fontWeight={500}>
-              {image ? "ახალი სურათის ატვირთვა" : "ატვირთეთ სურათი"}
+              {localImage ? "ახალი სურათის ატვირთვა" : "ატვირთეთ სურათი"}
             </Typography>
             <Typography variant="caption" color="text.secondary">
               გადმოიტანეთ სურათი აქ ან დააჭირეთ ასარჩევად
@@ -146,7 +191,7 @@ const UploadImage = () => {
         </Paper>
 
         {/* Delete Button */}
-        {image && (
+        {localImage && !disabled && (
           <IconButton
             onClick={handleDelete}
             color="error"
@@ -159,10 +204,13 @@ const UploadImage = () => {
         )}
       </Box>
 
-      {/* Error Message */}
-      {error && (
-        <Alert severity="error" onClose={() => setError(null)}>
-          {error}
+      {/* Error or Helper Message */}
+      {displayError && (
+        <Alert
+          severity={hasError ? "error" : "info"}
+          onClose={validationError ? () => setValidationError(null) : undefined}
+        >
+          {displayError}
         </Alert>
       )}
     </Box>

@@ -4,6 +4,7 @@ export const createRequestBody = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: Record<string, any> | undefined,
   type: RequestType,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any => {
   if (!body) return
 
