@@ -33,11 +33,11 @@ export const routes = [
         factory: () => import("~/pages/login"),
         state: "unauthenticated",
       },
+      {
+        path: paths.schemes,
+        factory: () => import("~/pages/schemes"),
+        state: "unauthenticated",
+      },
     ],
-  }),
-  buildRoute({
-    path: paths.login,
-    factory: () => import("~/pages/login"),
-    state: "unauthenticated",
   }),
 ];

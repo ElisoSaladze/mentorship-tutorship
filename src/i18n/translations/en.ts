@@ -27,15 +27,16 @@ export const en = {
     },
     contact: {
       title: "Contact",
-      email: "info@bsuproject.ge",
-      phone: "+995 XXX XX XX XX",
+      email: "lela.turmanidze@bsu.edu.ge",
+      phone: "+995577179797",
       location: "Batumi, Georgia",
     },
     copyright: "All rights reserved.",
   },
   gallery: {
     heroTitle: "Our Gallery",
-    heroSubtitle: "Capturing moments of excellence, learning, and community at BSU",
+    heroSubtitle:
+      "Capturing moments of excellence, learning, and community at BSU",
     featuredTitle: "Featured Highlights",
     exploreTitle: "Explore More",
     categories: {
@@ -79,36 +80,46 @@ export const en = {
   },
   aboutProject: {
     heroTitle: "About Our Project",
-    heroSubtitle: "A professional development platform that brings together mentors, students, and professionals in one community",
+    heroSubtitle:
+      "A professional development platform that brings together mentors, students, and professionals in one community",
     mainDescription: {
-      paragraph1: "The Tutoring and Mentoring Program (T&M Program) is a set of methods, procedures, university structures/services, and participants (competent staff, students, mentors and tutors) so that the university promotes a student-centered educational process. The program aims to promote students' social activity, their professional skills development and career advancement.",
-      paragraph2: "On the platform, you can connect with experts, schedule online meetings, share knowledge and gain experience. Our goal is to create a safe and innovative space where people grow and learn from each other.",
-      paragraph3: "ProMent is not just a mentoring platform — it is a community that brings together people who want to develop, help and find inspiration.",
+      paragraph1:
+        "The Tutoring and Mentoring Program (T&M Program) is a set of methods, procedures, university structures/services, and participants (competent staff, students, mentors and tutors) so that the university promotes a student-centered educational process. The program aims to promote students' social activity, their professional skills development and career advancement.",
+      paragraph2:
+        "On the platform, you can connect with experts, schedule online meetings, share knowledge and gain experience. Our goal is to create a safe and innovative space where people grow and learn from each other.",
+      paragraph3:
+        "ProMent is not just a mentoring platform — it is a community that brings together people who want to develop, help and find inspiration.",
       learnMoreButton: "Learn More",
     },
     rolesSection: {
       title: "Roles",
       mentor: {
         title: "Mentor",
-        description: "An experienced and trusted teacher or consultant who teaches or provides advice and personal support to assigned students (seekers)",
+        description:
+          "An experienced and trusted teacher or consultant who teaches or provides advice and personal support to assigned students (seekers)",
       },
       tutor: {
         title: "Tutor",
-        description: "A student with some experience who helps beginning students (seekers) adapt to the university learning environment and fully engage in the learning process.",
+        description:
+          "A student with some experience who helps beginning students (seekers) adapt to the university learning environment and fully engage in the learning process.",
       },
       seeker: {
         title: "Seeker",
-        description: "A university student who participates in the T&M program to receive support for adapting to the university environment or to gain additional knowledge, experience and competencies for professional development and achieving new ambitious goals.",
+        description:
+          "A university student who participates in the T&M program to receive support for adapting to the university environment or to gain additional knowledge, experience and competencies for professional development and achieving new ambitious goals.",
       },
     },
     background: {
       title: "Project Background",
-      paragraph1: "The university T&M system operates on the basis of integrated methods, algorithms and procedures, enhanced by an IT platform, structured organization, trained staff and active students.",
-      paragraph2: "Activities include: development of mentoring and tutoring systems, creation of T&M centers, development of educational materials, training of academic staff, students and industry mentors, and sharing international experience among HEI partners.",
+      paragraph1:
+        "The university T&M system operates on the basis of integrated methods, algorithms and procedures, enhanced by an IT platform, structured organization, trained staff and active students.",
+      paragraph2:
+        "Activities include: development of mentoring and tutoring systems, creation of T&M centers, development of educational materials, training of academic staff, students and industry mentors, and sharing international experience among HEI partners.",
     },
     tmCenters: {
       title: "T&M Centers",
-      description: "The creation of T&M centers in universities ensures the systematization of the learning and development process. The centers analyze participant feedback, improve learning materials, evaluate program effectiveness, and strengthen cooperation with partner HEIs.",
+      description:
+        "The creation of T&M centers in universities ensures the systematization of the learning and development process. The centers analyze participant feedback, improve learning materials, evaluate program effectiveness, and strengthen cooperation with partner HEIs.",
     },
     activities: {
       title: "Activities",
@@ -125,10 +136,12 @@ export const en = {
   },
   contact: {
     heroTitle: "Get in Touch",
-    heroSubtitle: "We're here to help! Reach out to us with any questions or inquiries",
+    heroSubtitle:
+      "We're here to help! Reach out to us with any questions or inquiries",
     formSection: {
       title: "Send us a Message",
-      subtitle: "Fill out the form below and we'll get back to you as soon as possible",
+      subtitle:
+        "Fill out the form below and we'll get back to you as soon as possible",
       nameLabel: "Full Name",
       namePlaceholder: "Enter your full name",
       emailLabel: "Email Address",

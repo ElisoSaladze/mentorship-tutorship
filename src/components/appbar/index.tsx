@@ -27,6 +27,7 @@ import { useState, useEffect } from "react";
 import { useThemeContext } from "~/providers/theme-provider";
 import { useLanguage } from "~/providers/language-provider";
 import { useNavigate } from "react-router-dom";
+import { paths } from "~/app/routes/paths";
 
 const AppBar = () => {
   const navigate = useNavigate();
@@ -83,10 +84,11 @@ const AppBar = () => {
   ];
 
   const menuItems = [
-    { label: t.appBar.aboutProject, path: "/home" },
+    { label: t.appBar.aboutProject, path: paths.home },
+    { label: "სქემები", path: paths.schemes },
     { label: t.appBar.registration, path: "#registration", hasDropdown: true },
-    { label: t.appBar.gallery, path: "/gallery" },
-    { label: t.appBar.contact, path: "/contact" },
+    { label: t.appBar.gallery, path: paths.gallery },
+    { label: t.appBar.contact, path: paths.contact },
   ];
 
   // Desktop Menu

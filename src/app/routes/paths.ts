@@ -5,6 +5,7 @@ export const paths = {
   'about-this-project': "/about-this-project",
   gallery: "/gallery",
   contact: "/contact",
+  schemes: "/schemes",
 };
 
 export type PathKey = keyof typeof paths;
