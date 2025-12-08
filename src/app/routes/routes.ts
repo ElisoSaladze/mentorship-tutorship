@@ -3,7 +3,7 @@ import { paths } from "./paths";
 
 export const routes = [
   buildRoute({
-    path: "/",
+    path: paths.home,
     factory: () => import("~/pages/unauth-layout"),
     state: "unauthenticated",
     defaultNavigation: "home",
