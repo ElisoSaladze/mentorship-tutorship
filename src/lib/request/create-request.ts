@@ -13,40 +13,38 @@ type RequestInput<Path extends string> = {
   body?: Record<string, any>;
   params?: Record<ParamParseKey<Path>, string>;
   query?: URLSearchParams;
-  withoutAuth: boolean;
   requestInit?: RequestInit;
   type?: RequestType;
 };
 
 export const createRequest =
   <Path extends string>(method: RequestMethods, url: Path) =>
-  async <T>(input: RequestInput<Path>, schema?: any): Promise<T> => {
-    const headers = new Headers(input.headers);
+  async <T>(input?: RequestInput<Path>, schema?: any): Promise<T> => {
+    const headers = new Headers(input?.headers);
 
-    const inputType = input.type ?? "json";
+    const inputType = input?.type ?? "json";
     const cookies = new Cookies();
     const token = cookies.get("refreshToken");
 
     if (inputType === "json") {
       headers.set("Content-Type", "application/json");
-      console.log("Token:", token);
-      if (!input.withoutAuth) {
+      if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
     }
 
     const requestInit = {
       method,
-      body: createRequestBody(input.body, inputType),
+      body: createRequestBody(input?.body, inputType),
       headers,
-      ...input.requestInit,
+      ...input?.requestInit,
     };
 
-    const apiUrl = input.params ? generatePath(url, input.params) : url;
+    const apiUrl = input?.params ? generatePath(url, input.params) : url;
 
     try {
       const res = await fetch(
-        input.query ? `${apiUrl}?${input.query}` : apiUrl,
+        input?.query ? `${apiUrl}?${input.query}` : apiUrl,
         requestInit
       );
 

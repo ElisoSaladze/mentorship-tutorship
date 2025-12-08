@@ -7,26 +7,18 @@ export const addUsersToProgramScheme = async (
 ) =>
   await request(`${REACT_APP_API_URL}programScheme/${id}/addUser`).put({
     body: { role },
-    withoutAuth: false,
   });
 
 export const getProgramSchemeUsers = async (id: string) =>
-  await request(`${REACT_APP_API_URL}programScheme/${id}/users`).get({
-    withoutAuth: false,
-  });
+  await request(`${REACT_APP_API_URL}programScheme/${id}/users`).get();
 
 export const getAllUsers = async () =>
-  await request(`${REACT_APP_API_URL}users`).get<Array<TYPES.user>>({
-    withoutAuth: false,
-  });
+  await request(`${REACT_APP_API_URL}users`).get<Array<TYPES.user>>();
 
 export const getUser = async () =>
-  await request(`${REACT_APP_API_URL}users/me`).get<TYPES.user>({
-    withoutAuth: false,
-  });
+  await request(`${REACT_APP_API_URL}users/me`).get<TYPES.user>();
 
 export const updateUserById = async (id: string, body: Partial<TYPES.user>) =>
   await request(`${REACT_APP_API_URL}users/${id}`).put<TYPES.user>({
     body,
-    withoutAuth: false,
   });

@@ -13,17 +13,14 @@ const REACT_APP_API_URL = import.meta.env["VITE_API_URL"];
 export const auth = async (body: AuthInput) =>
   await request(`${REACT_APP_API_URL}auth/login`).post<AuthUserResponse>({
     body,
-    withoutAuth: true,
   });
 
 export const reissueToken = async () =>
   await request(`${REACT_APP_API_URL}auth/refresh`).post<AuthUserResponse>({
     body: { refreshToken: cookies.get("refreshToken") },
-    withoutAuth: true,
   });
 
 export const register = async (body: TYPES.user) =>
   await request(`${REACT_APP_API_URL}auth/register`).post<AuthUserResponse>({
     body,
-    withoutAuth: true,
   });
