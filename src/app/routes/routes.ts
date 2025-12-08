@@ -6,7 +6,6 @@ export const routes = [
     path: paths.home,
     factory: () => import("~/pages/unauth-layout"),
     state: "unauthenticated",
-    defaultNavigation: "home",
     children: [
       {
         path: paths.home,
