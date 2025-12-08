@@ -123,7 +123,7 @@ const Footer = () => {
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
               <Link
-                href="/home"
+                href="/"
                 color="text.secondary"
                 underline="none"
                 sx={{
