@@ -28,6 +28,7 @@ import {
 } from "@mui/icons-material";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "~/providers/auth";
+import { useLanguage } from "~/providers/language-provider";
 
 const DRAWER_WIDTH = 260;
 
@@ -43,16 +44,17 @@ const DashboardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { unauthorize } = useAuthContext();
+  const { t } = useLanguage();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // Navigation items
   const navItems: NavItem[] = [
-    { title: "მთავარი", path: "/dashboard", icon: <Dashboard /> },
-    { title: "ჩემი პროფილი", path: "/dashboard/profile", icon: <Person /> },
-    { title: "სქემები", path: "/dashboard/schemas", icon: <Description /> },
-    { title: "პარამეტრები", path: "/dashboard/settings", icon: <Settings /> },
+    { title: t.dashboard.home, path: "/dashboard", icon: <Dashboard /> },
+    { title: t.dashboard.myProfile, path: "/dashboard/profile", icon: <Person /> },
+    { title: t.dashboard.schemes, path: "/dashboard/schemas", icon: <Description /> },
+    { title: t.dashboard.settings, path: "/dashboard/settings", icon: <Settings /> },
   ];
 
   const handleDrawerToggle = () => {
@@ -80,7 +82,7 @@ const DashboardLayout = () => {
           color="primary.main"
           sx={{ textAlign: "center" }}
         >
-          Mentorship & Tutorship
+          {t.common.appTitle}
         </Typography>
       </Box>
 
@@ -147,7 +149,7 @@ const DashboardLayout = () => {
             },
           }}
         >
-          გასვლა
+          {t.dashboard.logout}
         </Button>
       </Box>
     </Box>
@@ -176,7 +178,7 @@ const DashboardLayout = () => {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" fontWeight={600} sx={{ flexGrow: 1 }}>
-              Mentorship & Tutorship
+              {t.common.appTitle}
             </Typography>
             {/* Logout button in mobile AppBar */}
             <IconButton
@@ -287,7 +289,7 @@ const DashboardLayout = () => {
           <ListItemIcon>
             <Person fontSize="small" />
           </ListItemIcon>
-          პროფილი
+          {t.dashboard.profile}
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -298,14 +300,14 @@ const DashboardLayout = () => {
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
-          პარამეტრები
+          {t.dashboard.settings}
         </MenuItem>
         <Divider />
         <MenuItem onClick={unauthorize}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          გასვლა
+          {t.dashboard.logout}
         </MenuItem>
       </Menu>
     </Box>

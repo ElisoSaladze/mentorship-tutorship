@@ -29,18 +29,17 @@ export const routes = [
         state: "unauthenticated",
       },
       {
-        path: paths.login,
-        factory: () => import("~/pages/login"),
-        state: "unauthenticated",
-      },
-      {
         path: paths.schemes,
         factory: () => import("~/pages/schemes"),
         state: "unauthenticated",
       },
     ],
   }),
-
+  buildRoute({
+    path: paths.login,
+    factory: () => import("~/pages/login"),
+    state: "unauthenticated",
+  }),
   buildRoute({
     path: paths.main,
     factory: () => import("~/pages/auth-layout"),

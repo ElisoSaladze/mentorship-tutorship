@@ -20,6 +20,7 @@ import { ControlledTextField } from "~/components/form/controlled/controlled-tex
 import { auth, AuthInput } from "~/api/auth/api";
 import { paths } from "~/app/routes/paths";
 import { useAuthContext } from "~/providers/auth";
+import { useLanguage } from "~/providers/language-provider";
 
 const signInFormDefaultValues: AuthInput = {
   username: "",
@@ -29,6 +30,7 @@ const signInFormDefaultValues: AuthInput = {
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { authorize } = useAuthContext();
+  const { t } = useLanguage();
   const {
     control,
     handleSubmit,
@@ -93,7 +95,7 @@ const LoginPage = () => {
                   fontWeight="bold"
                   mb={2}
                 >
-                  Welcome Back
+                  {t.login.welcomeBack}
                 </Typography>
 
                 <Typography
@@ -102,7 +104,7 @@ const LoginPage = () => {
                   color="text.secondary"
                   mb={2}
                 >
-                  Sign in to your account
+                  {t.login.signInToAccount}
                 </Typography>
 
                 {successMessage && (
@@ -113,18 +115,17 @@ const LoginPage = () => {
 
                 {loginMutation.isError && (
                   <Alert severity="error" sx={{ width: "100%" }}>
-                    {loginMutation.error?.message ||
-                      "Invalid username or password. Please try again."}
+                    {loginMutation.error?.message || t.login.invalidCredentials}
                   </Alert>
                 )}
 
                 <ControlledTextField
                   name="username"
                   control={control}
-                  label="Username"
+                  label={t.login.username}
                   fullWidth
                   rules={{
-                    required: "Username is required",
+                    required: t.login.usernameRequired,
                   }}
                   error={!!errors.username}
                 />
@@ -132,11 +133,11 @@ const LoginPage = () => {
                 <ControlledTextField
                   name="password"
                   control={control}
-                  label="Password"
+                  label={t.login.password}
                   type={showPassword ? "text" : "password"}
                   fullWidth
                   rules={{
-                    required: "Password is required",
+                    required: t.login.passwordRequired,
                   }}
                   error={!!errors.password}
                   slotProps={{
@@ -144,7 +145,7 @@ const LoginPage = () => {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            aria-label="toggle password visibility"
+                            aria-label={t.login.togglePasswordVisibility}
                             onClick={() => setShowPassword((show) => !show)}
                             edge="end"
                           >
@@ -166,7 +167,7 @@ const LoginPage = () => {
                     },
                   }}
                 >
-                  Forgot Password?
+                  {t.login.forgotPassword}
                 </Typography>
 
                 <Button
@@ -182,7 +183,7 @@ const LoginPage = () => {
                     fontWeight: "medium",
                   }}
                 >
-                  {loginMutation.isPending ? "Signing in..." : "Sign in"}
+                  {loginMutation.isPending ? t.login.signingIn : t.login.signIn}
                 </Button>
 
                 <Box
@@ -194,14 +195,14 @@ const LoginPage = () => {
                 >
                   <Divider sx={{ flex: 1 }} />
                   <Typography variant="body2" color="textSecondary">
-                    Or
+                    {t.common.or}
                   </Typography>
                   <Divider sx={{ flex: 1 }} />
                 </Box>
 
                 <Box display="flex" alignItems="center" gap={1}>
                   <Typography color="text.secondary">
-                    Don&apos;t have an account?
+                    {t.login.noAccount}
                   </Typography>
                   <Button
                     onClick={() => navigate(paths.register)}
@@ -211,7 +212,7 @@ const LoginPage = () => {
                       fontWeight: "medium",
                     }}
                   >
-                    Sign up
+                    {t.login.signUp}
                   </Button>
                 </Box>
               </Stack>

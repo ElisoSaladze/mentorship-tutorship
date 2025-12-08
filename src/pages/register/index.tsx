@@ -16,6 +16,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useMutation } from "@tanstack/react-query";
 // import UploadImage from "~/components/upload-image";
 import { useAuthContext } from "~/providers/auth";
+import { useLanguage } from "~/providers/language-provider";
 
 const defaultValues: TYPES.user = {
   email: "",
@@ -44,6 +45,7 @@ const defaultValues: TYPES.user = {
 
 const RegisterPage = () => {
   const { authorize } = useAuthContext();
+  const { t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
   const registrationType = location.state?.type || "seeker"; // tutor, mentor, seeker
@@ -66,26 +68,26 @@ const RegisterPage = () => {
   const getRegistrationTitle = () => {
     switch (registrationType) {
       case "tutor":
-        return "ტუტორის რეგისტრაცია";
+        return t.register.tutorRegistration;
       case "mentor":
-        return "მენტორის რეგისტრაცია";
+        return t.register.mentorRegistration;
       case "seeker":
-        return "მაძიებლის რეგისტრაცია";
+        return t.register.seekerRegistration;
       default:
-        return "რეგისტრაცია";
+        return t.register.registration;
     }
   };
 
   const getRegistrationDescription = () => {
     switch (registrationType) {
       case "tutor":
-        return "გაუზიარეთ თქვენი ცოდნა სტუდენტებს და დაეხმარეთ მათ აკადემიურ წარმატებაში";
+        return t.register.tutorDescription;
       case "mentor":
-        return "გახდით მენტორი და დაეხმარეთ სტუდენტებს პროფესიულ განვითარებაში";
+        return t.register.mentorDescription;
       case "seeker":
-        return "იპოვეთ მენტორი ან ტუტორი თქვენი აკადემიური და კარიერული მიზნების მისაღწევად";
+        return t.register.seekerDescription;
       default:
-        return "იპოვეთ მენტორი ან ტუტორი თქვენი აკადემიური და კარიერული მიზნების მისაღწევად";
+        return t.register.seekerDescription;
     }
   };
 
@@ -110,13 +112,13 @@ const RegisterPage = () => {
 
     // Validate password match
     if (data.password !== data.repeatPassword) {
-      setError("პაროლები არ ემთხვევა");
+      setError(t.register.passwordsDoNotMatch);
       return;
     }
 
     // Validate password length
     if (data.password.length < 8) {
-      setError("პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს");
+      setError(t.register.minEightChars);
       return;
     }
 
@@ -174,7 +176,7 @@ const RegisterPage = () => {
       >
         {/* Basic Information */}
         <Typography variant="h6" fontWeight={600}>
-          ძირითადი ინფორმაცია
+          {t.register.basicInfo}
         </Typography>
         {/* <UploadImage /> */}
         <Box
@@ -187,18 +189,18 @@ const RegisterPage = () => {
           <ControlledTextField
             control={control}
             name="name"
-            label="სახელი"
+            label={t.register.firstName}
             fullWidth
-            rules={{ required: "სახელი აუცილებელია" }}
+            rules={{ required: t.register.firstNameRequired }}
             error={!!errors.name}
           />
 
           <ControlledTextField
             control={control}
             name="surname"
-            label="გვარი"
+            label={t.register.lastName}
             fullWidth
-            rules={{ required: "გვარი აუცილებელია" }}
+            rules={{ required: t.register.lastNameRequired }}
             error={!!errors.surname}
           />
         </Box>
@@ -206,14 +208,14 @@ const RegisterPage = () => {
         <ControlledTextField
           control={control}
           name="email"
-          label="ელ. ფოსტა"
+          label={t.register.email}
           type="email"
           fullWidth
           rules={{
-            required: "ელ. ფოსტა აუცილებელია",
+            required: t.register.emailRequired,
             pattern: {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "არასწორი ელ. ფოსტის ფორმატი",
+              message: t.register.invalidEmailFormat,
             },
           }}
           error={!!errors.email}
@@ -224,7 +226,7 @@ const RegisterPage = () => {
           <>
             <Divider sx={{ my: 2 }} />
             <Typography variant="h6" fontWeight={600}>
-              ტუტორის ინფორმაცია
+              {t.register.tutorInfo}
             </Typography>
 
             <Box
@@ -237,72 +239,71 @@ const RegisterPage = () => {
               <ControlledTextField
                 control={control}
                 name="year"
-                label="საგანმანათლებლო პროგრამა და სწავლების წელი"
+                label={t.register.educationalProgram}
                 fullWidth
-                helperText="მაგ.: ინფორმატიკა, მე-3 კურსი"
-                rules={{ required: "ეს ველი აუცილებელია" }}
+                helperText={t.register.educationalProgramHelper}
+                rules={{ required: t.register.fieldRequired }}
                 error={!!errors.year}
               />
 
               <ControlledTextField
                 control={control}
                 name="hobbies"
-                label="ჰობი"
+                label={t.register.hobbies}
                 fullWidth
-                helperText="თქვენი ინტერესები და ჰობი"
+                helperText={t.register.hobbiesHelper}
               />
             </Box>
 
             <ControlledTextField
               control={control}
               name="strengths"
-              label="ძლიერი მხარეები"
+              label={t.register.strengths}
               fullWidth
               multiline
               rows={2}
-              helperText="აღწერეთ თქვენი აკადემიური ძლიერი მხარეები"
-              rules={{ required: "ეს ველი აუცილებელია" }}
+              helperText={t.register.academicStrengthsHelper}
+              rules={{ required: t.register.fieldRequired }}
               error={!!errors.strengths}
             />
 
             <ControlledTextField
               control={control}
               name="motivation"
-              label="მოტივაცია"
+              label={t.register.motivation}
               fullWidth
               multiline
               rows={3}
-              helperText="აღწერეთ, რატომ გსურთ ტუტორობის პროგრამაში ჩართვა"
-              rules={{ required: "ეს ველი აუცილებელია" }}
+              helperText={t.register.motivationHelper}
+              rules={{ required: t.register.fieldRequired }}
               error={!!errors.motivation}
             />
 
             <ControlledTextField
               control={control}
               name="courseDescription"
-              label="რას სთავაზობთ მაძიებელს"
+              label={t.register.offerToSeeker}
               fullWidth
               multiline
               rows={3}
-              helperText="მაგალითად: შემიძლია დავეხმარო სტუდენტებს უმაღლესი მათემატიკის შესწავლაში"
-              rules={{ required: "ეს ველი აუცილებელია" }}
+              helperText={t.register.offerToSeekerHelper}
+              rules={{ required: t.register.fieldRequired }}
               error={!!errors.courseDescription}
             />
 
             <ControlledTextField
               control={control}
               name="keywords"
-              label="საკვანძო სიტყვები"
+              label={t.register.keywords}
               fullWidth
-              helperText="მიუთითეთ საკვანძო სიტყვები მძიმით გამოყოფილი (მაგ.: მათემატიკა, ფიზიკა, პროგრამირება)"
-              rules={{ required: "ეს ველი აუცილებელია" }}
+              helperText={t.register.keywordsHelper}
+              rules={{ required: t.register.fieldRequired }}
               error={!!errors.keywords}
             />
 
             <Alert severity="info" sx={{ mb: 2 }}>
               <Typography variant="body2">
-                <strong>შენიშვნა:</strong> ტუტორობის სტატუსის მოპოვება შეუძლია
-                მხოლოდ იმ სტუდენტს, რომლის საშუალო შეწონილი ქულა 81-ზე მეტია
+                {t.register.tutorNote}
               </Typography>
             </Alert>
           </>
@@ -313,72 +314,72 @@ const RegisterPage = () => {
           <>
             <Divider sx={{ my: 2 }} />
             <Typography variant="h6" fontWeight={600}>
-              პროფესიული ინფორმაცია
+              {t.register.professionalInfo}
             </Typography>
 
             <ControlledTextField
               control={control}
               name="workingPlace"
-              label="სამუშაო ადგილი"
+              label={t.register.workplace}
               fullWidth
-              helperText="ორგანიზაცია ან დაწესებულება"
-              rules={{ required: "ეს ველი აუცილებელია" }}
+              helperText={t.register.workplaceHelper}
+              rules={{ required: t.register.fieldRequired }}
               error={!!errors.workingPlace}
             />
 
             <ControlledTextField
               control={control}
               name="workingPosition"
-              label="პოზიცია"
+              label={t.register.position}
               fullWidth
-              helperText="თქვენი თანამდებობა"
-              rules={{ required: "ეს ველი აუცილებელია" }}
+              helperText={t.register.positionHelper}
+              rules={{ required: t.register.fieldRequired }}
               error={!!errors.workingPosition}
             />
 
             <ControlledTextField
               control={control}
               name="experience"
-              label="გამოცდილება"
+              label={t.register.experience}
               fullWidth
               multiline
               rows={3}
-              helperText="აღწერეთ თქვენი პროფესიული გამოცდილება"
-              rules={{ required: "ეს ველი აუცილებელია" }}
+              helperText={t.register.experienceHelper}
+              rules={{ required: t.register.fieldRequired }}
               error={!!errors.experience}
             />
 
             <ControlledTextField
               control={control}
               name="strengths"
-              label="ძლიერი მხარეები"
+              label={t.register.strengths}
               fullWidth
               multiline
               rows={2}
-              helperText="თქვენი პროფესიული ძლიერი მხარეები"
-              rules={{ required: "ეს ველი აუცილებელია" }}
+              helperText={t.register.professionalStrengthsHelper}
+              rules={{ required: t.register.fieldRequired }}
               error={!!errors.strengths}
             />
 
             <ControlledTextField
               control={control}
               name="mentoringCourseName"
-              label="მენტორობის კურსის დასახელება"
+              label={t.register.mentoringCourseName}
               fullWidth
-              helperText="კურსის ან პროგრამის დასახელება"
-              rules={{ required: "ეს ველი აუცილებელია" }}
+              helperText={t.register.mentoringCourseNameHelper}
+              rules={{ required: t.register.fieldRequired }}
               error={!!errors.mentoringCourseName}
             />
 
             <ControlledTextField
               control={control}
               name="courseDescription"
-              label="კურსის აღწერა"
+              label={t.register.courseDescription}
               fullWidth
               multiline
               rows={4}
-              helperText="მიზნები, შედეგები, შინაარსი, კურსის დაძლევის პირობები, განრიგი, შეხვედრების ფორმატი"
-              rules={{ required: "ეს ველი აუცილებელია" }}
+              helperText={t.register.courseDescriptionHelper}
+              rules={{ required: t.register.fieldRequired }}
               error={!!errors.courseDescription}
             />
           </>
@@ -389,28 +390,28 @@ const RegisterPage = () => {
           <>
             <Divider sx={{ my: 2 }} />
             <Typography variant="h6" fontWeight={600}>
-              მაძიებლის ინფორმაცია
+              {t.register.seekerInfo}
             </Typography>
 
             <ControlledTextField
               control={control}
               name="year"
-              label="საგანმანათლებლო პროგრამა და სწავლების წელი"
+              label={t.register.educationalProgram}
               fullWidth
-              helperText="მაგ.: ბიზნესის ადმინისტრირება, მე-2 კურსი"
-              rules={{ required: "ეს ველი აუცილებელია" }}
+              helperText={t.register.seekerEducationalProgramHelper}
+              rules={{ required: t.register.fieldRequired }}
               error={!!errors.year}
             />
 
             <ControlledTextField
               control={control}
               name="expectations"
-              label="თქვენი მოლოდინი მენტორისგან/ტუტორისგან"
+              label={t.register.expectations}
               fullWidth
               multiline
               rows={3}
-              helperText="აღწერეთ, რა დახმარებას ელოდებით"
-              rules={{ required: "ეს ველი აუცილებელია" }}
+              helperText={t.register.expectationsHelper}
+              rules={{ required: t.register.fieldRequired }}
               error={!!errors.expectations}
             />
           </>
@@ -421,17 +422,17 @@ const RegisterPage = () => {
           <>
             <Divider sx={{ my: 2 }} />
             <Typography variant="h6" fontWeight={600}>
-              მაძიებლის უკუკავშირი
+              {t.register.seekerFeedback}
             </Typography>
 
             <ControlledTextField
               control={control}
               name="userFeedback"
-              label="პროგრამის შეფასება"
+              label={t.register.programEvaluation}
               fullWidth
               multiline
               rows={4}
-              helperText="დაასახელეთ პროგრამის პოზიტიური ასპექტები და რეკომენდაციები პროგრამის ეფექტიანობის ასამაღლებლად"
+              helperText={t.register.programEvaluationHelper}
             />
           </>
         )}
@@ -439,20 +440,20 @@ const RegisterPage = () => {
         {/* Account Credentials */}
         <Divider sx={{ my: 2 }} />
         <Typography variant="h6" fontWeight={600}>
-          ანგარიშის მონაცემები
+          {t.register.accountCredentials}
         </Typography>
 
         <ControlledTextField
           control={control}
           name="username"
-          label="მომხმარებლის სახელი"
+          label={t.register.usernameField}
           fullWidth
-          helperText="აირჩიეთ უნიკალური მომხმარებლის სახელი"
+          helperText={t.register.usernameHelper}
           rules={{
-            required: "მომხმარებლის სახელი აუცილებელია",
+            required: t.register.usernameRequired,
             minLength: {
               value: 3,
-              message: "მინიმუმ 3 სიმბოლო",
+              message: t.register.minThreeChars,
             },
           }}
           error={!!errors.username}
@@ -468,15 +469,15 @@ const RegisterPage = () => {
           <ControlledTextField
             control={control}
             name="password"
-            label="პაროლი"
+            label={t.register.passwordField}
             type={showPassword ? "text" : "password"}
             fullWidth
-            helperText="მინიმუმ 8 სიმბოლო"
+            helperText={t.register.minEightChars}
             rules={{
-              required: "პაროლი აუცილებელია",
+              required: t.register.passwordFieldRequired,
               minLength: {
                 value: 8,
-                message: "მინიმუმ 8 სიმბოლო",
+                message: t.register.minEightChars,
               },
             }}
             error={!!errors.password}
@@ -485,7 +486,7 @@ const RegisterPage = () => {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label="პაროლის ხილვადობა"
+                      aria-label={t.login.togglePasswordVisibility}
                       onClick={() => setShowPassword((show) => !show)}
                       edge="end"
                     >
@@ -500,14 +501,14 @@ const RegisterPage = () => {
           <ControlledTextField
             control={control}
             name="repeatPassword"
-            label="გაიმეორეთ პაროლი"
+            label={t.register.repeatPassword}
             type={showRepeatPassword ? "text" : "password"}
             fullWidth
-            helperText="გაიმეორეთ პაროლი"
+            helperText={t.register.repeatPassword}
             rules={{
-              required: "გაიმეორეთ პაროლი",
+              required: t.register.repeatPasswordRequired,
               validate: (value: string) =>
-                value === password || "პაროლები არ ემთხვევა",
+                value === password || t.register.passwordsDoNotMatch,
             }}
             error={!!errors.repeatPassword}
             slotProps={{
@@ -515,7 +516,7 @@ const RegisterPage = () => {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label="პაროლის ხილვადობა"
+                      aria-label={t.login.togglePasswordVisibility}
                       onClick={() => setShowRepeatPassword((show) => !show)}
                       edge="end"
                     >
@@ -543,7 +544,7 @@ const RegisterPage = () => {
             fullWidth
             disabled={isSubmitting}
           >
-            {isSubmitting ? "მიმდინარეობს..." : "რეგისტრაცია"}
+            {isSubmitting ? t.register.registering : t.register.registerButton}
           </Button>
           <Button
             variant="outlined"
@@ -552,13 +553,12 @@ const RegisterPage = () => {
             onClick={handleCancel}
             disabled={isSubmitting}
           >
-            გაუქმება
+            {t.common.cancel}
           </Button>
         </Box>
 
         <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-          ანგარიშის შექმნით თქვენ ეთანხმებით ჩვენს მომსახურების პირობებს და
-          კონფიდენციალურობის პოლიტიკას
+          {t.register.termsAgreement}
         </Typography>
       </Box>
     </Box>

@@ -86,7 +86,7 @@ export const FormControl = forwardRef<HTMLDivElement, FormControlProps>(
             mt: 0.5,
             ml: 2,
             fontSize: '13px',
-            color: theme => theme.palette.error.main,
+            color: theme => props.error ? theme.palette.error.main : theme.palette.text.secondary,
           }}
         >
           <Typography fontSize={10} fontWeight={600}>

@@ -22,9 +22,11 @@ import {
   createProgramScheme,
   updateProgramScheme,
 } from "~/api/program-scheme/api";
+import { useLanguage } from "~/providers/language-provider";
 
 const ManageSchemesPage = () => {
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [editingScheme, setEditingScheme] =
@@ -122,7 +124,7 @@ const ManageSchemesPage = () => {
     return (
       <Box sx={{ p: 3 }}>
         <Alert severity="error">
-          შეცდომა სქემების ჩატვირთვისას: {(error as Error).message}
+          {t.manageSchemes.loadError} {(error as Error).message}
         </Alert>
       </Box>
     );
@@ -140,7 +142,7 @@ const ManageSchemesPage = () => {
         }}
       >
         <Typography variant="h4" fontWeight={700}>
-          პროგრამის სქემები
+          {t.manageSchemes.pageTitle}
         </Typography>
         {canCreateOrEdit && (
           <Button
@@ -155,14 +157,14 @@ const ManageSchemesPage = () => {
               textTransform: "none",
             }}
           >
-            ახალი სქემა
+            {t.manageSchemes.newScheme}
           </Button>
         )}
       </Box>
 
       {isSeeker && (
         <Alert severity="info" sx={{ mb: 3 }}>
-          თქვენ არ გაქვთ უფლება სქემების შექმნის ან რედაქტირების.
+          {t.manageSchemes.noPermission}
         </Alert>
       )}
 
@@ -224,7 +226,7 @@ const ManageSchemesPage = () => {
                     onClick={() => handleOpenDialog(scheme)}
                     sx={{ textTransform: "none" }}
                   >
-                    რედაქტირება
+                    {t.common.edit}
                   </Button>
                 )}
               </CardActions>
@@ -240,12 +242,12 @@ const ManageSchemesPage = () => {
           }}
         >
           <Typography variant="h6" color="text.secondary" gutterBottom>
-            სქემები არ არის
+            {t.manageSchemes.noSchemes}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
             {canCreateOrEdit
-              ? "დაამატეთ თქვენი პირველი პროგრამის სქემა"
-              : "სქემები ჯერ არ არის დამატებული"}
+              ? t.manageSchemes.addFirstScheme
+              : t.manageSchemes.schemesNotAdded}
           </Typography>
           {canCreateOrEdit && (
             <Button
@@ -260,7 +262,7 @@ const ManageSchemesPage = () => {
                 textTransform: "none",
               }}
             >
-              ახალი სქემა
+              {t.manageSchemes.newScheme}
             </Button>
           )}
         </Box>
@@ -287,7 +289,7 @@ const ManageSchemesPage = () => {
           }}
         >
           <Typography variant="h6" fontWeight={600}>
-            {editingScheme ? "სქემის რედაქტირება" : "ახალი სქემა"}
+            {editingScheme ? t.manageSchemes.editScheme : t.manageSchemes.newScheme}
           </Typography>
           <IconButton onClick={handleCloseDialog} size="small">
             <Close />
@@ -297,7 +299,7 @@ const ManageSchemesPage = () => {
         <DialogContent sx={{ pt: 2 }}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             <TextField
-              label="სათაური"
+              label={t.manageSchemes.title}
               fullWidth
               value={formData.title || ""}
               onChange={(e) => handleInputChange("title", e.target.value)}
@@ -310,7 +312,7 @@ const ManageSchemesPage = () => {
             />
 
             <TextField
-              label="აღწერა"
+              label={t.manageSchemes.description}
               fullWidth
               multiline
               rows={4}
@@ -324,7 +326,7 @@ const ManageSchemesPage = () => {
             />
 
             <TextField
-              label="როლის რუკა"
+              label={t.manageSchemes.roleMap}
               fullWidth
               value={formData.userProgramRoleToUserMap || ""}
               onChange={(e) =>
@@ -348,7 +350,7 @@ const ManageSchemesPage = () => {
               px: 3,
             }}
           >
-            გაუქმება
+            {t.common.cancel}
           </Button>
           <Button
             variant="contained"
@@ -367,9 +369,9 @@ const ManageSchemesPage = () => {
             {createMutation.isPending || updateMutation.isPending ? (
               <CircularProgress size={20} color="inherit" />
             ) : editingScheme ? (
-              "განახლება"
+              t.common.update
             ) : (
-              "შექმნა"
+              t.common.create
             )}
           </Button>
         </DialogActions>

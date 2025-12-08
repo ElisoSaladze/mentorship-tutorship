@@ -93,7 +93,7 @@ const AppBar = () => {
 
   const menuItems = [
     { label: t.appBar.aboutProject, path: paths.home },
-    { label: "სქემები", path: paths.schemes },
+    { label: t.appBar.schemes, path: paths.schemes },
     { label: t.appBar.registration, path: "#registration", hasDropdown: true },
     { label: t.appBar.gallery, path: paths.gallery },
     { label: t.appBar.contact, path: paths.contact },
@@ -188,7 +188,7 @@ const AppBar = () => {
             },
           }}
         >
-          {language === "en" ? "Login" : "შესვლა"}
+          {t.appBar.login}
         </Button>
 
         {/* Language Switcher */}
@@ -297,7 +297,7 @@ const AppBar = () => {
             },
           }}
         >
-          {language === "en" ? "Login" : "შესვლა"}
+          {t.appBar.login}
         </Button>
 
         <List>
@@ -432,7 +432,7 @@ const AppBar = () => {
                 transition: "color 0.3s ease",
               }}
             >
-              Mentorship & Tutorship
+              {t.common.appTitle}
             </Typography>
           </Box>
 

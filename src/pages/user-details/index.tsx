@@ -14,11 +14,13 @@ import { getUser, updateUserById } from "~/api/users/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
 // import UploadImage from "~/components/upload-image";
 import { Edit, Save, Cancel } from "@mui/icons-material";
+import { useLanguage } from "~/providers/language-provider";
 
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
 
   // Fetch current user data
   const {
@@ -44,7 +46,7 @@ const UserProfile = () => {
   const updateMutation = useMutation({
     mutationFn: (data: TYPES.user) => updateUserById(data.id!, data),
     onSuccess: () => {
-      setSuccessMessage("პროფილი წარმატებით განახლდა");
+      setSuccessMessage(t.userProfile.updateSuccess);
       setIsEditing(false);
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
       setTimeout(() => setSuccessMessage(null), 3000);
@@ -84,7 +86,7 @@ const UserProfile = () => {
     return (
       <Box sx={{ maxWidth: 800, margin: "0 auto", padding: 4 }}>
         <Alert severity="error">
-          მონაცემების ჩატვირთვა ვერ მოხერხდა. გთხოვთ სცადოთ თავიდან.
+          {t.userProfile.loadError}
         </Alert>
       </Box>
     );
@@ -113,10 +115,10 @@ const UserProfile = () => {
       >
         <Box>
           <Typography variant="h4" fontWeight={600}>
-            ჩემი პროფილი
+            {t.userProfile.pageTitle}
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-            თქვენი პირადი ინფორმაციის მართვა
+            {t.userProfile.pageSubtitle}
           </Typography>
         </Box>
 
@@ -126,7 +128,7 @@ const UserProfile = () => {
             startIcon={<Edit />}
             onClick={() => setIsEditing(true)}
           >
-            რედაქტირება
+            {t.common.edit}
           </Button>
         )}
       </Box>
@@ -141,7 +143,7 @@ const UserProfile = () => {
 
       {updateMutation.isError && (
         <Alert severity="error" sx={{ mb: 3 }}>
-          პროფილის განახლება ვერ მოხერხდა. გთხოვთ სცადოთ თავიდან.
+          {t.userProfile.updateError}
         </Alert>
       )}
 
@@ -169,7 +171,7 @@ const UserProfile = () => {
         {/* Basic Information */}
         <Paper sx={{ p: 3 }}>
           <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
-            ძირითადი ინფორმაცია
+            {t.register.basicInfo}
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -183,20 +185,20 @@ const UserProfile = () => {
               <ControlledTextField
                 control={control}
                 name="name"
-                label="სახელი"
+                label={t.register.firstName}
                 fullWidth
                 disabled={!isEditing}
-                rules={{ required: "სახელი აუცილებელია" }}
+                rules={{ required: t.register.firstNameRequired }}
                 error={!!errors.name}
               />
 
               <ControlledTextField
                 control={control}
                 name="surname"
-                label="გვარი"
+                label={t.register.lastName}
                 fullWidth
                 disabled={!isEditing}
-                rules={{ required: "გვარი აუცილებელია" }}
+                rules={{ required: t.register.lastNameRequired }}
                 error={!!errors.surname}
               />
             </Box>
@@ -204,15 +206,15 @@ const UserProfile = () => {
             <ControlledTextField
               control={control}
               name="email"
-              label="ელ. ფოსტა"
+              label={t.register.email}
               type="email"
               fullWidth
               disabled={!isEditing}
               rules={{
-                required: "ელ. ფოსტა აუცილებელია",
+                required: t.register.emailRequired,
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "არასწორი ელ. ფოსტის ფორმატი",
+                  message: t.register.invalidEmailFormat,
                 },
               }}
               error={!!errors.email}
@@ -221,10 +223,10 @@ const UserProfile = () => {
             <ControlledTextField
               control={control}
               name="username"
-              label="მომხმარებლის სახელი"
+              label={t.register.usernameField}
               fullWidth
               disabled={!isEditing}
-              rules={{ required: "მომხმარებლის სახელი აუცილებელია" }}
+              rules={{ required: t.register.usernameRequired }}
               error={!!errors.username}
             />
           </Box>
@@ -234,7 +236,7 @@ const UserProfile = () => {
         {isTutor && (
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
-              ტუტორის ინფორმაცია
+              {t.userProfile.tutorInfo}
             </Typography>
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -248,7 +250,7 @@ const UserProfile = () => {
                 <ControlledTextField
                   control={control}
                   name="year"
-                  label="საგანმანათლებლო პროგრამა და სწავლების წელი"
+                  label={t.register.educationalProgram}
                   fullWidth
                   disabled={!isEditing}
                 />
@@ -256,7 +258,7 @@ const UserProfile = () => {
                 <ControlledTextField
                   control={control}
                   name="hobbies"
-                  label="ჰობი"
+                  label={t.register.hobbies}
                   fullWidth
                   disabled={!isEditing}
                 />
@@ -265,7 +267,7 @@ const UserProfile = () => {
               <ControlledTextField
                 control={control}
                 name="strengths"
-                label="ძლიერი მხარეები"
+                label={t.register.strengths}
                 fullWidth
                 multiline
                 rows={2}
@@ -275,7 +277,7 @@ const UserProfile = () => {
               <ControlledTextField
                 control={control}
                 name="motivation"
-                label="მოტივაცია"
+                label={t.register.motivation}
                 fullWidth
                 multiline
                 rows={3}
@@ -285,7 +287,7 @@ const UserProfile = () => {
               <ControlledTextField
                 control={control}
                 name="courseDescription"
-                label="რას სთავაზობთ მაძიებელს"
+                label={t.register.offerToSeeker}
                 fullWidth
                 multiline
                 rows={3}
@@ -295,10 +297,10 @@ const UserProfile = () => {
               <ControlledTextField
                 control={control}
                 name="keywords"
-                label="საკვანძო სიტყვები"
+                label={t.register.keywords}
                 fullWidth
                 disabled={!isEditing}
-                helperText="მიუთითეთ საკვანძო სიტყვები მძიმით გამოყოფილი"
+                helperText={t.userProfile.keywordsHelper}
               />
             </Box>
           </Paper>
@@ -307,14 +309,14 @@ const UserProfile = () => {
         {isMentor && (
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
-              პროფესიული ინფორმაცია
+              {t.userProfile.professionalInfo}
             </Typography>
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
               <ControlledTextField
                 control={control}
                 name="workingPlace"
-                label="სამუშაო ადგილი"
+                label={t.register.workplace}
                 fullWidth
                 disabled={!isEditing}
               />
@@ -322,7 +324,7 @@ const UserProfile = () => {
               <ControlledTextField
                 control={control}
                 name="workingPosition"
-                label="პოზიცია"
+                label={t.register.position}
                 fullWidth
                 disabled={!isEditing}
               />
@@ -330,7 +332,7 @@ const UserProfile = () => {
               <ControlledTextField
                 control={control}
                 name="experience"
-                label="გამოცდილება"
+                label={t.register.experience}
                 fullWidth
                 multiline
                 rows={3}
@@ -340,7 +342,7 @@ const UserProfile = () => {
               <ControlledTextField
                 control={control}
                 name="strengths"
-                label="ძლიერი მხარეები"
+                label={t.register.strengths}
                 fullWidth
                 multiline
                 rows={2}
@@ -350,7 +352,7 @@ const UserProfile = () => {
               <ControlledTextField
                 control={control}
                 name="mentoringCourseName"
-                label="მენტორობის კურსის დასახელება"
+                label={t.register.mentoringCourseName}
                 fullWidth
                 disabled={!isEditing}
               />
@@ -358,7 +360,7 @@ const UserProfile = () => {
               <ControlledTextField
                 control={control}
                 name="courseDescription"
-                label="კურსის აღწერა"
+                label={t.register.courseDescription}
                 fullWidth
                 multiline
                 rows={4}
@@ -371,14 +373,14 @@ const UserProfile = () => {
         {isSeeker && (
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
-              მაძიებლის ინფორმაცია
+              {t.userProfile.seekerInfo}
             </Typography>
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
               <ControlledTextField
                 control={control}
                 name="year"
-                label="საგანმანათლებლო პროგრამა და სწავლების წელი"
+                label={t.register.educationalProgram}
                 fullWidth
                 disabled={!isEditing}
               />
@@ -386,7 +388,7 @@ const UserProfile = () => {
               <ControlledTextField
                 control={control}
                 name="expectations"
-                label="თქვენი მოლოდინი მენტორისგან/ტუტორისგან"
+                label={t.register.expectations}
                 fullWidth
                 multiline
                 rows={3}
@@ -412,7 +414,7 @@ const UserProfile = () => {
               onClick={handleCancel}
               disabled={updateMutation.isPending}
             >
-              გაუქმება
+              {t.common.cancel}
             </Button>
             <Button
               type="submit"
@@ -420,7 +422,7 @@ const UserProfile = () => {
               startIcon={<Save />}
               disabled={!isDirty || updateMutation.isPending}
             >
-              {updateMutation.isPending ? "მიმდინარეობს..." : "შენახვა"}
+              {updateMutation.isPending ? t.common.saving : t.common.save}
             </Button>
           </Box>
         )}
