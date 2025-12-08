@@ -7,11 +7,36 @@ const NotFound = () => {
   const { t } = useLanguage()
 
   return (
-    <Box>
-      <Typography>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        textAlign: 'center',
+        gap: 3,
+        p: 3,
+      }}
+    >
+      <Typography variant="h1" fontWeight={700} color="primary">
+        404
+      </Typography>
+      <Typography variant="h5" color="text.secondary">
         {t.notFound.message}
       </Typography>
-      <Button variant="contained" onClick={() => navigate('/')} size="large">
+      <Button
+        variant="contained"
+        onClick={() => navigate('/')}
+        size="large"
+        sx={{
+          mt: 2,
+          px: 4,
+          py: 1.5,
+          borderRadius: 2,
+          fontWeight: 600,
+        }}
+      >
         {t.notFound.goBack}
       </Button>
     </Box>
