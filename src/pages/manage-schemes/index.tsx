@@ -23,10 +23,12 @@ import {
   updateProgramScheme,
 } from "~/api/program-scheme/api";
 import { useLanguage } from "~/providers/language-provider";
+import { useAuthContext } from "~/providers/auth";
 
 const ManageSchemesPage = () => {
   const queryClient = useQueryClient();
   const { t } = useLanguage();
+  const { userDetails: user } = useAuthContext();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [editingScheme, setEditingScheme] =
@@ -102,7 +104,7 @@ const ManageSchemesPage = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const isSeeker = "seeker";
+  const isSeeker = user?.programRoles.includes("SEEKER");
   const canCreateOrEdit = !isSeeker;
 
   if (isLoading) {
@@ -289,7 +291,9 @@ const ManageSchemesPage = () => {
           }}
         >
           <Typography variant="h6" fontWeight={600}>
-            {editingScheme ? t.manageSchemes.editScheme : t.manageSchemes.newScheme}
+            {editingScheme
+              ? t.manageSchemes.editScheme
+              : t.manageSchemes.newScheme}
           </Typography>
           <IconButton onClick={handleCloseDialog} size="small">
             <Close />

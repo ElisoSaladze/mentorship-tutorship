@@ -9,12 +9,12 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUser, updateUserById } from "~/api/users/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateUserById } from "~/api/users/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
-// import UploadImage from "~/components/upload-image";
 import { Edit, Save, Cancel } from "@mui/icons-material";
 import { useLanguage } from "~/providers/language-provider";
+import { useAuthContext } from "~/providers/auth";
 
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -22,15 +22,12 @@ const UserProfile = () => {
   const queryClient = useQueryClient();
   const { t } = useLanguage();
 
-  // Fetch current user data
+  // Use auth context instead of separate query
   const {
-    data: user,
-    isLoading,
-    error: fetchError,
-  } = useQuery({
-    queryKey: ["currentUser"],
-    queryFn: getUser,
-  });
+    userDetails: user,
+    isLoadingUserDetails: isLoading,
+    fetchError,
+  } = useAuthContext();
 
   const {
     control,
@@ -85,16 +82,14 @@ const UserProfile = () => {
   if (fetchError) {
     return (
       <Box sx={{ maxWidth: 800, margin: "0 auto", padding: 4 }}>
-        <Alert severity="error">
-          {t.userProfile.loadError}
-        </Alert>
+        <Alert severity="error">{t.userProfile.loadError}</Alert>
       </Box>
     );
   }
 
-  const isTutor = user?.programRole?.includes("TUTOR");
-  const isMentor = user?.programRole?.includes("MENTOR");
-  const isSeeker = user?.programRole?.includes("SEEKER");
+  // const isTutor = user?.programRole?.includes("TUTOR");
+  // const isMentor = user?.programRole?.includes("MENTOR");
+  // const isSeeker = user?.programRole?.includes("SEEKER");
 
   return (
     <Box
@@ -233,7 +228,7 @@ const UserProfile = () => {
         </Paper>
 
         {/* Role-specific Information */}
-        {isTutor && (
+        {user?.programRoles?.includes("TUTOR") && (
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
               {t.userProfile.tutorInfo}
@@ -306,7 +301,7 @@ const UserProfile = () => {
           </Paper>
         )}
 
-        {isMentor && (
+        {user?.programRoles?.includes("MENTOR") && (
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
               {t.userProfile.professionalInfo}
@@ -370,7 +365,7 @@ const UserProfile = () => {
           </Paper>
         )}
 
-        {isSeeker && (
+        {user?.programRoles?.includes("SEEKER") && (
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
               {t.userProfile.seekerInfo}

@@ -29,6 +29,7 @@ declare namespace TYPES {
     hobbies?: string;
     roles: string[];
     programRole: string;
+    programRoles: Array<string>;
     confirmed: boolean;
   };
 }

@@ -41,6 +41,7 @@ const defaultValues: TYPES.user = {
   roles: [],
   programRole: "SEEKER",
   confirmed: false,
+  programRoles: [],
 };
 
 const RegisterPage = () => {
@@ -302,9 +303,7 @@ const RegisterPage = () => {
             />
 
             <Alert severity="info" sx={{ mb: 2 }}>
-              <Typography variant="body2">
-                {t.register.tutorNote}
-              </Typography>
+              <Typography variant="body2">{t.register.tutorNote}</Typography>
             </Alert>
           </>
         )}

@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 
 import { useLogoutAcrossTabs } from "./logout-across-tabs";
+import { getUser } from "~/api/users/api";
 
 type NotAuthUser = {
   state: "unauthenticated";
@@ -57,14 +58,20 @@ const useAuth = () => {
     staleTime: Infinity,
   });
 
+  const {
+    data: userDetails,
+    isLoading: isLoadingUserDetails,
+    error: fetchError,
+  } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: getUser,
+  });
+
   /**
-   * Authorizes t
-   *
-   * he user.
+   * Authorizes the user.
    *
    * @param user The user response object containing the access token.
    */
-
   const authorize = useCallback((user: AuthUserResponse) => {
     if (user) {
       const decodedJWT: { exp: number } = jwtDecode(user.accessToken);
@@ -86,10 +93,6 @@ const useAuth = () => {
       };
 
       setUser(newUser);
-      // refreshTimeoutRef.current = window.setTimeout(() => {
-      //   refreshTimeoutRef.current = null
-      //   refetchRefreshToken()
-      // }, expiresIn)
     } else {
       setUser({ state: "unauthenticated" });
     }
@@ -141,8 +144,12 @@ const useAuth = () => {
     unauthorize,
     isAuthenticated: user.state === "authenticated",
     state: user.state,
+    userDetails,
+    isLoadingUserDetails,
+    fetchError,
   } as const;
 };
+
 /**
  * Provider component for managing authentication state.
  */
