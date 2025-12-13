@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateUserById } from "~/api/users/api";
+import { updateUser } from "~/api/users/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
 import { Edit, Save, Cancel } from "@mui/icons-material";
 import { useLanguage } from "~/providers/language-provider";
@@ -41,7 +41,7 @@ const UserProfile = () => {
 
   // Update user mutation
   const updateMutation = useMutation({
-    mutationFn: (data: TYPES.user) => updateUserById(data.id!, data),
+    mutationFn: (data: TYPES.user) => updateUser(data),
     onSuccess: () => {
       setSuccessMessage(t.userProfile.updateSuccess);
       setIsEditing(false);

@@ -18,7 +18,7 @@ export const getAllUsers = async () =>
 export const getUser = async () =>
   await request(`${REACT_APP_API_URL}users/me`).get<TYPES.user>();
 
-export const updateUserById = async (id: string, body: Partial<TYPES.user>) =>
-  await request(`${REACT_APP_API_URL}users/${id}`).put<TYPES.user>({
+export const updateUser = async (body: Partial<TYPES.user>) =>
+  await request(`${REACT_APP_API_URL}users/me`).put<TYPES.user>({
     body,
   });

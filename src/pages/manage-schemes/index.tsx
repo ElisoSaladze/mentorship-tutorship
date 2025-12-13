@@ -15,7 +15,7 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import { Add, Edit, Close } from "@mui/icons-material";
+import { Add, Edit, Close, Visibility } from "@mui/icons-material";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getProgramScheme,
@@ -24,6 +24,7 @@ import {
 } from "~/api/program-scheme/api";
 import { useLanguage } from "~/providers/language-provider";
 import { useAuthContext } from "~/providers/auth";
+import ProgramSchemeDetails from "~/components/program-scheme";
 
 const ManageSchemesPage = () => {
   const queryClient = useQueryClient();
@@ -31,6 +32,8 @@ const ManageSchemesPage = () => {
   const { userDetails: user } = useAuthContext();
 
   const [openDialog, setOpenDialog] = useState(false);
+  const [openDetailsModal, setOpenDetailsModal] = useState(false);
+  const [selectedSchemeId, setSelectedSchemeId] = useState<string | null>(null);
   const [editingScheme, setEditingScheme] =
     useState<TYPES.programScheme | null>(null);
   const [formData, setFormData] = useState<Partial<TYPES.programScheme>>({
@@ -84,6 +87,16 @@ const ManageSchemesPage = () => {
     setOpenDialog(false);
     setEditingScheme(null);
     setFormData({ title: "", description: "", userProgramRoleToUserMap: "" });
+  };
+
+  const handleOpenDetailsModal = (schemeId: string) => {
+    setSelectedSchemeId(schemeId);
+    setOpenDetailsModal(true);
+  };
+
+  const handleCloseDetailsModal = () => {
+    setOpenDetailsModal(false);
+    setSelectedSchemeId(null);
   };
 
   const handleSubmit = () => {
@@ -221,6 +234,14 @@ const ManageSchemesPage = () => {
                 </Typography>
               </CardContent>
               <CardActions sx={{ p: 2, pt: 0 }}>
+                <Button
+                  size="small"
+                  startIcon={<Visibility />}
+                  onClick={() => handleOpenDetailsModal(scheme.id!)}
+                  sx={{ textTransform: "none" }}
+                >
+                  View Details
+                </Button>
                 {canCreateOrEdit && (
                   <Button
                     size="small"
@@ -268,6 +289,15 @@ const ManageSchemesPage = () => {
             </Button>
           )}
         </Box>
+      )}
+
+      {/* Program Scheme Details Modal */}
+      {selectedSchemeId && (
+        <ProgramSchemeDetails
+          id={selectedSchemeId}
+          isOpen={openDetailsModal}
+          onClose={handleCloseDetailsModal}
+        />
       )}
 
       {/* Create/Edit Dialog */}
