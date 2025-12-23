@@ -27,7 +27,7 @@ export type BuildRouteInput = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   factory: () => Promise<{ default: ComponentType<any> }>;
   scopes?: string[];
-  state: "unauthenticated" | "authenticated" | "pending";
+  state: "unauthenticated" | "authenticated" | "admin" | "pending";
   defaultNavigation?: string;
 };
 

@@ -75,6 +75,7 @@ declare namespace TYPES {
     username: string;
     confirmed: boolean;
     programRoles: ProgramRole[];
+    roles?: UserRole[];
   };
 
   type UpdateUserRequest = {

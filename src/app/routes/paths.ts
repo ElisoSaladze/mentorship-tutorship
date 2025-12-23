@@ -9,6 +9,8 @@ export const paths = {
   schemeDetails: "/schemes/:id",
   userDetails: "/dashboard/profile",
   main: "/dashboard",
+  adminUsers: "/dashboard/admin/users",
+  manageSchemes: "/dashboard/schemas",
 };
 
 export type PathKey = keyof typeof paths;

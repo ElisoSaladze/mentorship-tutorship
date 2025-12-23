@@ -139,6 +139,9 @@ const useAuth = () => {
     }, [navigate, queryClient])
   );
 
+  // Check if user has ADMIN role
+  const isAdmin = userDetails?.roles?.includes("ADMIN") ?? false;
+
   return {
     user,
     setUser,
@@ -146,6 +149,7 @@ const useAuth = () => {
     initialize,
     unauthorize,
     isAuthenticated: user.state === "authenticated",
+    isAdmin,
     state: user.state,
     userDetails,
     isLoadingUserDetails,

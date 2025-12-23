@@ -25,6 +25,7 @@ import {
   Description,
   Settings,
   Logout,
+  AdminPanelSettings,
 } from "@mui/icons-material";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "~/providers/auth";
@@ -44,7 +45,7 @@ const DashboardLayout = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const location = useLocation();
-  const { unauthorize } = useAuthContext();
+  const { unauthorize, isAdmin } = useAuthContext();
   const { t } = useLanguage();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -55,7 +56,9 @@ const DashboardLayout = () => {
     { title: t.dashboard.home, path: "/dashboard", icon: <Dashboard /> },
     { title: t.dashboard.myProfile, path: "/dashboard/profile", icon: <Person /> },
     { title: t.dashboard.schemes, path: "/dashboard/schemas", icon: <Description /> },
-    { title: t.dashboard.settings, path: "/dashboard/settings", icon: <Settings /> },
+    ...(isAdmin
+      ? [{ title: t.admin?.users || "Users", path: "/dashboard/admin/users", icon: <AdminPanelSettings /> }]
+      : []),
   ];
 
   const handleDrawerToggle = () => {

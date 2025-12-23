@@ -54,6 +54,16 @@ export const routes = [
         factory: () => import("~/pages/manage-schemes"),
         state: "authenticated",
       },
+      {
+        path: paths.manageSchemes,
+        factory: () => import("~/pages/manage-schemes"),
+        state: "authenticated",
+      },
+      {
+        path: paths.adminUsers,
+        factory: () => import("~/pages/admin-users"),
+        state: "admin",
+      },
     ],
   }),
 ];
