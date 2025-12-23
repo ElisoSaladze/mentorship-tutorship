@@ -6,6 +6,31 @@ const Footer = () => {
   const theme = useTheme();
   const { t } = useLanguage();
 
+  const linkStyles = {
+    fontSize: { xs: "0.9rem", sm: "0.875rem" },
+    transition: "all 0.3s ease",
+    position: "relative" as const,
+    width: "fit-content",
+    py: 0.5,
+    "&:hover": {
+      color: theme.palette.primary.main,
+      paddingLeft: "8px",
+    },
+    "&::before": {
+      content: '""',
+      position: "absolute" as const,
+      bottom: 0,
+      left: 0,
+      width: 0,
+      height: "2px",
+      backgroundColor: theme.palette.primary.main,
+      transition: "width 0.3s ease",
+    },
+    "&:hover::before": {
+      width: "100%",
+    },
+  };
+
   return (
     <Box
       component="footer"
@@ -14,12 +39,12 @@ const Footer = () => {
           ? "rgba(30, 30, 30, 0.95)"
           : "rgba(250, 250, 250, 0.95)",
         borderTop: `1px solid ${theme.palette.divider}`,
-        py: 6,
+        py: { xs: 4, sm: 5, md: 6 },
         mt: "auto",
         backdropFilter: "blur(10px)",
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
         <Box
           sx={{
             display: "grid",
@@ -28,18 +53,18 @@ const Footer = () => {
               sm: "1fr 1fr",
               md: "repeat(3, 1fr)",
             },
-            gap: 4,
+            gap: { xs: 4, sm: 4, md: 5 },
           }}
         >
           {/* About Section */}
-          <Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
+          <Box sx={{ gridColumn: { xs: "1", sm: "1 / -1", md: "auto" } }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1.5 }}>
               <Box
                 component="img"
                 src="/bsu-logo.png"
                 alt="BSU Logo"
                 sx={{
-                  height: 40,
+                  height: { xs: 36, sm: 40 },
                   width: "auto",
                 }}
               />
@@ -47,6 +72,7 @@ const Footer = () => {
                 variant="h6"
                 sx={{
                   fontWeight: 700,
+                  fontSize: { xs: "1rem", sm: "1.1rem" },
                   color: theme.palette.primary.main,
                 }}
               >
@@ -56,18 +82,24 @@ const Footer = () => {
             <Typography
               variant="body2"
               color="text.secondary"
-              sx={{ mb: 2, lineHeight: 1.7 }}
+              sx={{
+                mb: 2,
+                lineHeight: 1.7,
+                fontSize: { xs: "0.875rem", sm: "0.875rem" },
+                maxWidth: { md: "90%" },
+              }}
             >
               {t.footer.aboutSection.description}
             </Typography>
-            <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+            <Box sx={{ display: "flex", gap: { xs: 0.5, sm: 1 }, mt: 2 }}>
               <IconButton
                 href="https://www.facebook.com/batumishotarustaveli/"
                 target="_blank"
                 rel="noopener noreferrer"
-                size="small"
                 sx={{
                   color: theme.palette.text.secondary,
+                  width: { xs: 44, sm: 40 },
+                  height: { xs: 44, sm: 40 },
                   transition: "all 0.3s ease",
                   "&:hover": {
                     color: "#1877f2",
@@ -75,15 +107,16 @@ const Footer = () => {
                   },
                 }}
               >
-                <Facebook />
+                <Facebook sx={{ fontSize: { xs: 24, sm: 22 } }} />
               </IconButton>
               <IconButton
                 href="https://www.instagram.com/bsubatumi/"
                 target="_blank"
                 rel="noopener noreferrer"
-                size="small"
                 sx={{
                   color: theme.palette.text.secondary,
+                  width: { xs: 44, sm: 40 },
+                  height: { xs: 44, sm: 40 },
                   transition: "all 0.3s ease",
                   "&:hover": {
                     color: "#e4405f",
@@ -91,15 +124,16 @@ const Footer = () => {
                   },
                 }}
               >
-                <Instagram />
+                <Instagram sx={{ fontSize: { xs: 24, sm: 22 } }} />
               </IconButton>
               <IconButton
                 href="https://ge.linkedin.com/company/bsu-batumi"
                 target="_blank"
                 rel="noopener noreferrer"
-                size="small"
                 sx={{
                   color: theme.palette.text.secondary,
+                  width: { xs: 44, sm: 40 },
+                  height: { xs: 44, sm: 40 },
                   transition: "all 0.3s ease",
                   "&:hover": {
                     color: "#0077b5",
@@ -107,7 +141,7 @@ const Footer = () => {
                   },
                 }}
               >
-                <LinkedIn />
+                <LinkedIn sx={{ fontSize: { xs: 24, sm: 22 } }} />
               </IconButton>
             </Box>
           </Box>
@@ -117,38 +151,20 @@ const Footer = () => {
             <Typography
               variant="h6"
               gutterBottom
-              sx={{ fontWeight: 600, mb: 2 }}
+              sx={{
+                fontWeight: 600,
+                mb: 2,
+                fontSize: { xs: "1rem", sm: "1.1rem" },
+              }}
             >
               {t.footer.quickLinks.title}
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1, sm: 1.5 } }}>
               <Link
                 href="/"
                 color="text.secondary"
                 underline="none"
-                sx={{
-                  fontSize: "0.875rem",
-                  transition: "all 0.3s ease",
-                  position: "relative",
-                  width: "fit-content",
-                  "&:hover": {
-                    color: theme.palette.primary.main,
-                    paddingLeft: "8px",
-                  },
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    width: 0,
-                    height: "2px",
-                    backgroundColor: theme.palette.primary.main,
-                    transition: "width 0.3s ease",
-                  },
-                  "&:hover::before": {
-                    width: "100%",
-                  },
-                }}
+                sx={linkStyles}
               >
                 {t.footer.quickLinks.aboutProject}
               </Link>
@@ -156,29 +172,7 @@ const Footer = () => {
                 href="#registration"
                 color="text.secondary"
                 underline="none"
-                sx={{
-                  fontSize: "0.875rem",
-                  transition: "all 0.3s ease",
-                  position: "relative",
-                  width: "fit-content",
-                  "&:hover": {
-                    color: theme.palette.primary.main,
-                    paddingLeft: "8px",
-                  },
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    width: 0,
-                    height: "2px",
-                    backgroundColor: theme.palette.primary.main,
-                    transition: "width 0.3s ease",
-                  },
-                  "&:hover::before": {
-                    width: "100%",
-                  },
-                }}
+                sx={linkStyles}
               >
                 {t.footer.quickLinks.registration}
               </Link>
@@ -186,29 +180,7 @@ const Footer = () => {
                 href="/gallery"
                 color="text.secondary"
                 underline="none"
-                sx={{
-                  fontSize: "0.875rem",
-                  transition: "all 0.3s ease",
-                  position: "relative",
-                  width: "fit-content",
-                  "&:hover": {
-                    color: theme.palette.primary.main,
-                    paddingLeft: "8px",
-                  },
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    width: 0,
-                    height: "2px",
-                    backgroundColor: theme.palette.primary.main,
-                    transition: "width 0.3s ease",
-                  },
-                  "&:hover::before": {
-                    width: "100%",
-                  },
-                }}
+                sx={linkStyles}
               >
                 {t.footer.quickLinks.gallery}
               </Link>
@@ -216,29 +188,7 @@ const Footer = () => {
                 href="/contact"
                 color="text.secondary"
                 underline="none"
-                sx={{
-                  fontSize: "0.875rem",
-                  transition: "all 0.3s ease",
-                  position: "relative",
-                  width: "fit-content",
-                  "&:hover": {
-                    color: theme.palette.primary.main,
-                    paddingLeft: "8px",
-                  },
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    width: 0,
-                    height: "2px",
-                    backgroundColor: theme.palette.primary.main,
-                    transition: "width 0.3s ease",
-                  },
-                  "&:hover::before": {
-                    width: "100%",
-                  },
-                }}
+                sx={linkStyles}
               >
                 {t.footer.quickLinks.contact}
               </Link>
@@ -250,36 +200,33 @@ const Footer = () => {
             <Typography
               variant="h6"
               gutterBottom
-              sx={{ fontWeight: 600, mb: 2 }}
+              sx={{
+                fontWeight: 600,
+                mb: 2,
+                fontSize: { xs: "1rem", sm: "1.1rem" },
+              }}
             >
               {t.footer.contact.title}
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1.5, sm: 2 } }}>
               <Link
                 href="mailto:info@bsuproject.ge"
                 underline="none"
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 1,
+                  gap: 1.5,
                   color: theme.palette.text.secondary,
                   transition: "all 0.3s ease",
+                  py: 0.5,
                   "&:hover": {
                     color: theme.palette.primary.main,
                     transform: "translateX(4px)",
                   },
                 }}
               >
-                <Email
-                  fontSize="small"
-                  sx={{
-                    transition: "transform 0.3s ease",
-                    "&:hover": {
-                      transform: "scale(1.1)",
-                    },
-                  }}
-                />
-                <Typography variant="body2">
+                <Email sx={{ fontSize: { xs: 20, sm: 18 } }} />
+                <Typography variant="body2" sx={{ fontSize: { xs: "0.9rem", sm: "0.875rem" } }}>
                   {t.footer.contact.email}
                 </Typography>
               </Link>
@@ -289,38 +236,32 @@ const Footer = () => {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 1,
+                  gap: 1.5,
                   color: theme.palette.text.secondary,
                   transition: "all 0.3s ease",
+                  py: 0.5,
                   "&:hover": {
                     color: theme.palette.primary.main,
                     transform: "translateX(4px)",
                   },
                 }}
               >
-                <Phone
-                  fontSize="small"
-                  sx={{
-                    transition: "transform 0.3s ease",
-                    "&:hover": {
-                      transform: "scale(1.1)",
-                    },
-                  }}
-                />
-                <Typography variant="body2">
+                <Phone sx={{ fontSize: { xs: 20, sm: 18 } }} />
+                <Typography variant="body2" sx={{ fontSize: { xs: "0.9rem", sm: "0.875rem" } }}>
                   {t.footer.contact.phone}
                 </Typography>
               </Link>
               <Box
                 sx={{
                   display: "flex",
-                  alignItems: "center",
-                  gap: 1,
+                  alignItems: "flex-start",
+                  gap: 1.5,
                   color: theme.palette.text.secondary,
+                  py: 0.5,
                 }}
               >
-                <LocationOn fontSize="small" />
-                <Typography variant="body2">
+                <LocationOn sx={{ fontSize: { xs: 20, sm: 18 }, mt: 0.25 }} />
+                <Typography variant="body2" sx={{ fontSize: { xs: "0.9rem", sm: "0.875rem" } }}>
                   {t.footer.contact.location}
                 </Typography>
               </Box>
@@ -332,12 +273,16 @@ const Footer = () => {
         <Box
           sx={{
             borderTop: `1px solid ${theme.palette.divider}`,
-            mt: 4,
-            pt: 3,
+            mt: { xs: 3, sm: 4 },
+            pt: { xs: 2, sm: 3 },
             textAlign: "center",
           }}
         >
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontSize: { xs: "0.8rem", sm: "0.875rem" } }}
+          >
             &copy; {new Date().getFullYear()} {t.footer.aboutSection.title}. {t.footer.copyright}
           </Typography>
         </Box>

@@ -42,34 +42,44 @@ export const createRequest =
 
     const apiUrl = input?.params ? generatePath(url, input.params) : url;
 
-    try {
-      const res = await fetch(
-        input?.query ? `${apiUrl}?${input.query}` : apiUrl,
-        requestInit
-      );
+    const res = await fetch(
+      input?.query ? `${apiUrl}?${input.query}` : apiUrl,
+      requestInit
+    );
 
-      if (schema) {
-        const json = await res.json();
+    // Handle non-OK responses
+    if (!res.ok) {
+      let errorMessage = `Request failed with status ${res.status}`;
+      try {
+        const errorData = await res.json();
+        // Try to extract error message from common API response formats
+        errorMessage = errorData.message || errorData.error || errorData.detail || JSON.stringify(errorData);
+      } catch {
+        // If response is not JSON, use status text
+        errorMessage = res.statusText || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
 
-        const parsed = schema.safeParse(json);
+    if (schema) {
+      const json = await res.json();
 
-        if (!parsed.success) {
-          const { error } = parsed;
-          const errorMessages = error.issues
-            .map(
-              (issue: { message: any; path: any[] }) =>
-                `${issue.message} - ${issue.path.join("->")}`
-            )
-            .join(", ");
+      const parsed = schema.safeParse(json);
 
-          console.error(errorMessages);
-        }
+      if (!parsed.success) {
+        const { error } = parsed;
+        const errorMessages = error.issues
+          .map(
+            (issue: { message: any; path: any[] }) =>
+              `${issue.message} - ${issue.path.join("->")}`
+          )
+          .join(", ");
 
-        return parsed.data;
+        console.error(errorMessages);
       }
 
-      return res.json();
-    } catch (error) {
-      throw console.error(error);
+      return parsed.data;
     }
+
+    return res.json();
   };

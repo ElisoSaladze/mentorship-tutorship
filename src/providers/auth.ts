@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { reissueToken } from "~/api/auth/api";
 import { keys } from "~/api/keys";
 import { paths } from "~/app/routes/paths";
@@ -46,6 +46,7 @@ const cookies = new Cookies();
  */
 const useAuth = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<User>({
     state: cookies.get("refreshToken") ? "authenticated" : "unauthenticated",
   } as User);
@@ -132,8 +133,10 @@ const useAuth = () => {
       if (refreshTimeoutRef.current !== null) {
         window.clearTimeout(refreshTimeoutRef.current);
       }
+      // Clear all cached data to prevent stale data on new login
+      queryClient.clear();
       navigate(paths.login);
-    }, [navigate])
+    }, [navigate, queryClient])
   );
 
   return {

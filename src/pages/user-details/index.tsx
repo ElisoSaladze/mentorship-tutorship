@@ -34,14 +34,14 @@ const UserProfile = () => {
     handleSubmit,
     reset,
     formState: { errors, isDirty },
-  } = useForm<TYPES.user>({
+  } = useForm<TYPES.UserResponse>({
     defaultValues: user,
     values: user, // This updates form when user data loads
   });
 
   // Update user mutation
   const updateMutation = useMutation({
-    mutationFn: (data: TYPES.user) => updateUser(data),
+    mutationFn: (data: TYPES.UpdateUserRequest) => updateUser(data),
     onSuccess: () => {
       setSuccessMessage(t.userProfile.updateSuccess);
       setIsEditing(false);
@@ -54,8 +54,25 @@ const UserProfile = () => {
     },
   });
 
-  const onSubmit = (data: TYPES.user) => {
-    updateMutation.mutate(data);
+  const onSubmit = (data: TYPES.UserResponse) => {
+    const updateData: TYPES.UpdateUserRequest = {
+      programRoles: data.programRoles,
+      year: data.year,
+      strengths: data.strengths,
+      motivation: data.motivation,
+      keywords: data.keywords,
+      userFeedback: data.userFeedback,
+      name: data.name,
+      surname: data.surname,
+      workingPlace: data.workingPlace,
+      workingPosition: data.workingPosition,
+      experience: data.experience,
+      mentoringCourseName: data.mentoringCourseName,
+      courseDescription: data.courseDescription,
+      expectations: data.expectations,
+      hobbies: data.hobbies,
+    };
+    updateMutation.mutate(updateData);
   };
 
   const handleCancel = () => {
@@ -90,29 +107,43 @@ const UserProfile = () => {
   // const isTutor = user?.programRole?.includes("TUTOR");
   // const isMentor = user?.programRole?.includes("MENTOR");
   // const isSeeker = user?.programRole?.includes("SEEKER");
-
+  console.log(user);
   return (
     <Box
       sx={{
         maxWidth: 900,
         margin: "0 auto",
-        padding: 4,
+        px: { xs: 2, sm: 3, md: 4 },
+        py: { xs: 2, sm: 3, md: 4 },
       }}
     >
       {/* Header */}
       <Box
         sx={{
           display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
           justifyContent: "space-between",
-          alignItems: "center",
-          mb: 4,
+          alignItems: { xs: "stretch", sm: "center" },
+          gap: { xs: 2, sm: 0 },
+          mb: { xs: 3, sm: 4 },
         }}
       >
         <Box>
-          <Typography variant="h4" fontWeight={600}>
+          <Typography
+            variant="h4"
+            fontWeight={600}
+            sx={{ fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2.125rem" } }}
+          >
             {t.userProfile.pageTitle}
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{
+              mt: { xs: 0.5, sm: 1 },
+              fontSize: { xs: "0.875rem", sm: "1rem" },
+            }}
+          >
             {t.userProfile.pageSubtitle}
           </Typography>
         </Box>
@@ -122,22 +153,38 @@ const UserProfile = () => {
             variant="contained"
             startIcon={<Edit />}
             onClick={() => setIsEditing(true)}
+            sx={{
+              minHeight: 44,
+              alignSelf: { xs: "flex-start", sm: "center" },
+            }}
           >
             {t.common.edit}
           </Button>
         )}
       </Box>
 
-      <Divider sx={{ mb: 4 }} />
+      <Divider sx={{ mb: { xs: 3, sm: 4 } }} />
 
       {successMessage && (
-        <Alert severity="success" sx={{ mb: 3 }}>
+        <Alert
+          severity="success"
+          sx={{
+            mb: { xs: 2, sm: 3 },
+            fontSize: { xs: "0.875rem", sm: "1rem" },
+          }}
+        >
           {successMessage}
         </Alert>
       )}
 
       {updateMutation.isError && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert
+          severity="error"
+          sx={{
+            mb: { xs: 2, sm: 3 },
+            fontSize: { xs: "0.875rem", sm: "1rem" },
+          }}
+        >
           {t.userProfile.updateError}
         </Alert>
       )}
@@ -145,7 +192,7 @@ const UserProfile = () => {
       <Box
         component="form"
         onSubmit={handleSubmit(onSubmit)}
-        sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+        sx={{ display: "flex", flexDirection: "column", gap: { xs: 2, sm: 3 } }}
       >
         {/* Profile Image */}
         {/* <Paper sx={{ p: 3 }}>
@@ -164,17 +211,30 @@ const UserProfile = () => {
         </Paper> */}
 
         {/* Basic Information */}
-        <Paper sx={{ p: 3 }}>
-          <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
+        <Paper sx={{ p: { xs: 2, sm: 3 } }}>
+          <Typography
+            variant="h6"
+            fontWeight={600}
+            sx={{
+              mb: { xs: 2, sm: 3 },
+              fontSize: { xs: "1rem", sm: "1.25rem" },
+            }}
+          >
             {t.register.basicInfo}
           </Typography>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: { xs: 2, sm: 3 },
+            }}
+          >
             <Box
               sx={{
                 display: "grid",
                 gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                gap: 3,
+                gap: { xs: 2, sm: 3 },
               }}
             >
               <ControlledTextField
@@ -229,17 +289,30 @@ const UserProfile = () => {
 
         {/* Role-specific Information */}
         {user?.programRoles?.includes("TUTOR") && (
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
+          <Paper sx={{ p: { xs: 2, sm: 3 } }}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              sx={{
+                mb: { xs: 2, sm: 3 },
+                fontSize: { xs: "1rem", sm: "1.25rem" },
+              }}
+            >
               {t.userProfile.tutorInfo}
             </Typography>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: { xs: 2, sm: 3 },
+              }}
+            >
               <Box
                 sx={{
                   display: "grid",
                   gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                  gap: 3,
+                  gap: { xs: 2, sm: 3 },
                 }}
               >
                 <ControlledTextField
@@ -302,12 +375,25 @@ const UserProfile = () => {
         )}
 
         {user?.programRoles?.includes("MENTOR") && (
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
+          <Paper sx={{ p: { xs: 2, sm: 3 } }}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              sx={{
+                mb: { xs: 2, sm: 3 },
+                fontSize: { xs: "1rem", sm: "1.25rem" },
+              }}
+            >
               {t.userProfile.professionalInfo}
             </Typography>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: { xs: 2, sm: 3 },
+              }}
+            >
               <ControlledTextField
                 control={control}
                 name="workingPlace"
@@ -366,12 +452,25 @@ const UserProfile = () => {
         )}
 
         {user?.programRoles?.includes("SEEKER") && (
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
+          <Paper sx={{ p: { xs: 2, sm: 3 } }}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              sx={{
+                mb: { xs: 2, sm: 3 },
+                fontSize: { xs: "1rem", sm: "1.25rem" },
+              }}
+            >
               {t.userProfile.seekerInfo}
             </Typography>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: { xs: 2, sm: 3 },
+              }}
+            >
               <ControlledTextField
                 control={control}
                 name="year"
@@ -398,9 +497,10 @@ const UserProfile = () => {
           <Box
             sx={{
               display: "flex",
-              gap: 2,
-              justifyContent: "flex-end",
-              mt: 2,
+              flexDirection: { xs: "column-reverse", sm: "row" },
+              gap: { xs: 1.5, sm: 2 },
+              justifyContent: { xs: "stretch", sm: "flex-end" },
+              mt: { xs: 1, sm: 2 },
             }}
           >
             <Button
@@ -408,6 +508,7 @@ const UserProfile = () => {
               startIcon={<Cancel />}
               onClick={handleCancel}
               disabled={updateMutation.isPending}
+              sx={{ minHeight: 44 }}
             >
               {t.common.cancel}
             </Button>
@@ -416,6 +517,7 @@ const UserProfile = () => {
               variant="contained"
               startIcon={<Save />}
               disabled={!isDirty || updateMutation.isPending}
+              sx={{ minHeight: 44 }}
             >
               {updateMutation.isPending ? t.common.saving : t.common.save}
             </Button>

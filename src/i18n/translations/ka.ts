@@ -16,6 +16,17 @@ export const ka: Translations = {
     or: "ან",
     appTitle: "მენტორობა და ტუტორობა",
   },
+  errors: {
+    generic: "რაღაც არასწორად წავიდა. გთხოვთ სცადოთ თავიდან.",
+    networkError: "ქსელის შეცდომა. გთხოვთ შეამოწმოთ კავშირი.",
+    emailTaken: "ეს ელ. ფოსტა უკვე რეგისტრირებულია.",
+    usernameTaken: "ეს მომხმარებლის სახელი უკვე დაკავებულია.",
+    invalidCredentials: "არასწორი მომხმარებლის სახელი ან პაროლი.",
+    unauthorized: "თქვენ არ გაქვთ ამ მოქმედების უფლება.",
+    notFound: "მოთხოვნილი რესურსი ვერ მოიძებნა.",
+    serverError: "სერვერის შეცდომა. გთხოვთ სცადოთ მოგვიანებით.",
+    validationError: "გთხოვთ შეამოწმოთ შეყვანილი მონაცემები და სცადოთ თავიდან.",
+  },
   appBar: {
     aboutProject: "პროექტის შესახებ",
     registration: "რეგისტრაცია",
@@ -198,6 +209,18 @@ export const ka: Translations = {
     title: "სათაური",
     description: "აღწერა",
     roleMap: "როლის რუკა",
+  },
+  programScheme: {
+    detailsTitle: "პროგრამის დეტალები",
+    description: "აღწერა",
+    maxSize: "მაქსიმალური მონაწილეები",
+    creator: "შემქმნელი",
+    registrationPeriod: "რეგისტრაციის პერიოდი",
+    startDate: "დაწყება",
+    endDate: "დასრულება",
+    joiningAs: "თქვენ შეუერთდებით როგორც",
+    joinSuccess: "პროგრამას წარმატებით შეუერთდით!",
+    joinProgram: "პროგრამასთან შეერთება",
   },
   footer: {
     aboutSection: {

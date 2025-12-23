@@ -18,12 +18,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useAuthContext } from "~/providers/auth";
 import { useLanguage } from "~/providers/language-provider";
 
-const defaultValues: TYPES.user = {
+const defaultValues: TYPES.RegisterFormData = {
   email: "",
   username: "",
   password: "",
   repeatPassword: "",
   userRole: "STUDENT",
+  programRole: "SEEKER",
   year: "",
   strengths: "",
   motivation: "",
@@ -38,10 +39,6 @@ const defaultValues: TYPES.user = {
   courseDescription: "",
   expectations: "",
   hobbies: "",
-  roles: [],
-  programRole: "SEEKER",
-  confirmed: false,
-  programRoles: [],
 };
 
 const RegisterPage = () => {
@@ -102,13 +99,12 @@ const RegisterPage = () => {
       authorize(data);
       navigate("/dashboard");
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError: (error: any) => {
-      console.error("Login failed:", error);
+    onError: (error: Error) => {
+      setError(error.message);
     },
   });
 
-  const onSubmit = (data: TYPES.user) => {
+  const onSubmit = (data: TYPES.RegisterFormData) => {
     setError(null);
 
     // Validate password match
@@ -124,15 +120,16 @@ const RegisterPage = () => {
     }
 
     // Map registration type to programRole
-    const programRoleMap: Record<string, string> = {
+    const programRoleMap: Record<string, TYPES.ProgramRole> = {
       tutor: "TUTOR",
       mentor: "MENTOR",
       seeker: "SEEKER",
     };
 
-    // Set programRole based on registration type
-    const submissionData = {
-      ...data,
+    // Set programRole based on registration type and prepare RegisterRequest
+    const { repeatPassword: _, ...registerData } = data;
+    const submissionData: TYPES.RegisterRequest = {
+      ...registerData,
       programRole: programRoleMap[registrationType] || "SEEKER",
     };
 
@@ -148,24 +145,33 @@ const RegisterPage = () => {
       sx={{
         maxWidth: 800,
         margin: "0 auto",
-        padding: 4,
+        px: { xs: 2, sm: 3, md: 4 },
+        py: { xs: 3, sm: 4 },
       }}
     >
-      <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
-          <Typography variant="h4" fontWeight={600}>
+      <Box sx={{ mb: { xs: 3, sm: 4 } }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: { xs: 1.5, sm: 2 } }}>
+          <Typography
+            variant="h4"
+            fontWeight={600}
+            sx={{ fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2.125rem" } }}
+          >
             {getRegistrationTitle()}
           </Typography>
         </Box>
-        <Typography variant="body1" color="text.secondary">
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontSize: { xs: "0.9rem", sm: "1rem" } }}
+        >
           {getRegistrationDescription()}
         </Typography>
       </Box>
 
-      <Divider sx={{ mb: 4 }} />
+      <Divider sx={{ mb: { xs: 3, sm: 4 } }} />
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity="error" sx={{ mb: { xs: 2, sm: 3 }, fontSize: { xs: "0.875rem", sm: "1rem" } }}>
           {error}
         </Alert>
       )}
@@ -173,10 +179,10 @@ const RegisterPage = () => {
       <Box
         component="form"
         onSubmit={handleSubmit(onSubmit)}
-        sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+        sx={{ display: "flex", flexDirection: "column", gap: { xs: 2.5, sm: 3 } }}
       >
         {/* Basic Information */}
-        <Typography variant="h6" fontWeight={600}>
+        <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
           {t.register.basicInfo}
         </Typography>
         {/* <UploadImage /> */}
@@ -184,7 +190,7 @@ const RegisterPage = () => {
           sx={{
             display: "grid",
             gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-            gap: 3,
+            gap: { xs: 2, sm: 3 },
           }}
         >
           <ControlledTextField
@@ -225,8 +231,8 @@ const RegisterPage = () => {
         {/* Tutor Registration */}
         {isTutor && (
           <>
-            <Divider sx={{ my: 2 }} />
-            <Typography variant="h6" fontWeight={600}>
+            <Divider sx={{ my: { xs: 1.5, sm: 2 } }} />
+            <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
               {t.register.tutorInfo}
             </Typography>
 
@@ -234,7 +240,7 @@ const RegisterPage = () => {
               sx={{
                 display: "grid",
                 gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                gap: 3,
+                gap: { xs: 2, sm: 3 },
               }}
             >
               <ControlledTextField
@@ -311,8 +317,8 @@ const RegisterPage = () => {
         {/* Mentor Registration */}
         {isMentor && (
           <>
-            <Divider sx={{ my: 2 }} />
-            <Typography variant="h6" fontWeight={600}>
+            <Divider sx={{ my: { xs: 1.5, sm: 2 } }} />
+            <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
               {t.register.professionalInfo}
             </Typography>
 
@@ -387,8 +393,8 @@ const RegisterPage = () => {
         {/* Seeker Registration */}
         {isSeeker && (
           <>
-            <Divider sx={{ my: 2 }} />
-            <Typography variant="h6" fontWeight={600}>
+            <Divider sx={{ my: { xs: 1.5, sm: 2 } }} />
+            <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
               {t.register.seekerInfo}
             </Typography>
 
@@ -419,8 +425,8 @@ const RegisterPage = () => {
         {/* Feedback Section (visible for tutors only after completion) */}
         {isTutor && (
           <>
-            <Divider sx={{ my: 2 }} />
-            <Typography variant="h6" fontWeight={600}>
+            <Divider sx={{ my: { xs: 1.5, sm: 2 } }} />
+            <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
               {t.register.seekerFeedback}
             </Typography>
 
@@ -437,8 +443,8 @@ const RegisterPage = () => {
         )}
 
         {/* Account Credentials */}
-        <Divider sx={{ my: 2 }} />
-        <Typography variant="h6" fontWeight={600}>
+        <Divider sx={{ my: { xs: 1.5, sm: 2 } }} />
+        <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
           {t.register.accountCredentials}
         </Typography>
 
@@ -462,7 +468,7 @@ const RegisterPage = () => {
           sx={{
             display: "grid",
             gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-            gap: 3,
+            gap: { xs: 2, sm: 3 },
           }}
         >
           <ControlledTextField
@@ -488,6 +494,7 @@ const RegisterPage = () => {
                       aria-label={t.login.togglePasswordVisibility}
                       onClick={() => setShowPassword((show) => !show)}
                       edge="end"
+                      sx={{ width: 44, height: 44 }}
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -518,6 +525,7 @@ const RegisterPage = () => {
                       aria-label={t.login.togglePasswordVisibility}
                       onClick={() => setShowRepeatPassword((show) => !show)}
                       edge="end"
+                      sx={{ width: 44, height: 44 }}
                     >
                       {showRepeatPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -530,9 +538,9 @@ const RegisterPage = () => {
 
         <Box
           sx={{
-            mt: 2,
+            mt: { xs: 2, sm: 3 },
             display: "flex",
-            gap: 2,
+            gap: { xs: 1.5, sm: 2 },
             flexDirection: { xs: "column", sm: "row" },
           }}
         >
@@ -542,6 +550,10 @@ const RegisterPage = () => {
             size="large"
             fullWidth
             disabled={isSubmitting}
+            sx={{
+              minHeight: 48,
+              fontSize: { xs: "0.95rem", sm: "1rem" },
+            }}
           >
             {isSubmitting ? t.register.registering : t.register.registerButton}
           </Button>
@@ -551,12 +563,24 @@ const RegisterPage = () => {
             fullWidth
             onClick={handleCancel}
             disabled={isSubmitting}
+            sx={{
+              minHeight: 48,
+              fontSize: { xs: "0.95rem", sm: "1rem" },
+            }}
           >
             {t.common.cancel}
           </Button>
         </Box>
 
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            mt: { xs: 2, sm: 3 },
+            fontSize: { xs: "0.8rem", sm: "0.875rem" },
+            textAlign: { xs: "center", sm: "left" },
+          }}
+        >
           {t.register.termsAgreement}
         </Typography>
       </Box>

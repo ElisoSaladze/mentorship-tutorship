@@ -31,6 +31,7 @@ import { useAuthContext } from "~/providers/auth";
 import { useLanguage } from "~/providers/language-provider";
 
 const DRAWER_WIDTH = 260;
+const MOBILE_DRAWER_WIDTH = 280;
 
 interface NavItem {
   title: string;
@@ -75,12 +76,12 @@ const DashboardLayout = () => {
   const drawer = (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       {/* Sidebar Header */}
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: { xs: 2, sm: 2.5 }, pt: { xs: 3, sm: 2.5 } }}>
         <Typography
           variant="h6"
           fontWeight={700}
           color="primary.main"
-          sx={{ textAlign: "center" }}
+          sx={{ textAlign: "center", fontSize: { xs: "1.1rem", sm: "1.25rem" } }}
         >
           {t.common.appTitle}
         </Typography>
@@ -89,7 +90,7 @@ const DashboardLayout = () => {
       <Divider />
 
       {/* Navigation Items */}
-      <List sx={{ px: 2, py: 2, flexGrow: 1 }}>
+      <List sx={{ px: { xs: 1.5, sm: 2 }, py: 2, flexGrow: 1 }}>
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
@@ -98,6 +99,7 @@ const DashboardLayout = () => {
                 onClick={() => handleNavigation(item.path)}
                 sx={{
                   borderRadius: 2,
+                  minHeight: 48,
                   bgcolor: isActive ? "primary.main" : "transparent",
                   color: isActive ? "white" : "text.primary",
                   "&:hover": {
@@ -117,6 +119,7 @@ const DashboardLayout = () => {
                   primary={item.title}
                   primaryTypographyProps={{
                     fontWeight: isActive ? 600 : 400,
+                    fontSize: { xs: "0.95rem", sm: "1rem" },
                   }}
                 />
               </ListItemButton>
@@ -128,7 +131,7 @@ const DashboardLayout = () => {
       <Divider />
 
       {/* Logout Button */}
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: { xs: 1.5, sm: 2 } }}>
         <Button
           fullWidth
           variant="outlined"
@@ -138,6 +141,7 @@ const DashboardLayout = () => {
           sx={{
             borderRadius: 2,
             py: 1.2,
+            minHeight: 48,
             fontWeight: 600,
             textTransform: "none",
             transition: "all 0.3s ease",
@@ -156,47 +160,8 @@ const DashboardLayout = () => {
   );
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+    <Box sx={{ display: "flex" }}>
       {/* AppBar - Mobile Only */}
-      {isMobile && (
-        <AppBar
-          position="fixed"
-          sx={{
-            width: "100%",
-            bgcolor: "background.paper",
-            color: "text.primary",
-            boxShadow: 1,
-          }}
-        >
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" fontWeight={600} sx={{ flexGrow: 1 }}>
-              {t.common.appTitle}
-            </Typography>
-            {/* Logout button in mobile AppBar */}
-            <IconButton
-              color="error"
-              onClick={unauthorize}
-              sx={{
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  bgcolor: "error.main",
-                  color: "white",
-                },
-              }}
-            >
-              <Logout />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-      )}
 
       {/* Sidebar Drawer */}
       <Box
@@ -218,7 +183,8 @@ const DashboardLayout = () => {
             display: { xs: "block", md: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
-              width: DRAWER_WIDTH,
+              width: { xs: "80vw", sm: MOBILE_DRAWER_WIDTH },
+              maxWidth: 300,
             },
           }}
         >
@@ -248,18 +214,52 @@ const DashboardLayout = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
+          width: { xs: "100%", md: `calc(100% - ${DRAWER_WIDTH}px)` },
           minHeight: "100vh",
           bgcolor: "background.default",
+          overflow: "auto",
         }}
       >
+        {isMobile && (
+          <AppBar
+            position="fixed"
+            sx={{
+              width: "100%",
+              bgcolor: "background.paper",
+              color: "text.primary",
+              boxShadow: 1,
+            }}
+          >
+            <Toolbar
+              sx={{ minHeight: { xs: 56, sm: 64 }, px: { xs: 1, sm: 2 } }}
+            >
+              <IconButton
+                color="inherit"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 1, width: 44, height: 44 }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography
+                variant="h6"
+                fontWeight={600}
+                sx={{ flexGrow: 1, fontSize: { xs: "1rem", sm: "1.25rem" } }}
+              >
+                {t.common.appTitle}
+              </Typography>
+            </Toolbar>
+          </AppBar>
+        )}
         {/* Spacer for mobile AppBar */}
-        {isMobile && <Toolbar />}
+        {isMobile && <Toolbar sx={{ minHeight: { xs: 56, sm: 64 } }} />}
 
         {/* Page Content */}
         <Box
           sx={{
             p: { xs: 2, sm: 3, md: 4 },
+            maxWidth: { xs: "100%", lg: 1200 },
+            mx: "auto",
           }}
         >
           <Outlet />

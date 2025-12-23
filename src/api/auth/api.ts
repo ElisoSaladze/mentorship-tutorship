@@ -20,7 +20,7 @@ export const reissueToken = async () =>
     body: { refreshToken: cookies.get("refreshToken") },
   });
 
-export const register = async (body: TYPES.user) =>
+export const register = async (body: TYPES.RegisterRequest) =>
   await request(`${REACT_APP_API_URL}auth/register`).post<AuthUserResponse>({
     body,
   });

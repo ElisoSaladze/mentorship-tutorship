@@ -14,6 +14,17 @@ export const en = {
     or: "Or",
     appTitle: "Mentorship & Tutorship",
   },
+  errors: {
+    generic: "Something went wrong. Please try again.",
+    networkError: "Network error. Please check your connection.",
+    emailTaken: "This email is already registered.",
+    usernameTaken: "This username is already taken.",
+    invalidCredentials: "Invalid username or password.",
+    unauthorized: "You are not authorized to perform this action.",
+    notFound: "The requested resource was not found.",
+    serverError: "Server error. Please try again later.",
+    validationError: "Please check your input and try again.",
+  },
   appBar: {
     aboutProject: "About Project",
     registration: "Registration",
@@ -196,6 +207,18 @@ export const en = {
     title: "Title",
     description: "Description",
     roleMap: "Role Map",
+  },
+  programScheme: {
+    detailsTitle: "Program Details",
+    description: "Description",
+    maxSize: "Max Participants",
+    creator: "Created By",
+    registrationPeriod: "Registration Period",
+    startDate: "Start",
+    endDate: "End",
+    joiningAs: "You will join as",
+    joinSuccess: "Successfully joined the program!",
+    joinProgram: "Join Program",
   },
   footer: {
     aboutSection: {

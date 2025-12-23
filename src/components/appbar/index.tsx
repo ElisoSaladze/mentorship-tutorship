@@ -233,7 +233,8 @@ const AppBar = () => {
       onClose={handleDrawerToggle}
       PaperProps={{
         sx: {
-          width: 280,
+          width: { xs: "85vw", sm: 320 },
+          maxWidth: 360,
           backgroundColor: theme.palette.background.paper,
           boxShadow: darkMode
             ? "0 8px 32px rgba(0, 0, 0, 0.6)"
@@ -242,25 +243,27 @@ const AppBar = () => {
       }}
       transitionDuration={400}
     >
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: { xs: 2, sm: 3 }, pt: { xs: 3, sm: 4 } }}>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            mb: 2,
+            mb: 3,
+            pb: 2,
+            borderBottom: `1px solid ${theme.palette.divider}`,
           }}
         >
           {/* Language Switcher */}
           <Button
             onClick={() => setLanguage(language === "en" ? "ka" : "en")}
             variant="outlined"
-            size="small"
             sx={{
-              minWidth: 60,
+              minWidth: 70,
+              minHeight: 44,
               fontWeight: 600,
-              fontSize: "0.875rem",
-              borderRadius: "20px",
+              fontSize: "0.9rem",
+              borderRadius: "22px",
             }}
           >
             {language === "en" ? "GEO" : "ENG"}
@@ -271,7 +274,11 @@ const AppBar = () => {
             <IconButton
               onClick={toggleDarkMode}
               color="inherit"
-              sx={{ color: theme.palette.text.primary }}
+              sx={{
+                color: theme.palette.text.primary,
+                width: 44,
+                height: 44,
+              }}
             >
               {darkMode ? <Brightness7 /> : <Brightness4 />}
             </IconButton>
@@ -287,10 +294,11 @@ const AppBar = () => {
           fullWidth
           sx={{
             fontWeight: 600,
-            fontSize: "0.95rem",
-            borderRadius: "20px",
-            py: 1.2,
-            mb: 2,
+            fontSize: "1rem",
+            borderRadius: "24px",
+            py: 1.5,
+            minHeight: 48,
+            mb: 3,
             transition: "all 0.3s ease",
             "&:hover": {
               transform: "scale(1.02)",
@@ -300,22 +308,27 @@ const AppBar = () => {
           {t.appBar.login}
         </Button>
 
-        <List>
+        <List sx={{ mx: -1 }}>
           {menuItems.map((item) =>
             item.hasDropdown ? (
               <Box key={item.label}>
                 <ListItem
                   onClick={handleMobileRegistrationToggle}
                   sx={{
-                    borderRadius: 1,
+                    borderRadius: 2,
                     mb: 0.5,
+                    minHeight: 52,
+                    cursor: "pointer",
+                    "&:hover": {
+                      backgroundColor: theme.palette.action.hover,
+                    },
                   }}
                 >
                   <ListItemText
                     primary={item.label}
                     primaryTypographyProps={{
                       fontWeight: 500,
-                      fontSize: "1rem",
+                      fontSize: "1.05rem",
                     }}
                   />
                   {mobileRegistrationOpen ? <ExpandLess /> : <ExpandMore />}
@@ -331,9 +344,13 @@ const AppBar = () => {
                         key={option.value}
                         sx={{
                           pl: 4,
-                          borderRadius: 1,
+                          borderRadius: 2,
                           mb: 0.5,
+                          minHeight: 48,
                           cursor: "pointer",
+                          "&:hover": {
+                            backgroundColor: theme.palette.action.hover,
+                          },
                         }}
                         onClick={() =>
                           handleMobileRegistrationOptionClick(option.value)
@@ -342,7 +359,7 @@ const AppBar = () => {
                         <ListItemText
                           primary={option.label}
                           primaryTypographyProps={{
-                            fontSize: "0.95rem",
+                            fontSize: "1rem",
                           }}
                         />
                       </ListItem>
@@ -359,16 +376,20 @@ const AppBar = () => {
                   handleDrawerToggle();
                 }}
                 sx={{
-                  borderRadius: 1,
+                  borderRadius: 2,
                   mb: 0.5,
+                  minHeight: 52,
                   cursor: "pointer",
+                  "&:hover": {
+                    backgroundColor: theme.palette.action.hover,
+                  },
                 }}
               >
                 <ListItemText
                   primary={item.label}
                   primaryTypographyProps={{
                     fontWeight: 500,
-                    fontSize: "1rem",
+                    fontSize: "1.05rem",
                   }}
                 />
               </ListItem>
@@ -444,6 +465,8 @@ const AppBar = () => {
               onClick={handleDrawerToggle}
               sx={{
                 color: theme.palette.text.primary,
+                width: 48,
+                height: 48,
                 transition: "all 0.3s ease",
                 "&:hover": {
                   backgroundColor: theme.palette.action.hover,
@@ -451,7 +474,7 @@ const AppBar = () => {
                 },
               }}
             >
-              <MenuIcon />
+              <MenuIcon sx={{ fontSize: { xs: 28, sm: 32 } }} />
             </IconButton>
           ) : (
             desktopMenu
