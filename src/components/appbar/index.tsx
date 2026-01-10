@@ -15,6 +15,7 @@ import {
   ListItemText,
   Collapse,
   ListItem,
+  Container,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -94,68 +95,119 @@ const AppBar = () => {
   const menuItems = [
     { label: t.appBar.aboutProject, path: paths.home },
     { label: t.appBar.schemes, path: paths.schemes },
-    { label: t.appBar.registration, path: "#registration", hasDropdown: true },
-    { label: t.appBar.gallery, path: paths.gallery },
+    { label: t.appBar.resource, path: paths.gallery },
     { label: t.appBar.contact, path: paths.contact },
   ];
 
   // Desktop Menu
   const desktopMenu = (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      {menuItems.map((item) =>
-        item.hasDropdown ? (
-          <Box key={item.label}>
-            <Button
-              color="inherit"
-              onClick={handleRegistrationClick}
-              endIcon={<ExpandMore />}
+    <Box sx={{ width: "100%" }}>
+      {/* Top Row - Logo, Title, Slogan, and Controls */}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 2,
+        }}
+      >
+        {/* Left: Logo and Text */}
+        <Box
+          component="a"
+          href="/"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            textDecoration: "none",
+            transition: "transform 0.3s ease",
+            "&:hover": {
+              transform: "scale(1.02)",
+            },
+          }}
+        >
+          <Box
+            component="img"
+            src="/bsu-logo.png"
+            alt="BSU Logo"
+            sx={{
+              height: 50,
+              width: "auto",
+            }}
+          />
+          <Box>
+            <Typography
+              variant="h6"
               sx={{
-                fontWeight: 500,
-                fontSize: "1rem",
-                color: theme.palette.text.primary,
+                fontWeight: 700,
+                fontSize: "1.3rem",
+                color: theme.palette.primary.main,
+                letterSpacing: "0.5px",
+                lineHeight: 1.2,
               }}
             >
-              {item.label}
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={registrationOpen}
-              onClose={handleRegistrationClose}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              PaperProps={{
-                sx: {
-                  mt: 1,
-                  borderRadius: 2,
-                  minWidth: 200,
-                },
+              {t.common.appTitle}
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                color: theme.palette.text.secondary,
+                fontSize: "0.85rem",
+                fontStyle: "italic",
               }}
             >
-              {registrationOptions.map((option) => (
-                <MenuItem
-                  key={option.value}
-                  onClick={() => handleRegistrationOptionClick(option.value)}
-                  sx={{
-                    py: 1.5,
-                    px: 2,
-                    fontWeight: 500,
-                    "&:hover": {
-                      backgroundColor: theme.palette.primary.light,
-                    },
-                  }}
-                >
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Menu>
+              {t.slogan}
+            </Typography>
           </Box>
-        ) : (
+        </Box>
+
+        {/* Right: Controls */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {/* Language Switcher */}
+          <Button
+            onClick={() => setLanguage(language === "en" ? "ka" : "en")}
+            variant="outlined"
+            size="small"
+            sx={{
+              minWidth: 60,
+              fontWeight: 600,
+              fontSize: "0.875rem",
+              borderRadius: "20px",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                transform: "scale(1.05)",
+              },
+            }}
+          >
+            {language === "en" ? "GEO" : "ENG"}
+          </Button>
+
+          {/* Dark Mode Switch */}
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton
+              onClick={toggleDarkMode}
+              color="inherit"
+              sx={{ color: theme.palette.text.primary }}
+            >
+              {darkMode ? <Brightness7 /> : <Brightness4 />}
+            </IconButton>
+            <Switch checked={darkMode} onChange={toggleDarkMode} />
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Bottom Row - Centered Navigation */}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 1,
+          borderTop: `1px solid ${theme.palette.divider}`,
+          pt: 2,
+        }}
+      >
+        {menuItems.map((item) => (
           <Button
             key={item.label}
             color="inherit"
@@ -164,13 +216,13 @@ const AppBar = () => {
               fontWeight: 500,
               fontSize: "1rem",
               color: theme.palette.text.primary,
+              px: 2,
             }}
           >
             {item.label}
           </Button>
-        )
-      )}
-      <Box sx={{ display: "flex", alignItems: "center", ml: 2, gap: 2 }}>
+        ))}
+
         {/* Login Button */}
         <Button
           onClick={handleLoginClick}
@@ -181,6 +233,7 @@ const AppBar = () => {
             fontSize: "0.875rem",
             borderRadius: "20px",
             px: 2.5,
+            ml: 1,
             transition: "all 0.3s ease",
             "&:hover": {
               transform: "scale(1.05)",
@@ -191,35 +244,63 @@ const AppBar = () => {
           {t.appBar.login}
         </Button>
 
-        {/* Language Switcher */}
-        <Button
-          onClick={() => setLanguage(language === "en" ? "ka" : "en")}
-          variant="outlined"
-          size="small"
-          sx={{
-            minWidth: 60,
-            fontWeight: 600,
-            fontSize: "0.875rem",
-            borderRadius: "20px",
-            transition: "all 0.3s ease",
-            "&:hover": {
-              transform: "scale(1.05)",
-            },
-          }}
-        >
-          {language === "en" ? "GEO" : "ENG"}
-        </Button>
-
-        {/* Dark Mode Switch */}
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton
-            onClick={toggleDarkMode}
+        {/* Registration Dropdown */}
+        <Box>
+          <Button
             color="inherit"
-            sx={{ color: theme.palette.text.primary }}
+            onClick={handleRegistrationClick}
+            endIcon={<ExpandMore />}
+            variant="outlined"
+            sx={{
+              fontWeight: 600,
+              fontSize: "0.875rem",
+              borderRadius: "20px",
+              px: 2.5,
+              transition: "all 0.3s ease",
+              "&:hover": {
+                transform: "scale(1.05)",
+              },
+            }}
           >
-            {darkMode ? <Brightness7 /> : <Brightness4 />}
-          </IconButton>
-          <Switch checked={darkMode} onChange={toggleDarkMode} />
+            {t.appBar.registration}
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={registrationOpen}
+            onClose={handleRegistrationClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            PaperProps={{
+              sx: {
+                mt: 1,
+                borderRadius: 2,
+                minWidth: 200,
+              },
+            }}
+          >
+            {registrationOptions.map((option) => (
+              <MenuItem
+                key={option.value}
+                onClick={() => handleRegistrationOptionClick(option.value)}
+                sx={{
+                  py: 1.5,
+                  px: 2,
+                  fontWeight: 500,
+                  "&:hover": {
+                    backgroundColor: theme.palette.primary.light,
+                  },
+                }}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </Menu>
         </Box>
       </Box>
     </Box>
@@ -298,7 +379,7 @@ const AppBar = () => {
             borderRadius: "24px",
             py: 1.5,
             minHeight: 48,
-            mb: 3,
+            mb: 2,
             transition: "all 0.3s ease",
             "&:hover": {
               transform: "scale(1.02)",
@@ -308,93 +389,89 @@ const AppBar = () => {
           {t.appBar.login}
         </Button>
 
-        <List sx={{ mx: -1 }}>
-          {menuItems.map((item) =>
-            item.hasDropdown ? (
-              <Box key={item.label}>
+        {/* Registration Dropdown in Mobile */}
+        <Box sx={{ mb: 3 }}>
+          <ListItem
+            onClick={handleMobileRegistrationToggle}
+            sx={{
+              borderRadius: 2,
+              mb: 0.5,
+              minHeight: 52,
+              cursor: "pointer",
+              backgroundColor: theme.palette.action.hover,
+              "&:hover": {
+                backgroundColor: theme.palette.action.selected,
+              },
+            }}
+          >
+            <ListItemText
+              primary={t.appBar.registration}
+              primaryTypographyProps={{
+                fontWeight: 600,
+                fontSize: "1.05rem",
+              }}
+            />
+            {mobileRegistrationOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          <Collapse in={mobileRegistrationOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {registrationOptions.map((option) => (
                 <ListItem
-                  onClick={handleMobileRegistrationToggle}
+                  key={option.value}
                   sx={{
+                    pl: 4,
                     borderRadius: 2,
                     mb: 0.5,
-                    minHeight: 52,
+                    minHeight: 48,
                     cursor: "pointer",
                     "&:hover": {
                       backgroundColor: theme.palette.action.hover,
                     },
                   }}
+                  onClick={() =>
+                    handleMobileRegistrationOptionClick(option.value)
+                  }
                 >
                   <ListItemText
-                    primary={item.label}
+                    primary={option.label}
                     primaryTypographyProps={{
-                      fontWeight: 500,
-                      fontSize: "1.05rem",
+                      fontSize: "1rem",
                     }}
                   />
-                  {mobileRegistrationOpen ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
-                <Collapse
-                  in={mobileRegistrationOpen}
-                  timeout="auto"
-                  unmountOnExit
-                >
-                  <List component="div" disablePadding>
-                    {registrationOptions.map((option) => (
-                      <ListItem
-                        key={option.value}
-                        sx={{
-                          pl: 4,
-                          borderRadius: 2,
-                          mb: 0.5,
-                          minHeight: 48,
-                          cursor: "pointer",
-                          "&:hover": {
-                            backgroundColor: theme.palette.action.hover,
-                          },
-                        }}
-                        onClick={() =>
-                          handleMobileRegistrationOptionClick(option.value)
-                        }
-                      >
-                        <ListItemText
-                          primary={option.label}
-                          primaryTypographyProps={{
-                            fontSize: "1rem",
-                          }}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Collapse>
-              </Box>
-            ) : (
-              <ListItem
-                key={item.label}
-                component="a"
-                onClick={() => {
-                  navigate(item.path);
-                  handleDrawerToggle();
+              ))}
+            </List>
+          </Collapse>
+        </Box>
+
+        <List sx={{ mx: -1 }}>
+          {menuItems.map((item) => (
+            <ListItem
+              key={item.label}
+              component="a"
+              onClick={() => {
+                navigate(item.path);
+                handleDrawerToggle();
+              }}
+              sx={{
+                borderRadius: 2,
+                mb: 0.5,
+                minHeight: 52,
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: theme.palette.action.hover,
+                },
+              }}
+            >
+              <ListItemText
+                primary={item.label}
+                primaryTypographyProps={{
+                  fontWeight: 500,
+                  fontSize: "1.05rem",
                 }}
-                sx={{
-                  borderRadius: 2,
-                  mb: 0.5,
-                  minHeight: 52,
-                  cursor: "pointer",
-                  "&:hover": {
-                    backgroundColor: theme.palette.action.hover,
-                  },
-                }}
-              >
-                <ListItemText
-                  primary={item.label}
-                  primaryTypographyProps={{
-                    fontWeight: 500,
-                    fontSize: "1.05rem",
-                  }}
-                />
-              </ListItem>
-            )
-          )}
+              />
+            </ListItem>
+          ))}
         </List>
       </Box>
     </Drawer>
@@ -413,73 +490,92 @@ const AppBar = () => {
             : "none",
         }}
       >
-        <Toolbar
-          sx={{ justifyContent: "space-between", py: { xs: 1.5, sm: 2 } }}
-        >
-          <Box
-            component="a"
-            href="/"
+        <Container maxWidth="lg">
+          <Toolbar
             sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: { xs: 1, sm: 1.5 },
-              textDecoration: "none",
-              transition: "transform 0.3s ease",
-              "&:hover": {
-                transform: "scale(1.03)",
-              },
+              justifyContent: "space-between",
+              py: { xs: 1.5, sm: 2 },
+              flexDirection: "column",
+              alignItems: "stretch",
             }}
           >
-            <Box
-              component="img"
-              src="/bsu-logo.png"
-              alt="BSU Logo"
-              sx={{
-                height: { xs: 40, sm: 50 },
-                width: "auto",
-                transition: "filter 0.3s ease",
-                "&:hover": {
-                  filter: "brightness(1.1)",
-                },
-              }}
-            />
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 700,
-                fontSize: { xs: "1rem", sm: "1.3rem" },
-                color: theme.palette.primary.main,
-                letterSpacing: "0.5px",
-                transition: "color 0.3s ease",
-              }}
-            >
-              {t.common.appTitle}
-            </Typography>
-          </Box>
+            {isMobile ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  component="a"
+                  href="/"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: { xs: 1, sm: 1.5 },
+                    textDecoration: "none",
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src="/bsu-logo.png"
+                    alt="BSU Logo"
+                    sx={{
+                      height: { xs: 40, sm: 50 },
+                      width: "auto",
+                    }}
+                  />
+                  <Box>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 700,
+                        fontSize: { xs: "1rem", sm: "1.3rem" },
+                        color: theme.palette.primary.main,
+                        letterSpacing: "0.5px",
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {t.common.appTitle}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: theme.palette.text.secondary,
+                        fontSize: { xs: "0.7rem", sm: "0.85rem" },
+                        fontStyle: "italic",
+                      }}
+                    >
+                      {t.slogan}
+                    </Typography>
+                  </Box>
+                </Box>
 
-          {isMobile ? (
-            <IconButton
-              color="inherit"
-              aria-label="open menu"
-              edge="end"
-              onClick={handleDrawerToggle}
-              sx={{
-                color: theme.palette.text.primary,
-                width: 48,
-                height: 48,
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  backgroundColor: theme.palette.action.hover,
-                  transform: "rotate(90deg)",
-                },
-              }}
-            >
-              <MenuIcon sx={{ fontSize: { xs: 28, sm: 32 } }} />
-            </IconButton>
-          ) : (
-            desktopMenu
-          )}
-        </Toolbar>
+                <IconButton
+                  color="inherit"
+                  aria-label="open menu"
+                  edge="end"
+                  onClick={handleDrawerToggle}
+                  sx={{
+                    color: theme.palette.text.primary,
+                    width: 48,
+                    height: 48,
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      backgroundColor: theme.palette.action.hover,
+                      transform: "rotate(90deg)",
+                    },
+                  }}
+                >
+                  <MenuIcon sx={{ fontSize: { xs: 28, sm: 32 } }} />
+                </IconButton>
+              </Box>
+            ) : (
+              desktopMenu
+            )}
+          </Toolbar>
+        </Container>
       </MuiAppBar>
       {isMobile && mobileDrawer}
     </>

@@ -1,88 +1,38 @@
 import { Box, Container, Typography, Card, CardContent } from "@mui/material";
-import {
-  Business,
-  EmojiPeople,
-  AccountBalance,
-  School,
-  Computer,
-  PersonAdd,
-  Wc,
-  Flight,
-  Accessible,
-  Groups,
-  Park,
-} from "@mui/icons-material";
 import { useLanguage } from "~/providers/language-provider";
+
+// Import images at the top
+import scheme1 from "../../assets/schemes/1.jpg";
+import scheme2 from "../../assets/schemes/2.jpg";
+import scheme3 from "../../assets/schemes/3.jpg";
+import scheme4 from "../../assets/schemes/4.jpg";
+import scheme5 from "../../assets/schemes/5.jpg";
+import scheme6 from "../../assets/schemes/6.jpg";
+import scheme7 from "../../assets/schemes/7.jpg";
+import scheme8 from "../../assets/schemes/8.jpg";
+import scheme9 from "../../assets/schemes/9.jpg";
+import scheme10 from "../../assets/schemes/10.jpg";
+import scheme11 from "../../assets/schemes/11.jpg";
+import scheme12 from "../../assets/schemes/12.jpg";
 
 interface MentoringScheme {
   id: string;
-  icon: React.ReactNode;
-  color: string;
+  image: string;
 }
 
-const iconSx = { fontSize: { xs: 28, sm: 32, md: 40 } };
-
 const schemeConfigs: MentoringScheme[] = [
-  {
-    id: "professional",
-    icon: <Business sx={iconSx} />,
-    color: "#1976d2",
-  },
-  {
-    id: "idps",
-    icon: <EmojiPeople sx={iconSx} />,
-    color: "#d32f2f",
-  },
-  {
-    id: "business",
-    icon: <Business sx={iconSx} />,
-    color: "#388e3c",
-  },
-  {
-    id: "greenDeal",
-    icon: <Park sx={iconSx} />,
-    color: "#2e7d32",
-  },
-  {
-    id: "localGovernment",
-    icon: <AccountBalance sx={iconSx} />,
-    color: "#0288d1",
-  },
-  {
-    id: "youngTeacher",
-    icon: <School sx={iconSx} />,
-    color: "#f57c00",
-  },
-  {
-    id: "digital",
-    icon: <Computer sx={iconSx} />,
-    color: "#7b1fa2",
-  },
-  {
-    id: "firstYear",
-    icon: <PersonAdd sx={iconSx} />,
-    color: "#c2185b",
-  },
-  {
-    id: "gender",
-    icon: <Wc sx={iconSx} />,
-    color: "#e91e63",
-  },
-  {
-    id: "internationalization",
-    icon: <Flight sx={iconSx} />,
-    color: "#00796b",
-  },
-  {
-    id: "disabilities",
-    icon: <Accessible sx={iconSx} />,
-    color: "#5e35b1",
-  },
-  {
-    id: "buddy",
-    icon: <Groups sx={iconSx} />,
-    color: "#ff6f00",
-  },
+  { id: "professional", image: scheme1 },
+  { id: "idps", image: scheme2 },
+  { id: "business", image: scheme3 },
+  { id: "greenDeal", image: scheme4 },
+  { id: "localGovernment", image: scheme5 },
+  { id: "youngTeacher", image: scheme6 },
+  { id: "digital", image: scheme7 },
+  { id: "firstYear", image: scheme8 },
+  { id: "gender", image: scheme9 },
+  { id: "internationalization", image: scheme10 },
+  { id: "disabilities", image: scheme11 },
+  { id: "buddy", image: scheme12 },
 ];
 
 type SchemeData = { title: string; description: string };
@@ -90,7 +40,6 @@ type SchemeData = { title: string; description: string };
 const SchemesPage = () => {
   const { t } = useLanguage();
 
-  // Helper function to get scheme translation
   const getSchemeTranslation = (id: string): SchemeData | null => {
     const schemes = t.schemes as Record<string, SchemeData | string>;
     const scheme = schemes[id];
@@ -101,9 +50,15 @@ const SchemesPage = () => {
   };
 
   return (
-    <Box sx={{ bgcolor: "grey.50", minHeight: "100vh", py: { xs: 4, sm: 5, md: 6 } }}>
+    <Box
+      sx={{
+        bgcolor: "grey.50",
+        minHeight: "100vh",
+        py: { xs: 4, sm: 6, md: 8 },
+      }}
+    >
       <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
-        <Box sx={{ mb: { xs: 4, sm: 5, md: 6 }, textAlign: "center" }}>
+        <Box sx={{ mb: { xs: 5, sm: 6, md: 8 }, textAlign: "center" }}>
           <Typography
             variant="h3"
             component="h1"
@@ -131,8 +86,12 @@ const SchemesPage = () => {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" },
-            gap: { xs: 2.5, sm: 3, md: 4 },
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2, 1fr)",
+              lg: "repeat(3, 1fr)",
+            },
+            gap: { xs: 3, sm: 4, md: 4 },
           }}
         >
           {schemeConfigs.map((scheme) => {
@@ -146,57 +105,77 @@ const SchemesPage = () => {
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
-                  transition: "transform 0.3s, box-shadow 0.3s",
+                  overflow: "hidden",
+                  borderRadius: 3,
+                  transition: "all 0.3s ease-in-out",
                   "&:hover": {
-                    transform: { xs: "none", sm: "translateY(-8px)" },
-                    boxShadow: { xs: 3, sm: 6 },
+                    transform: { xs: "none", sm: "translateY(-12px)" },
+                    boxShadow: {
+                      xs: 3,
+                      sm: "0 12px 40px rgba(0,0,0,0.15)",
+                    },
                   },
                 }}
               >
-                <CardContent sx={{ flexGrow: 1, p: { xs: 2, sm: 2.5, md: 3 } }}>
+                <Box
+                  sx={{
+                    position: "relative",
+                    width: "100%",
+                    paddingTop: "60%",
+                    overflow: "hidden",
+                    bgcolor: "grey.100",
+                  }}
+                >
                   <Box
+                    component="img"
+                    src={scheme.image}
+                    alt={schemeData.title}
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: { xs: 1.5, sm: 2 },
-                      mb: { xs: 1.5, sm: 2 },
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      transition: "transform 0.3s ease-in-out",
+                      "&:hover": {
+                        transform: "scale(1.05)",
+                      },
+                    }}
+                  />
+                </Box>
+
+                <CardContent
+                  sx={{
+                    flexGrow: 1,
+                    p: { xs: 2.5, sm: 3, md: 3.5 },
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    component="h2"
+                    fontWeight={700}
+                    color="primary.main"
+                    sx={{
+                      mb: 2,
+                      fontSize: {
+                        xs: "1.1rem",
+                        sm: "1.2rem",
+                        md: "1.3rem",
+                      },
                     }}
                   >
-                    <Box
-                      sx={{
-                        bgcolor: scheme.color,
-                        color: "white",
-                        borderRadius: { xs: 1.5, sm: 2 },
-                        p: { xs: 1, sm: 1.25, md: 1.5 },
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        minWidth: { xs: 44, sm: 52, md: 60 },
-                        minHeight: { xs: 44, sm: 52, md: 60 },
-                      }}
-                    >
-                      {scheme.icon}
-                    </Box>
-                    <Typography
-                      variant="h6"
-                      component="h2"
-                      fontWeight={600}
-                      sx={{
-                        flex: 1,
-                        fontSize: { xs: "0.95rem", sm: "1.05rem", md: "1.25rem" },
-                      }}
-                    >
-                      {schemeData.title}
-                    </Typography>
-                  </Box>
+                    {schemeData.title}
+                  </Typography>
 
                   <Typography
                     variant="body2"
                     color="text.secondary"
                     sx={{
-                      lineHeight: 1.7,
-                      textAlign: "justify",
-                      fontSize: { xs: "0.85rem", sm: "0.875rem" },
+                      lineHeight: 1.8,
+                      fontSize: { xs: "0.9rem", sm: "0.95rem" },
                     }}
                   >
                     {schemeData.description}
@@ -205,16 +184,6 @@ const SchemesPage = () => {
               </Card>
             );
           })}
-        </Box>
-
-        <Box sx={{ mt: { xs: 4, sm: 5, md: 6 }, textAlign: "center" }}>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ fontSize: { xs: "0.9rem", sm: "1rem" }, px: { xs: 2, sm: 0 } }}
-          >
-            {t.schemes.contactInfo}
-          </Typography>
         </Box>
       </Container>
     </Box>

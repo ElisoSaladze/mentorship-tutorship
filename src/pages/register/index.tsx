@@ -6,15 +6,16 @@ import {
   Button,
   Divider,
   Alert,
+  Card,
+  CardContent,
 } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { register } from "~/api/auth/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Visibility, VisibilityOff, InfoOutlined } from "@mui/icons-material";
 import { useMutation } from "@tanstack/react-query";
-// import UploadImage from "~/components/upload-image";
 import { useAuthContext } from "~/providers/auth";
 import { useLanguage } from "~/providers/language-provider";
 
@@ -46,7 +47,7 @@ const RegisterPage = () => {
   const { t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
-  const registrationType = location.state?.type || "seeker"; // tutor, mentor, seeker
+  const registrationType = location.state?.type || "seeker";
 
   const {
     control,
@@ -89,6 +90,28 @@ const RegisterPage = () => {
     }
   };
 
+  const getWhoCanBecomeInfo = () => {
+    switch (registrationType) {
+      case "tutor":
+        return {
+          title: t.register.whoCanBecomeTutor,
+          items: t.register.tutorAnswers,
+        };
+      case "mentor":
+        return {
+          title: t.register.whoCanBecomeMentor,
+          items: t.register.mentorAnswers,
+        };
+      case "seeker":
+        return {
+          title: t.register.whoCanBecomeSeeker,
+          items: t.register.seekerAnswers,
+        };
+      default:
+        return null;
+    }
+  };
+
   const handleCancel = () => {
     navigate("/login");
   };
@@ -107,26 +130,23 @@ const RegisterPage = () => {
   const onSubmit = (data: TYPES.RegisterFormData) => {
     setError(null);
 
-    // Validate password match
     if (data.password !== data.repeatPassword) {
       setError(t.register.passwordsDoNotMatch);
       return;
     }
 
-    // Validate password length
     if (data.password.length < 8) {
       setError(t.register.minEightChars);
       return;
     }
 
-    // Map registration type to programRole
     const programRoleMap: Record<string, TYPES.ProgramRole> = {
       tutor: "TUTOR",
       mentor: "MENTOR",
       seeker: "SEEKER",
     };
 
-    // Set programRole based on registration type and prepare RegisterRequest
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { repeatPassword: _, ...registerData } = data;
     const submissionData: TYPES.RegisterRequest = {
       ...registerData,
@@ -139,18 +159,27 @@ const RegisterPage = () => {
   const isTutor = registrationType === "tutor";
   const isMentor = registrationType === "mentor";
   const isSeeker = registrationType === "seeker";
+  const whoCanBecomeInfo = getWhoCanBecomeInfo();
 
   return (
     <Box
       sx={{
-        maxWidth: 800,
+        maxWidth: 900,
         margin: "0 auto",
         px: { xs: 2, sm: 3, md: 4 },
         py: { xs: 3, sm: 4 },
       }}
     >
+      {/* Header */}
       <Box sx={{ mb: { xs: 3, sm: 4 } }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: { xs: 1.5, sm: 2 } }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            mb: { xs: 1.5, sm: 2 },
+          }}
+        >
           <Typography
             variant="h4"
             fontWeight={600}
@@ -168,10 +197,62 @@ const RegisterPage = () => {
         </Typography>
       </Box>
 
+      {/* Who Can Become Info Card */}
+      {whoCanBecomeInfo && (
+        <Card
+          sx={{
+            mb: { xs: 3, sm: 4 },
+            backgroundColor: (theme) =>
+              theme.palette.mode === "dark"
+                ? "rgba(33, 150, 243, 0.1)"
+                : "rgba(33, 150, 243, 0.05)",
+            borderLeft: (theme) => `4px solid ${theme.palette.primary.main}`,
+          }}
+        >
+          <CardContent sx={{ p: { xs: 2.5, sm: 3 } }}>
+            <Box
+              sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2 }}
+            >
+              <InfoOutlined color="primary" />
+              <Typography
+                variant="h6"
+                fontWeight={600}
+                color="primary"
+                sx={{ fontSize: { xs: "1rem", sm: "1.1rem" } }}
+              >
+                {whoCanBecomeInfo.title}
+              </Typography>
+            </Box>
+            <Box component="ul" sx={{ pl: 2, m: 0 }}>
+              {whoCanBecomeInfo.items.map((item, index) => (
+                <Typography
+                  key={index}
+                  component="li"
+                  variant="body2"
+                  sx={{
+                    mb: 1.5,
+                    lineHeight: 1.7,
+                    fontSize: { xs: "0.875rem", sm: "0.9rem" },
+                  }}
+                >
+                  {item}
+                </Typography>
+              ))}
+            </Box>
+          </CardContent>
+        </Card>
+      )}
+
       <Divider sx={{ mb: { xs: 3, sm: 4 } }} />
 
       {error && (
-        <Alert severity="error" sx={{ mb: { xs: 2, sm: 3 }, fontSize: { xs: "0.875rem", sm: "1rem" } }}>
+        <Alert
+          severity="error"
+          sx={{
+            mb: { xs: 2, sm: 3 },
+            fontSize: { xs: "0.875rem", sm: "1rem" },
+          }}
+        >
           {error}
         </Alert>
       )}
@@ -179,13 +260,21 @@ const RegisterPage = () => {
       <Box
         component="form"
         onSubmit={handleSubmit(onSubmit)}
-        sx={{ display: "flex", flexDirection: "column", gap: { xs: 2.5, sm: 3 } }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: { xs: 2.5, sm: 3 },
+        }}
       >
         {/* Basic Information */}
-        <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
+        <Typography
+          variant="h6"
+          fontWeight={600}
+          sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+        >
           {t.register.basicInfo}
         </Typography>
-        {/* <UploadImage /> */}
+
         <Box
           sx={{
             display: "grid",
@@ -232,7 +321,11 @@ const RegisterPage = () => {
         {isTutor && (
           <>
             <Divider sx={{ my: { xs: 1.5, sm: 2 } }} />
-            <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+            >
               {t.register.tutorInfo}
             </Typography>
 
@@ -318,7 +411,11 @@ const RegisterPage = () => {
         {isMentor && (
           <>
             <Divider sx={{ my: { xs: 1.5, sm: 2 } }} />
-            <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+            >
               {t.register.professionalInfo}
             </Typography>
 
@@ -394,7 +491,11 @@ const RegisterPage = () => {
         {isSeeker && (
           <>
             <Divider sx={{ my: { xs: 1.5, sm: 2 } }} />
-            <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+            >
               {t.register.seekerInfo}
             </Typography>
 
@@ -422,11 +523,15 @@ const RegisterPage = () => {
           </>
         )}
 
-        {/* Feedback Section (visible for tutors only after completion) */}
+        {/* Feedback Section */}
         {isTutor && (
           <>
             <Divider sx={{ my: { xs: 1.5, sm: 2 } }} />
-            <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+            >
               {t.register.seekerFeedback}
             </Typography>
 
@@ -444,7 +549,11 @@ const RegisterPage = () => {
 
         {/* Account Credentials */}
         <Divider sx={{ my: { xs: 1.5, sm: 2 } }} />
-        <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
+        <Typography
+          variant="h6"
+          fontWeight={600}
+          sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+        >
           {t.register.accountCredentials}
         </Typography>
 
@@ -491,7 +600,7 @@ const RegisterPage = () => {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label={t.login.togglePasswordVisibility}
+                      aria-label="toggle password visibility"
                       onClick={() => setShowPassword((show) => !show)}
                       edge="end"
                       sx={{ width: 44, height: 44 }}
@@ -522,7 +631,7 @@ const RegisterPage = () => {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label={t.login.togglePasswordVisibility}
+                      aria-label="toggle password visibility"
                       onClick={() => setShowRepeatPassword((show) => !show)}
                       edge="end"
                       sx={{ width: 44, height: 44 }}
