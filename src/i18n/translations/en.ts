@@ -233,6 +233,7 @@ export const en = {
     settings: "Settings",
     logout: "Logout",
     profile: "Profile",
+    academicStaff: "აკადემიური პერსონალი",
   },
   userProfile: {
     pageTitle: "My Profile",

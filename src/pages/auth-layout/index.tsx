@@ -23,13 +23,14 @@ import {
   Person,
   Dashboard,
   Description,
-  Settings,
   Logout,
   AdminPanelSettings,
+  Group,
 } from "@mui/icons-material";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "~/providers/auth";
 import { useLanguage } from "~/providers/language-provider";
+import { paths } from "~/app/routes/paths";
 
 const DRAWER_WIDTH = 260;
 const MOBILE_DRAWER_WIDTH = 280;
@@ -53,11 +54,22 @@ const DashboardLayout = () => {
 
   // Navigation items
   const navItems: NavItem[] = [
-    { title: t.dashboard.home, path: "/dashboard", icon: <Dashboard /> },
-    { title: t.dashboard.myProfile, path: "/dashboard/profile", icon: <Person /> },
-    { title: t.dashboard.schemes, path: "/dashboard/schemas", icon: <Description /> },
+    { title: t.dashboard.home, path: paths.home, icon: <Dashboard /> },
+    { title: t.dashboard.myProfile, path: paths.home, icon: <Person /> },
+    { title: t.dashboard.schemes, path: paths.schemes, icon: <Description /> },
+    {
+      title: t.dashboard.academicStaff,
+      path: paths.academicStaff,
+      icon: <Group />,
+    },
     ...(isAdmin
-      ? [{ title: t.admin?.users || "Users", path: "/dashboard/admin/users", icon: <AdminPanelSettings /> }]
+      ? [
+          {
+            title: t.admin?.users || "Users",
+            path: "/dashboard/admin/users",
+            icon: <AdminPanelSettings />,
+          },
+        ]
       : []),
   ];
 
@@ -84,7 +96,10 @@ const DashboardLayout = () => {
           variant="h6"
           fontWeight={700}
           color="primary.main"
-          sx={{ textAlign: "center", fontSize: { xs: "1.1rem", sm: "1.25rem" } }}
+          sx={{
+            textAlign: "center",
+            fontSize: { xs: "1.1rem", sm: "1.25rem" },
+          }}
         >
           {t.common.appTitle}
         </Typography>
@@ -301,9 +316,9 @@ const DashboardLayout = () => {
           }}
         >
           <ListItemIcon>
-            <Settings fontSize="small" />
+            <Group fontSize="small" />
           </ListItemIcon>
-          {t.dashboard.settings}
+          {t.dashboard.academicStaff}
         </MenuItem>
         <Divider />
         <MenuItem onClick={unauthorize}>

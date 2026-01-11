@@ -50,6 +50,11 @@ export const routes = [
         state: "authenticated",
       },
       {
+        path: paths.academicStaff,
+        factory: () => import("~/pages/academic-staff"),
+        state: "authenticated",
+      },
+      {
         path: paths.main,
         factory: () => import("~/pages/manage-schemes"),
         state: "authenticated",

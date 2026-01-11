@@ -237,6 +237,7 @@ export const ka: Translations = {
     settings: "პარამეტრები",
     logout: "გასვლა",
     profile: "პროფილი",
+    academicStaff: "აკადემიური პერსონალი"
   },
   userProfile: {
     pageTitle: "ჩემი პროფილი",

@@ -11,6 +11,7 @@ export const paths = {
   main: "/dashboard",
   adminUsers: "/dashboard/admin/users",
   manageSchemes: "/dashboard/schemas",
+  academicStaff: "/dashboard/staff",
 };
 
 export type PathKey = keyof typeof paths;
