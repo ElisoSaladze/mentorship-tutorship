@@ -26,6 +26,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useAuthContext } from "~/providers/auth";
 import { useLanguage } from "~/providers/language-provider";
+import UploadImage from "~/components/upload-image";
 
 const defaultValues: TYPES.RegisterFormData = {
   email: "",
@@ -70,6 +71,7 @@ const RegisterPage = () => {
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [files, setFiles] = useState<File[]>([]);
+  const [profileImage, setProfileImage] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const password = watch("password");
@@ -184,7 +186,8 @@ const RegisterPage = () => {
       programRole: programRoleMap[registrationType] || "SEEKER",
     };
 
-    registerMutation.mutate({ data: submissionData, files });
+    const allFiles = profileImage ? [profileImage, ...files] : files;
+    registerMutation.mutate({ data: submissionData, files: allFiles });
   };
 
   const isTutor = registrationType === "tutor";
@@ -297,6 +300,14 @@ const RegisterPage = () => {
           gap: { xs: 2.5, sm: 3 },
         }}
       >
+        {/* Profile Image */}
+        <UploadImage
+          value={profileImage}
+          onChange={setProfileImage}
+        />
+
+        <Divider />
+
         {/* Basic Information */}
         <Typography
           variant="h6"
