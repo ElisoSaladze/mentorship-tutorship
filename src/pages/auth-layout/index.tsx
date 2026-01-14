@@ -21,7 +21,6 @@ import {
 import {
   Menu as MenuIcon,
   Person,
-  Dashboard,
   Description,
   Logout,
   AdminPanelSettings,
@@ -54,9 +53,8 @@ const DashboardLayout = () => {
 
   // Navigation items
   const navItems: NavItem[] = [
-    { title: t.dashboard.home, path: paths.home, icon: <Dashboard /> },
-    { title: t.dashboard.myProfile, path: paths.home, icon: <Person /> },
-    { title: t.dashboard.schemes, path: paths.schemes, icon: <Description /> },
+    { title: t.dashboard.myProfile, path: paths.userDetails, icon: <Person /> },
+    { title: t.dashboard.schemes, path: paths.manageSchemes, icon: <Description /> },
     {
       title: t.dashboard.academicStaff,
       path: paths.academicStaff,
@@ -66,7 +64,7 @@ const DashboardLayout = () => {
       ? [
           {
             title: t.admin?.users || "Users",
-            path: "/dashboard/admin/users",
+            path: paths.adminUsers,
             icon: <AdminPanelSettings />,
           },
         ]
@@ -91,14 +89,31 @@ const DashboardLayout = () => {
   const drawer = (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       {/* Sidebar Header */}
-      <Box sx={{ p: { xs: 2, sm: 2.5 }, pt: { xs: 3, sm: 2.5 } }}>
+      <Box
+        sx={{
+          p: { xs: 2, sm: 2.5 },
+          pt: { xs: 3, sm: 2.5 },
+          display: "flex",
+          alignItems: "center",
+          gap: 1.5,
+        }}
+      >
+        <Box
+          component="img"
+          src="/bsu-logo.png"
+          alt="BSU Logo"
+          sx={{
+            height: 40,
+            width: "auto",
+          }}
+        />
         <Typography
           variant="h6"
           fontWeight={700}
           color="primary.main"
           sx={{
-            textAlign: "center",
-            fontSize: { xs: "1.1rem", sm: "1.25rem" },
+            fontSize: { xs: "0.95rem", sm: "1rem" },
+            lineHeight: 1.3,
           }}
         >
           {t.common.appTitle}
