@@ -41,3 +41,6 @@ export const adminDeleteUser = async (id: string) =>
 
 export const adminConfirmUser = async (id: string) =>
   await request(`${REACT_APP_API_URL}admin/users/${id}/confirm`).patch<object>();
+
+export const getMentors = async () =>
+  await request(`${REACT_APP_API_URL}users/mentors`).get<Array<TYPES.UserResponse>>();

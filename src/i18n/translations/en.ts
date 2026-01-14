@@ -271,6 +271,11 @@ export const en = {
     joinSuccess: "Successfully joined the program!",
     joinProgram: "Join Program",
   },
+  academicStaff: {
+    pageTitle: "Our Mentors",
+    pageSubtitle: "Meet our experienced mentors ready to guide you",
+    noMentors: "No mentors available at the moment",
+  },
   admin: {
     pageTitle: "User Management",
     users: "Users",

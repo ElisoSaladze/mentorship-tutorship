@@ -275,6 +275,11 @@ export const ka: Translations = {
     joinSuccess: "პროგრამას წარმატებით შეუერთდით!",
     joinProgram: "პროგრამასთან შეერთება",
   },
+  academicStaff: {
+    pageTitle: "ჩვენი მენტორები",
+    pageSubtitle: "გაიცანით ჩვენი გამოცდილი მენტორები, რომლებიც მზად არიან დაგეხმარონ",
+    noMentors: "მენტორები ამჟამად მიუწვდომელია",
+  },
   admin: {
     pageTitle: "მომხმარებლების მართვა",
     users: "მომხმარებლები",
