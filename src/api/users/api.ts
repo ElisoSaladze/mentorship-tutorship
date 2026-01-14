@@ -17,10 +17,19 @@ export const getProgramSchemeUsers = async (id: string) =>
 export const getUser = async () =>
   await request(`${REACT_APP_API_URL}users/me`).get<TYPES.UserResponse>();
 
-export const updateUser = async (body: TYPES.UpdateUserRequest) =>
-  await request(`${REACT_APP_API_URL}users/me`).put<TYPES.UserResponse>({
-    body,
+export const updateUser = async (data: TYPES.UpdateUserRequest, files: File[] = []) => {
+  const query = new URLSearchParams();
+  query.append("files", files.map(f => f.name).join(",") || "");
+
+  return await request(`${REACT_APP_API_URL}users/me`).put<TYPES.UserResponse>({
+    body: {
+      data,
+      ...files.reduce((acc, file, index) => ({ ...acc, [`file${index}`]: file }), {}),
+    },
+    query,
+    type: "file",
   });
+};
 
 // Admin API functions
 export const adminGetAllUsers = async () =>
@@ -44,3 +53,21 @@ export const adminConfirmUser = async (id: string) =>
 
 export const getMentors = async () =>
   await request(`${REACT_APP_API_URL}users/mentors`).get<Array<TYPES.UserResponse>>();
+
+export const getResource = async (id: string): Promise<string> => {
+  const cookies = new (await import("universal-cookie")).default();
+  const token = cookies.get("refreshToken");
+
+  const response = await fetch(`${REACT_APP_API_URL}resource/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch resource");
+  }
+
+  const blob = await response.blob();
+  return URL.createObjectURL(blob);
+};

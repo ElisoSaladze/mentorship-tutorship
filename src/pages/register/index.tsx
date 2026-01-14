@@ -8,13 +8,15 @@ import {
   Alert,
   Card,
   CardContent,
+  Chip,
+  Stack,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { register } from "~/api/auth/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
-import { Visibility, VisibilityOff, InfoOutlined } from "@mui/icons-material";
+import { Visibility, VisibilityOff, InfoOutlined, CloudUpload, Close } from "@mui/icons-material";
 import { useMutation } from "@tanstack/react-query";
 import { useAuthContext } from "~/providers/auth";
 import { useLanguage } from "~/providers/language-provider";
@@ -61,6 +63,8 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const password = watch("password");
 
@@ -117,7 +121,8 @@ const RegisterPage = () => {
   };
 
   const registerMutation = useMutation({
-    mutationFn: register,
+    mutationFn: ({ data, files }: { data: TYPES.RegisterRequest; files: File[] }) =>
+      register(data, files),
     onSuccess: (data) => {
       authorize(data);
       navigate("/dashboard");
@@ -126,6 +131,21 @@ const RegisterPage = () => {
       setError(error.message);
     },
   });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = event.target.files;
+    if (selectedFiles) {
+      setFiles((prev) => [...prev, ...Array.from(selectedFiles)]);
+    }
+    // Reset input so same file can be selected again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const onSubmit = (data: TYPES.RegisterFormData) => {
     setError(null);
@@ -153,7 +173,7 @@ const RegisterPage = () => {
       programRole: programRoleMap[registrationType] || "SEEKER",
     };
 
-    registerMutation.mutate(submissionData);
+    registerMutation.mutate({ data: submissionData, files });
   };
 
   const isTutor = registrationType === "tutor";
@@ -644,6 +664,60 @@ const RegisterPage = () => {
             }}
           />
         </Box>
+
+        {/* File Upload Section */}
+        <Divider sx={{ my: { xs: 1.5, sm: 2 } }} />
+        <Typography
+          variant="h6"
+          fontWeight={600}
+          sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+        >
+          {t.register.documents || "Documents"}
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ mb: 2 }}
+        >
+          {t.register.documentsHelper || "Upload required documents (CV, certificates, etc.)"}
+        </Typography>
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          multiple
+          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+          style={{ display: "none" }}
+        />
+
+        <Button
+          variant="outlined"
+          startIcon={<CloudUpload />}
+          onClick={() => fileInputRef.current?.click()}
+          sx={{
+            minHeight: 48,
+            borderStyle: "dashed",
+            mb: 2,
+          }}
+        >
+          {t.register.uploadFiles || "Upload Files"}
+        </Button>
+
+        {files.length > 0 && (
+          <Stack direction="row" spacing={1} flexWrap="wrap" gap={1} sx={{ mb: 2 }}>
+            {files.map((file, index) => (
+              <Chip
+                key={`${file.name}-${index}`}
+                label={file.name}
+                onDelete={() => handleRemoveFile(index)}
+                deleteIcon={<Close />}
+                variant="outlined"
+                sx={{ maxWidth: 200 }}
+              />
+            ))}
+          </Stack>
+        )}
 
         <Box
           sx={{

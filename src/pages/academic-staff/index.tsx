@@ -21,6 +21,28 @@ import { useQuery } from "@tanstack/react-query";
 import { getMentors } from "~/api/users/api";
 import { keys } from "~/api/keys";
 import { useLanguage } from "~/providers/language-provider";
+import { useResourceUrl } from "~/hooks/useResourceUrl";
+
+const MentorAvatar = ({ mentor }: { mentor: TYPES.UserResponse }) => {
+  const { url } = useResourceUrl(mentor.data?.[0]);
+
+  return (
+    <Avatar
+      src={url || undefined}
+      sx={{
+        width: 56,
+        height: 56,
+        fontSize: "1.25rem",
+        bgcolor: "primary.main",
+        color: "white",
+        fontWeight: 600,
+      }}
+    >
+      {mentor.name?.[0]?.toUpperCase()}
+      {mentor.surname?.[0]?.toUpperCase()}
+    </Avatar>
+  );
+};
 
 const AcademicStaffPage = () => {
   const { t } = useLanguage();
@@ -132,19 +154,7 @@ const AcademicStaffPage = () => {
                   }}
                 >
                   <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <Avatar
-                      sx={{
-                        width: 56,
-                        height: 56,
-                        fontSize: "1.25rem",
-                        bgcolor: "primary.main",
-                        color: "white",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {mentor.name?.[0]?.toUpperCase()}
-                      {mentor.surname?.[0]?.toUpperCase()}
-                    </Avatar>
+                    <MentorAvatar mentor={mentor} />
                     <Box>
                       <Typography
                         variant="subtitle1"

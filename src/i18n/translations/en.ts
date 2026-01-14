@@ -132,6 +132,9 @@ export const en = {
     registerButton: "Register",
     termsAgreement:
       "By creating an account, you agree to our Terms of Service and Privacy Policy",
+    documents: "Documents",
+    documentsHelper: "Upload required documents (CV, certificates, etc.)",
+    uploadFiles: "Upload Files",
     whoCanBecomeMentor: "ვინ შეიძლება გახდეს მენტორი?",
     mentorAnswers: [
       "Academic Staff and Teachers: Those ready to go beyond theoretical knowledge and introduce students to professional ethics and field specifics, helping them with self-assessment and the development of professional skills.",

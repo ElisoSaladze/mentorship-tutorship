@@ -26,11 +26,14 @@ export const createRequest =
     const cookies = new Cookies();
     const token = cookies.get("refreshToken");
 
+    // Set Authorization header for all request types
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    // Set Content-Type only for JSON requests (browser sets it automatically for FormData)
     if (inputType === "json") {
       headers.set("Content-Type", "application/json");
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
     }
 
     const requestInit = {

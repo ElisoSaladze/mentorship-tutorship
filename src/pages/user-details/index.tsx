@@ -6,19 +6,25 @@ import {
   Divider,
   Alert,
   CircularProgress,
+  Chip,
+  Stack,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateUser } from "~/api/users/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
-import { Edit, Save, Cancel } from "@mui/icons-material";
+import { Edit, Save, Cancel, CloudUpload, Close } from "@mui/icons-material";
 import { useLanguage } from "~/providers/language-provider";
 import { useAuthContext } from "~/providers/auth";
+import UploadImage from "~/components/upload-image";
 
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [profileImage, setProfileImage] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const { t } = useLanguage();
 
@@ -41,10 +47,13 @@ const UserProfile = () => {
 
   // Update user mutation
   const updateMutation = useMutation({
-    mutationFn: (data: TYPES.UpdateUserRequest) => updateUser(data),
+    mutationFn: ({ data, files }: { data: TYPES.UpdateUserRequest; files: File[] }) =>
+      updateUser(data, files),
     onSuccess: () => {
       setSuccessMessage(t.userProfile.updateSuccess);
       setIsEditing(false);
+      setFiles([]);
+      setProfileImage(null);
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
       setTimeout(() => setSuccessMessage(null), 3000);
     },
@@ -53,6 +62,20 @@ const UserProfile = () => {
       console.error("Update failed:", error);
     },
   });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = event.target.files;
+    if (selectedFiles) {
+      setFiles((prev) => [...prev, ...Array.from(selectedFiles)]);
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const onSubmit = (data: TYPES.UserResponse) => {
     const updateData: TYPES.UpdateUserRequest = {
@@ -72,13 +95,16 @@ const UserProfile = () => {
       expectations: data.expectations,
       hobbies: data.hobbies,
     };
-    updateMutation.mutate(updateData);
+    const allFiles = profileImage ? [profileImage, ...files] : files;
+    updateMutation.mutate({ data: updateData, files: allFiles });
   };
 
   const handleCancel = () => {
     reset(user);
     setIsEditing(false);
     setSuccessMessage(null);
+    setFiles([]);
+    setProfileImage(null);
   };
 
   if (isLoading) {
@@ -209,6 +235,16 @@ const UserProfile = () => {
             )}
           />
         </Paper> */}
+
+        {/* Profile Image */}
+        <Paper sx={{ p: { xs: 2, sm: 3 } }}>
+          <UploadImage
+            value={profileImage}
+            existingImageId={user?.data?.[0]}
+            onChange={setProfileImage}
+            disabled={!isEditing}
+          />
+        </Paper>
 
         {/* Basic Information */}
         <Paper sx={{ p: { xs: 2, sm: 3 } }}>
@@ -492,6 +528,66 @@ const UserProfile = () => {
           </Paper>
         )}
 
+        {/* Documents Section */}
+        {isEditing && (
+          <Paper sx={{ p: { xs: 2, sm: 3 } }}>
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              sx={{
+                mb: { xs: 1, sm: 2 },
+                fontSize: { xs: "1rem", sm: "1.25rem" },
+              }}
+            >
+              {t.register.documents}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ mb: 2 }}
+            >
+              {t.register.documentsHelper}
+            </Typography>
+
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              multiple
+              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+              style={{ display: "none" }}
+            />
+
+            <Button
+              variant="outlined"
+              startIcon={<CloudUpload />}
+              onClick={() => fileInputRef.current?.click()}
+              sx={{
+                minHeight: 44,
+                borderStyle: "dashed",
+                mb: files.length > 0 ? 2 : 0,
+              }}
+            >
+              {t.register.uploadFiles}
+            </Button>
+
+            {files.length > 0 && (
+              <Stack direction="row" spacing={1} flexWrap="wrap" gap={1}>
+                {files.map((file, index) => (
+                  <Chip
+                    key={`${file.name}-${index}`}
+                    label={file.name}
+                    onDelete={() => handleRemoveFile(index)}
+                    deleteIcon={<Close />}
+                    variant="outlined"
+                    sx={{ maxWidth: 200 }}
+                  />
+                ))}
+              </Stack>
+            )}
+          </Paper>
+        )}
+
         {/* Action Buttons */}
         {isEditing && (
           <Box
@@ -516,7 +612,7 @@ const UserProfile = () => {
               type="submit"
               variant="contained"
               startIcon={<Save />}
-              disabled={!isDirty || updateMutation.isPending}
+              disabled={(!isDirty && files.length === 0 && !profileImage) || updateMutation.isPending}
               sx={{ minHeight: 44 }}
             >
               {updateMutation.isPending ? t.common.saving : t.common.save}
