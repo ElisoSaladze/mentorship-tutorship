@@ -84,7 +84,7 @@ export const en = {
     fieldRequired: "This field is required",
     hobbies: "Hobbies",
     hobbiesHelper: "Your interests and hobbies",
-    strengths: "Strengths",
+    strengths: "Hashtags",
     academicStrengthsHelper: "Describe your academic strengths",
     professionalStrengthsHelper: "Your professional strengths",
     motivation: "Motivation",
