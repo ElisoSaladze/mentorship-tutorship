@@ -87,7 +87,7 @@ export const ka: Translations = {
     fieldRequired: "ეს ველი აუცილებელია",
     hobbies: "ჰობი",
     hobbiesHelper: "თქვენი ინტერესები და ჰობი",
-    strengths: "ძლიერი მხარეები",
+    strengths: "საკვანძო სიტყვები",
     academicStrengthsHelper: "აღწერეთ თქვენი აკადემიური ძლიერი მხარეები",
     professionalStrengthsHelper: "თქვენი პროფესიული ძლიერი მხარეები",
     motivation: "მოტივაცია",

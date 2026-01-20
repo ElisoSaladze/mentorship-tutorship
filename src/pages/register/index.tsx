@@ -16,7 +16,13 @@ import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { register } from "~/api/auth/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
-import { Visibility, VisibilityOff, InfoOutlined, CloudUpload, Close } from "@mui/icons-material";
+import {
+  Visibility,
+  VisibilityOff,
+  InfoOutlined,
+  CloudUpload,
+  Close,
+} from "@mui/icons-material";
 import { useMutation } from "@tanstack/react-query";
 import { useAuthContext } from "~/providers/auth";
 import { useLanguage } from "~/providers/language-provider";
@@ -121,8 +127,13 @@ const RegisterPage = () => {
   };
 
   const registerMutation = useMutation({
-    mutationFn: ({ data, files }: { data: TYPES.RegisterRequest; files: File[] }) =>
-      register(data, files),
+    mutationFn: ({
+      data,
+      files,
+    }: {
+      data: TYPES.RegisterRequest;
+      files: File[];
+    }) => register(data, files),
     onSuccess: (data) => {
       authorize(data);
       navigate("/dashboard");
@@ -361,7 +372,7 @@ const RegisterPage = () => {
                 name="year"
                 label={t.register.educationalProgram}
                 fullWidth
-                helperText={t.register.educationalProgramHelper}
+                placeholder={t.register.educationalProgramHelper}
                 rules={{ required: t.register.fieldRequired }}
                 error={!!errors.year}
               />
@@ -371,7 +382,7 @@ const RegisterPage = () => {
                 name="hobbies"
                 label={t.register.hobbies}
                 fullWidth
-                helperText={t.register.hobbiesHelper}
+                placeholder={t.register.hobbiesHelper}
               />
             </Box>
 
@@ -382,7 +393,7 @@ const RegisterPage = () => {
               fullWidth
               multiline
               rows={2}
-              helperText={t.register.academicStrengthsHelper}
+              placeholder={t.register.academicStrengthsHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.strengths}
             />
@@ -394,7 +405,7 @@ const RegisterPage = () => {
               fullWidth
               multiline
               rows={3}
-              helperText={t.register.motivationHelper}
+              placeholder={t.register.motivationHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.motivation}
             />
@@ -406,7 +417,7 @@ const RegisterPage = () => {
               fullWidth
               multiline
               rows={3}
-              helperText={t.register.offerToSeekerHelper}
+              placeholder={t.register.offerToSeekerHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.courseDescription}
             />
@@ -416,7 +427,7 @@ const RegisterPage = () => {
               name="keywords"
               label={t.register.keywords}
               fullWidth
-              helperText={t.register.keywordsHelper}
+              placeholder={t.register.keywordsHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.keywords}
             />
@@ -444,7 +455,7 @@ const RegisterPage = () => {
               name="workingPlace"
               label={t.register.workplace}
               fullWidth
-              helperText={t.register.workplaceHelper}
+              placeholder={t.register.workplaceHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.workingPlace}
             />
@@ -454,7 +465,7 @@ const RegisterPage = () => {
               name="workingPosition"
               label={t.register.position}
               fullWidth
-              helperText={t.register.positionHelper}
+              placeholder={t.register.positionHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.workingPosition}
             />
@@ -466,7 +477,7 @@ const RegisterPage = () => {
               fullWidth
               multiline
               rows={3}
-              helperText={t.register.experienceHelper}
+              placeholder={t.register.experienceHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.experience}
             />
@@ -478,7 +489,7 @@ const RegisterPage = () => {
               fullWidth
               multiline
               rows={2}
-              helperText={t.register.professionalStrengthsHelper}
+              placeholder={t.register.professionalStrengthsHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.strengths}
             />
@@ -488,7 +499,7 @@ const RegisterPage = () => {
               name="mentoringCourseName"
               label={t.register.mentoringCourseName}
               fullWidth
-              helperText={t.register.mentoringCourseNameHelper}
+              placeholder={t.register.mentoringCourseNameHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.mentoringCourseName}
             />
@@ -500,7 +511,7 @@ const RegisterPage = () => {
               fullWidth
               multiline
               rows={4}
-              helperText={t.register.courseDescriptionHelper}
+              placeholder={t.register.courseDescriptionHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.courseDescription}
             />
@@ -524,7 +535,7 @@ const RegisterPage = () => {
               name="year"
               label={t.register.educationalProgram}
               fullWidth
-              helperText={t.register.seekerEducationalProgramHelper}
+              placeholder={t.register.seekerEducationalProgramHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.year}
             />
@@ -536,7 +547,7 @@ const RegisterPage = () => {
               fullWidth
               multiline
               rows={3}
-              helperText={t.register.expectationsHelper}
+              placeholder={t.register.expectationsHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.expectations}
             />
@@ -562,7 +573,7 @@ const RegisterPage = () => {
               fullWidth
               multiline
               rows={4}
-              helperText={t.register.programEvaluationHelper}
+              placeholder={t.register.programEvaluationHelper}
             />
           </>
         )}
@@ -582,7 +593,7 @@ const RegisterPage = () => {
           name="username"
           label={t.register.usernameField}
           fullWidth
-          helperText={t.register.usernameHelper}
+          placeholder={t.register.usernameHelper}
           rules={{
             required: t.register.usernameRequired,
             minLength: {
@@ -606,7 +617,7 @@ const RegisterPage = () => {
             label={t.register.passwordField}
             type={showPassword ? "text" : "password"}
             fullWidth
-            helperText={t.register.minEightChars}
+            placeholder={t.register.minEightChars}
             rules={{
               required: t.register.passwordFieldRequired,
               minLength: {
@@ -639,7 +650,7 @@ const RegisterPage = () => {
             label={t.register.repeatPassword}
             type={showRepeatPassword ? "text" : "password"}
             fullWidth
-            helperText={t.register.repeatPassword}
+            placeholder={t.register.repeatPassword}
             rules={{
               required: t.register.repeatPasswordRequired,
               validate: (value: string) =>
@@ -674,12 +685,9 @@ const RegisterPage = () => {
         >
           {t.register.documents || "Documents"}
         </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ mb: 2 }}
-        >
-          {t.register.documentsHelper || "Upload required documents (CV, certificates, etc.)"}
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          {t.register.documentsHelper ||
+            "Upload required documents (CV, certificates, etc.)"}
         </Typography>
 
         <input
@@ -705,7 +713,13 @@ const RegisterPage = () => {
         </Button>
 
         {files.length > 0 && (
-          <Stack direction="row" spacing={1} flexWrap="wrap" gap={1} sx={{ mb: 2 }}>
+          <Stack
+            direction="row"
+            spacing={1}
+            flexWrap="wrap"
+            gap={1}
+            sx={{ mb: 2 }}
+          >
             {files.map((file, index) => (
               <Chip
                 key={`${file.name}-${index}`}
