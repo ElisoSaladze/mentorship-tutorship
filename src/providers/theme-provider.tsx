@@ -313,7 +313,7 @@ const ThemeProvider = ({ children }: Props) => {
       "0 2px 8px rgba(0, 0, 0, 0.08)",
     ],
     typography: {
-      fontFamily: "'Inter', Arial, sans-serif",
+      fontFamily: "'Google Sans', Arial, sans-serif",
       h1: {
         fontWeight: 600,
         color: "#212121",
@@ -424,7 +424,7 @@ const ThemeProvider = ({ children }: Props) => {
       "0 2px 8px rgba(0, 0, 0, 0.4)",
     ],
     typography: {
-      fontFamily: "'Inter', Arial, sans-serif",
+      fontFamily: "'Google Sans', Arial, sans-serif",
       h1: {
         fontWeight: 600,
         color: "#FFFFFF",
