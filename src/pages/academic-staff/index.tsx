@@ -9,6 +9,7 @@ import {
   Avatar,
   Chip,
   Stack,
+  Rating,
 } from "@mui/material";
 import {
   Email,
@@ -16,6 +17,7 @@ import {
   School,
   Psychology,
   Interests,
+  Star,
 } from "@mui/icons-material";
 import { useQuery } from "@tanstack/react-query";
 import { getMentors } from "~/api/users/api";
@@ -167,6 +169,21 @@ const AcademicStaffPage = () => {
                         <Typography variant="body2" color="text.secondary">
                           {mentor.workingPosition}
                         </Typography>
+                      )}
+                      {mentor.rating != null && mentor.rating > 0 && (
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.5 }}>
+                          <Rating
+                            value={mentor.rating}
+                            precision={0.5}
+                            size="small"
+                            readOnly
+                            icon={<Star fontSize="inherit" sx={{ color: "#faaf00" }} />}
+                            emptyIcon={<Star fontSize="inherit" sx={{ opacity: 0.3 }} />}
+                          />
+                          <Typography variant="caption" color="text.secondary">
+                            ({mentor.rating})
+                          </Typography>
+                        </Box>
                       )}
                     </Box>
                   </Box>

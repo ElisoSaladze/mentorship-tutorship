@@ -25,6 +25,7 @@ import {
   MenuItem,
   Stack,
   Tooltip,
+  Rating,
 } from "@mui/material";
 import {
   CheckCircle,
@@ -63,6 +64,7 @@ const AdminUsersPage = () => {
     roles: ["STUDENT"],
     programRoles: ["SEEKER"],
     confirmed: false,
+    rating: 0,
   });
 
   // Fetch all users
@@ -130,6 +132,7 @@ const AdminUsersPage = () => {
         workingPosition: user.workingPosition,
         experience: user.experience,
         confirmed: user.confirmed,
+        rating: user.rating || 0,
       });
     } else {
       setEditingUser(null);
@@ -142,6 +145,7 @@ const AdminUsersPage = () => {
         roles: ["STUDENT"],
         programRoles: ["SEEKER"],
         confirmed: false,
+        rating: 0,
       });
     }
     setOpenDialog(true);
@@ -159,6 +163,7 @@ const AdminUsersPage = () => {
       roles: ["STUDENT"],
       programRoles: ["SEEKER"],
       confirmed: false,
+      rating: 0,
     });
   };
 
@@ -294,6 +299,7 @@ const AdminUsersPage = () => {
               <TableCell sx={{ fontWeight: 600 }}>{t.admin?.email || "Email"}</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>{t.admin?.username || "Username"}</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>{t.admin?.roles || "Roles"}</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>{t.admin?.rating || "Rating"}</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>{t.admin?.status || "Status"}</TableCell>
               <TableCell sx={{ fontWeight: 600 }} align="right">
                 {t.admin?.actions || "Actions"}
@@ -326,6 +332,18 @@ const AdminUsersPage = () => {
                         />
                       ))}
                     </Stack>
+                  </TableCell>
+                  <TableCell>
+                    {user.rating != null && user.rating > 0 ? (
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                        <Rating value={user.rating} precision={0.5} size="small" readOnly />
+                        <Typography variant="caption" color="text.secondary">
+                          ({user.rating})
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <Typography variant="body2" color="text.disabled">—</Typography>
+                    )}
                   </TableCell>
                   <TableCell>
                     {user.confirmed ? (
@@ -384,7 +402,7 @@ const AdminUsersPage = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
                   <Typography color="text.secondary">
                     {t.admin?.noUsers || "No users found"}
                   </Typography>
@@ -511,6 +529,20 @@ const AdminUsersPage = () => {
                 <MenuItem value="TEACHER">Teacher</MenuItem>
               </Select>
             </FormControl>
+
+            <Box>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                {t.admin?.rating || "Rating"}
+              </Typography>
+              <Rating
+                value={formData.rating || 0}
+                precision={0.5}
+                size="large"
+                onChange={(_, newValue) =>
+                  setFormData({ ...formData, rating: newValue || 0 })
+                }
+              />
+            </Box>
           </Box>
         </DialogContent>
 

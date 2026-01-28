@@ -301,6 +301,7 @@ export const en = {
     passwordHelper: "Leave empty to keep current password",
     programRole: "Program Role",
     userRole: "User Role",
+    rating: "Rating",
     unauthorized: "Access Denied",
     unauthorizedMessage: "You do not have permission to access this page.",
   },

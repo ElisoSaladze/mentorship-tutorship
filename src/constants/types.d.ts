@@ -78,6 +78,7 @@ declare namespace TYPES {
     roles?: UserRole[];
     data?: string[];
     file0?: string[];
+    rating?: number;
   };
 
   type UpdateUserRequest = {
@@ -123,6 +124,7 @@ declare namespace TYPES {
     expectations?: string;
     hobbies?: string;
     confirmed?: boolean;
+    rating?: number;
   };
 
   type RegisterRequest = {

@@ -10,7 +10,7 @@ export type RequestType = "json" | "file";
 
 type RequestInput<Path extends string> = {
   headers?: Headers;
-  body?: Record<string, any>;
+  body?: Record<string, any> | string;
   params?: Record<ParamParseKey<Path>, string>;
   query?: URLSearchParams;
   requestInit?: RequestInit;

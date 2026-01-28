@@ -8,11 +8,8 @@ export const addUsersToProgramScheme = async (
   await request(`${REACT_APP_API_URL}programScheme/${id}/addUser`).put<
     Array<TYPES.ProgramSchemeResponse>
   >({
-    body: { role },
+    body: role,
   });
-
-export const getProgramSchemeUsers = async (id: string) =>
-  await request(`${REACT_APP_API_URL}programScheme/${id}/users`).get();
 
 export const getUser = async () =>
   await request(`${REACT_APP_API_URL}users/me`).get<TYPES.UserResponse>();

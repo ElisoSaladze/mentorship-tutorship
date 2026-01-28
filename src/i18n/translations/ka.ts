@@ -305,6 +305,7 @@ export const ka: Translations = {
     passwordHelper: "დატოვეთ ცარიელი მიმდინარე პაროლის შესანარჩუნებლად",
     programRole: "პროგრამის როლი",
     userRole: "მომხმარებლის როლი",
+    rating: "რეიტინგი",
     unauthorized: "წვდომა აკრძალულია",
     unauthorizedMessage: "თქვენ არ გაქვთ ამ გვერდზე წვდომის უფლება.",
   },

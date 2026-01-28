@@ -2,11 +2,16 @@ import { RequestType } from './create-request'
 
 export const createRequestBody = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  body: Record<string, any> | undefined,
+  body: Record<string, any> | string | undefined,
   type: RequestType,
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any => {
   if (!body) return
+
+  // Handle string body (for APIs that expect plain string in body)
+  if (typeof body === 'string') {
+    return type === 'json' ? JSON.stringify(body) : body
+  }
 
   if (type === 'json') return JSON.stringify(body)
 
