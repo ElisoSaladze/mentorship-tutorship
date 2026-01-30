@@ -39,8 +39,6 @@ const ManageSchemesPage = () => {
   const [formData, setFormData] = useState<Partial<TYPES.ProgramSchemeRequest>>({
     title: "",
     description: "",
-    maxSize: 0,
-    registrationDates: { start: "", end: "" },
   });
 
   // Fetch all schemes
@@ -64,8 +62,7 @@ const ManageSchemesPage = () => {
 
   // Update scheme mutation
   const updateMutation = useMutation({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mutationFn: ({ id, body }: { id: string; body: any }) =>
+    mutationFn: ({ id, body }: { id: string; body: TYPES.ProgramSchemeRequest }) =>
       updateProgramScheme(id, body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["programSchemes"] });
@@ -79,12 +76,10 @@ const ManageSchemesPage = () => {
       setFormData({
         title: scheme.title,
         description: scheme.description,
-        maxSize: scheme.maxSize,
-        registrationDates: scheme.registrationDates,
       });
     } else {
       setEditingScheme(null);
-      setFormData({ title: "", description: "", maxSize: 0, registrationDates: { start: "", end: "" } });
+      setFormData({ title: "", description: "" });
     }
     setOpenDialog(true);
   };
@@ -92,7 +87,7 @@ const ManageSchemesPage = () => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setEditingScheme(null);
-    setFormData({ title: "", description: "", maxSize: 0, registrationDates: { start: "", end: "" } });
+    setFormData({ title: "", description: "" });
   };
 
   const handleOpenDetailsModal = (scheme: TYPES.ProgramSchemeResponse) => {
@@ -118,7 +113,7 @@ const ManageSchemesPage = () => {
 
   const handleInputChange = (
     field: keyof TYPES.ProgramSchemeRequest,
-    value: string | number
+    value: string
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -370,65 +365,6 @@ const ManageSchemesPage = () => {
               rows={4}
               value={formData.description || ""}
               onChange={(e) => handleInputChange("description", e.target.value)}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 2,
-                },
-              }}
-            />
-
-            <TextField
-              label="Max Size"
-              fullWidth
-              type="number"
-              value={formData.maxSize || 0}
-              onChange={(e) => handleInputChange("maxSize", parseInt(e.target.value) || 0)}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 2,
-                },
-              }}
-            />
-
-            <TextField
-              label="Start Date"
-              fullWidth
-              type="datetime-local"
-              value={formData.registrationDates?.start || ""}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  registrationDates: {
-                    ...prev.registrationDates,
-                    start: e.target.value,
-                    end: prev.registrationDates?.end || "",
-                  },
-                }))
-              }
-              slotProps={{ inputLabel: { shrink: true } }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 2,
-                },
-              }}
-            />
-
-            <TextField
-              label="End Date"
-              fullWidth
-              type="datetime-local"
-              value={formData.registrationDates?.end || ""}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  registrationDates: {
-                    ...prev.registrationDates,
-                    start: prev.registrationDates?.start || "",
-                    end: e.target.value,
-                  },
-                }))
-              }
-              slotProps={{ inputLabel: { shrink: true } }}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 2,

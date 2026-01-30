@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogTitle,
@@ -13,15 +12,20 @@ import {
   Stack,
   Chip,
   Alert,
+  Card,
+  CardContent,
+  CardActions,
 } from "@mui/material";
 import {
   Close as CloseIcon,
   CalendarMonth,
   Group,
   Person,
+  School,
 } from "@mui/icons-material";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addUsersToProgramScheme } from "~/api/users/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { addUserToCourse } from "~/api/users/api";
+import { getCoursesByProgramId } from "~/api/course/api";
 import { useAuthContext } from "~/providers/auth";
 import { useLanguage } from "~/providers/language-provider";
 import { useState } from "react";
@@ -37,37 +41,47 @@ const ProgramSchemeDetails = ({ scheme, isOpen, onClose }: Props) => {
   const { userDetails } = useAuthContext();
   const queryClient = useQueryClient();
   const [joinError, setJoinError] = useState<string | null>(null);
-  const [joinSuccess, setJoinSuccess] = useState(false);
+  const [joinSuccess, setJoinSuccess] = useState<string | null>(null);
+  const [joiningCourseId, setJoiningCourseId] = useState<string | null>(null);
 
   // Get user's program role
   const userRole = userDetails?.programRoles?.[0] || "SEEKER";
 
+  // Fetch courses for this program
+  const { data: courses, isLoading: coursesLoading } = useQuery({
+    queryKey: ["courses", scheme?.id],
+    queryFn: () => getCoursesByProgramId(scheme?.id || ""),
+    enabled: !!scheme?.id && isOpen,
+  });
+
   const joinMutation = useMutation({
-    mutationFn: () => addUsersToProgramScheme(scheme?.id || "", userRole),
-    onSuccess: () => {
-      setJoinSuccess(true);
+    mutationFn: (courseId: string) => addUserToCourse(courseId, userRole),
+    onSuccess: (_, courseId) => {
+      setJoinSuccess(courseId);
       setJoinError(null);
-      queryClient.invalidateQueries({ queryKey: ["programSchemes"] });
+      setJoiningCourseId(null);
+      queryClient.invalidateQueries({ queryKey: ["courses", scheme?.id] });
       setTimeout(() => {
-        setJoinSuccess(false);
-        onClose();
-      }, 1500);
+        setJoinSuccess(null);
+      }, 2000);
     },
     onError: (error: Error) => {
-      setJoinError(error.message || "Failed to join program");
-      setJoinSuccess(false);
+      setJoinError(error.message || "Failed to join course");
+      setJoinSuccess(null);
+      setJoiningCourseId(null);
     },
   });
 
-  const handleJoin = () => {
-    if (!scheme?.id) return;
+  const handleJoinCourse = (courseId: string) => {
     setJoinError(null);
-    joinMutation.mutate();
+    setJoiningCourseId(courseId);
+    joinMutation.mutate(courseId);
   };
 
   const handleClose = () => {
     setJoinError(null);
-    setJoinSuccess(false);
+    setJoinSuccess(null);
+    setJoiningCourseId(null);
     onClose();
   };
 
@@ -86,7 +100,7 @@ const ProgramSchemeDetails = ({ scheme, isOpen, onClose }: Props) => {
     <Dialog
       open={isOpen}
       onClose={handleClose}
-      maxWidth="sm"
+      maxWidth="md"
       fullWidth
       PaperProps={{
         sx: {
@@ -157,169 +171,134 @@ const ProgramSchemeDetails = ({ scheme, isOpen, onClose }: Props) => {
             </Box>
           )}
 
-          <Divider />
-
-          {/* Info Cards */}
-          <Stack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={{ xs: 1.5, sm: 2 }}
-          >
-            {/* Max Size */}
+          {/* Creator */}
+          {scheme.creatorUserData && (
             <Box
               sx={{
-                flex: 1,
                 p: { xs: 1.5, sm: 2 },
                 bgcolor: "grey.50",
                 borderRadius: 2,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 1,
+                width: "fit-content",
               }}
             >
-              <Stack direction="row" spacing={1} alignItems="center" mb={0.5}>
-                <Group color="primary" sx={{ fontSize: { xs: 18, sm: 20 } }} />
-                <Typography
-                  variant="subtitle2"
-                  color="text.secondary"
-                  sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
-                >
-                  {t.programScheme?.maxSize || "Max Participants"}
-                </Typography>
-              </Stack>
-              <Typography
-                variant="body1"
-                fontWeight="500"
-                sx={{ fontSize: { xs: "0.95rem", sm: "1rem" } }}
-              >
-                {scheme.maxSize || "-"}
+              <Person color="primary" sx={{ fontSize: { xs: 18, sm: 20 } }} />
+              <Typography variant="body2" color="text.secondary">
+                {t.programScheme?.creator || "Created By"}:
               </Typography>
-            </Box>
-
-            {/* Creator */}
-            {scheme.creatorUserData && (
-              <Box
-                sx={{
-                  flex: 1,
-                  p: { xs: 1.5, sm: 2 },
-                  bgcolor: "grey.50",
-                  borderRadius: 2,
-                }}
-              >
-                <Stack direction="row" spacing={1} alignItems="center" mb={0.5}>
-                  <Person color="primary" sx={{ fontSize: { xs: 18, sm: 20 } }} />
-                  <Typography
-                    variant="subtitle2"
-                    color="text.secondary"
-                    sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
-                  >
-                    {t.programScheme?.creator || "Created By"}
-                  </Typography>
-                </Stack>
-                <Typography
-                  variant="body1"
-                  fontWeight="500"
-                  sx={{ fontSize: { xs: "0.95rem", sm: "1rem" } }}
-                >
-                  {scheme.creatorUserData.name} {scheme.creatorUserData.surname}
-                </Typography>
-              </Box>
-            )}
-          </Stack>
-
-          {/* Registration Dates */}
-          {scheme.registrationDates && (
-            <Box
-              sx={{
-                p: { xs: 1.5, sm: 2 },
-                bgcolor: "primary.50",
-                borderRadius: 2,
-                border: "1px solid",
-                borderColor: "primary.100",
-              }}
-            >
-              <Stack direction="row" spacing={1} alignItems="center" mb={1}>
-                <CalendarMonth color="primary" sx={{ fontSize: { xs: 18, sm: 20 } }} />
-                <Typography
-                  variant="subtitle2"
-                  color="text.secondary"
-                  sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
-                >
-                  {t.programScheme?.registrationPeriod || "Registration Period"}
-                </Typography>
-              </Stack>
-              <Stack
-                direction={{ xs: "column", sm: "row" }}
-                spacing={{ xs: 0.5, sm: 2 }}
-              >
-                <Box>
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ fontSize: { xs: "0.7rem", sm: "0.75rem" } }}
-                  >
-                    {t.programScheme?.startDate || "Start"}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    fontWeight="500"
-                    sx={{ fontSize: { xs: "0.85rem", sm: "0.875rem" } }}
-                  >
-                    {formatDate(scheme.registrationDates.start)}
-                  </Typography>
-                </Box>
-                <Typography
-                  sx={{
-                    display: { xs: "none", sm: "block" },
-                    alignSelf: "center",
-                  }}
-                >
-                  -
-                </Typography>
-                <Box>
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ fontSize: { xs: "0.7rem", sm: "0.75rem" } }}
-                  >
-                    {t.programScheme?.endDate || "End"}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    fontWeight="500"
-                    sx={{ fontSize: { xs: "0.85rem", sm: "0.875rem" } }}
-                  >
-                    {formatDate(scheme.registrationDates.end)}
-                  </Typography>
-                </Box>
-              </Stack>
+              <Typography variant="body2" fontWeight="500">
+                {scheme.creatorUserData.name} {scheme.creatorUserData.surname}
+              </Typography>
             </Box>
           )}
 
-          {/* User Role Chip */}
+          <Divider />
+
+          {/* Courses Section */}
           <Box>
-            <Typography
-              variant="subtitle2"
-              color="text.secondary"
-              gutterBottom
-              sx={{ fontSize: { xs: "0.8rem", sm: "0.875rem" } }}
-            >
-              {t.programScheme?.joiningAs || "You will join as"}
-            </Typography>
-            <Chip
-              label={userRole}
-              color="primary"
-              variant="outlined"
-              size="small"
-            />
+            <Stack direction="row" spacing={1} alignItems="center" mb={2}>
+              <School color="primary" />
+              <Typography variant="h6" fontWeight="600">
+                {t.programScheme?.courses || "Available Courses"}
+              </Typography>
+            </Stack>
+
+            {coursesLoading ? (
+              <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+                <CircularProgress size={32} />
+              </Box>
+            ) : courses && courses.length > 0 ? (
+              <Stack spacing={2}>
+                {courses.map((course) => (
+                  <Card
+                    key={course.id}
+                    variant="outlined"
+                    sx={{ borderRadius: 2 }}
+                  >
+                    <CardContent sx={{ pb: 1 }}>
+                      <Typography variant="subtitle1" fontWeight="600" gutterBottom>
+                        {course.name}
+                      </Typography>
+
+                      <Stack
+                        direction={{ xs: "column", sm: "row" }}
+                        spacing={{ xs: 1, sm: 3 }}
+                        sx={{ mt: 1 }}
+                      >
+                        {/* Max Size */}
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                          <Group
+                            color="action"
+                            sx={{ fontSize: 18 }}
+                          />
+                          <Typography variant="body2" color="text.secondary">
+                            {t.programScheme?.maxSize || "Max Participants"}:
+                          </Typography>
+                          <Typography variant="body2" fontWeight="500">
+                            {course.maxSize || "-"}
+                          </Typography>
+                        </Box>
+
+                        {/* Registration Dates */}
+                        {course.registrationDates && (
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                            <CalendarMonth
+                              color="action"
+                              sx={{ fontSize: 18 }}
+                            />
+                            <Typography variant="body2" color="text.secondary">
+                              {formatDate(course.registrationDates.start)} - {formatDate(course.registrationDates.end)}
+                            </Typography>
+                          </Box>
+                        )}
+                      </Stack>
+                    </CardContent>
+
+                    <CardActions sx={{ px: 2, pb: 2 }}>
+                      <Chip
+                        label={userRole}
+                        color="primary"
+                        variant="outlined"
+                        size="small"
+                      />
+                      <Box sx={{ flexGrow: 1 }} />
+                      {joinSuccess === course.id ? (
+                        <Chip
+                          label={t.programScheme?.joinSuccess || "Joined!"}
+                          color="success"
+                          size="small"
+                        />
+                      ) : (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          onClick={() => handleJoinCourse(course.id)}
+                          disabled={joiningCourseId === course.id}
+                        >
+                          {joiningCourseId === course.id ? (
+                            <CircularProgress size={16} color="inherit" />
+                          ) : (
+                            t.programScheme?.joinCourse || "Join Course"
+                          )}
+                        </Button>
+                      )}
+                    </CardActions>
+                  </Card>
+                ))}
+              </Stack>
+            ) : (
+              <Typography color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+                {t.programScheme?.noCourses || "No courses available for this program"}
+              </Typography>
+            )}
           </Box>
 
-          {/* Error/Success Messages */}
+          {/* Error Message */}
           {joinError && (
             <Alert severity="error" sx={{ fontSize: { xs: "0.85rem", sm: "0.875rem" } }}>
               {joinError}
-            </Alert>
-          )}
-
-          {joinSuccess && (
-            <Alert severity="success" sx={{ fontSize: { xs: "0.85rem", sm: "0.875rem" } }}>
-              {t.programScheme?.joinSuccess || "Successfully joined the program!"}
             </Alert>
           )}
         </Stack>
@@ -329,38 +308,15 @@ const ProgramSchemeDetails = ({ scheme, isOpen, onClose }: Props) => {
         sx={{
           p: { xs: 2, sm: 3 },
           pt: { xs: 1, sm: 2 },
-          flexDirection: { xs: "column-reverse", sm: "row" },
-          gap: { xs: 1, sm: 1 },
         }}
       >
         <Button
           onClick={handleClose}
           variant="outlined"
           color="inherit"
-          fullWidth={false}
-          sx={{
-            minHeight: 44,
-            width: { xs: "100%", sm: "auto" },
-          }}
+          sx={{ minHeight: 44 }}
         >
-          {t.common?.cancel || "Cancel"}
-        </Button>
-        <Button
-          onClick={handleJoin}
-          variant="contained"
-          color="primary"
-          disabled={joinMutation.isPending || joinSuccess}
-          fullWidth={false}
-          sx={{
-            minHeight: 44,
-            width: { xs: "100%", sm: "auto" },
-          }}
-        >
-          {joinMutation.isPending ? (
-            <CircularProgress size={20} color="inherit" />
-          ) : (
-            t.programScheme?.joinProgram || "Join Program"
-          )}
+          {t.common?.cancel || "Close"}
         </Button>
       </DialogActions>
     </Dialog>

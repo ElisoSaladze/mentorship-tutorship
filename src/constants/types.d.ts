@@ -15,19 +15,16 @@ declare namespace TYPES {
     workingPosition: string;
   };
 
+  // Program Scheme types (container for courses)
   type ProgramSchemeRequest = {
     title: string;
     description: string;
-    maxSize: number;
-    registrationDates: RegistrationDates;
   };
 
   type ProgramSchemeResponse = {
     id: string;
     title: string;
     description: string;
-    maxSize: number;
-    registrationDates: RegistrationDates;
     creatorUserData: UserData;
   };
 
@@ -35,19 +32,40 @@ declare namespace TYPES {
     id: string;
     title: string;
     description: string;
-    maxSize: number;
-    registrationDates: RegistrationDates;
-    userProgramRoleToUserMap: ProgramRole;
   };
 
   type ProgramSchemeFullResponse = {
     id: string;
     title: string;
     description: string;
+    creatorUserData: UserData;
+    courses: CourseResponse[];
+  };
+
+  // Course types (belongs to a program scheme)
+  type CourseRequest = {
+    name: string;
     maxSize: number;
     registrationDates: RegistrationDates;
+    programId: string;
+  };
+
+  type CourseResponse = {
+    id: string;
+    name: string;
+    maxSize: number;
+    registrationDates: RegistrationDates;
+    programId: string;
     creatorUserData: UserData;
-    userProgramRoleToUserMap: ProgramRole;
+  };
+
+  type Course = {
+    id: string;
+    name: string;
+    maxSize: number;
+    registrationDates: RegistrationDates;
+    creatorUserId: string;
+    programId: string;
   };
 
   // Alias for backward compatibility
@@ -79,6 +97,7 @@ declare namespace TYPES {
     data?: string[];
     file0?: string[];
     rating?: number;
+    programRoleToCourseMap?: ProgramRole;
   };
 
   type UpdateUserRequest = {
@@ -100,7 +119,7 @@ declare namespace TYPES {
   };
 
   type UserFullResponse = UserResponse & {
-    programRoleToProgramSchemeMap?: ProgramRole;
+    programRoleToCourseMap?: ProgramRole;
   };
 
   type UserRequest = {

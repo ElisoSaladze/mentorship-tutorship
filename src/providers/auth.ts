@@ -34,6 +34,7 @@ export let globalAccessToken: string | null = null;
  * @param accessToken The access token to set.
  */
 export const setGlobalAccessToken = (accessToken: string | null) => {
+  console.log("Setting global access token:", accessToken);
   globalAccessToken = accessToken;
 };
 
@@ -50,12 +51,13 @@ const useAuth = () => {
   const [user, setUser] = useState<User>({
     state: cookies.get("refreshToken") ? "authenticated" : "unauthenticated",
   } as User);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const refreshTimeoutRef = useRef<number | null>(null);
 
   const { data: tokenData } = useQuery({
     queryKey: keys.reissueToken.token(),
     queryFn: reissueToken,
-    enabled: Boolean(cookies.get("refreshToken")),
+    enabled: Boolean(cookies.get("refreshToken")) && !isLoggingOut,
     staleTime: Infinity,
   });
 
@@ -66,6 +68,7 @@ const useAuth = () => {
   } = useQuery({
     queryKey: ["currentUser"],
     queryFn: getUser,
+    enabled: user.state === "authenticated" && !isLoggingOut,
   });
 
   /**
@@ -127,16 +130,33 @@ const useAuth = () => {
    */
   const unauthorize = useLogoutAcrossTabs(
     useCallback(() => {
-      setGlobalAccessToken(null);
-      cookies.remove("refreshToken");
-      setUser({ state: "unauthenticated" });
+      // Prevent multiple logout attempts
+      if (isLoggingOut) return;
+
+      setIsLoggingOut(true);
+
+      // Clear timeout first
       if (refreshTimeoutRef.current !== null) {
         window.clearTimeout(refreshTimeoutRef.current);
+        refreshTimeoutRef.current = null;
       }
+
+      // Clear token and cookie
+      setGlobalAccessToken(null);
+      cookies.remove("refreshToken", { path: "/" });
+
       // Clear all cached data to prevent stale data on new login
       queryClient.clear();
-      navigate(paths.login);
-    }, [navigate, queryClient])
+
+      // Update state
+      setUser({ state: "unauthenticated" });
+
+      // Navigate after state is cleared
+      setTimeout(() => {
+        navigate(paths.login, { replace: true });
+        setIsLoggingOut(false);
+      }, 0);
+    }, [navigate, queryClient, isLoggingOut])
   );
 
   // Check if user has ADMIN role
@@ -148,8 +168,9 @@ const useAuth = () => {
     authorize,
     initialize,
     unauthorize,
-    isAuthenticated: user.state === "authenticated",
+    isAuthenticated: user.state === "authenticated" && !isLoggingOut,
     isAdmin,
+    isLoggingOut,
     state: user.state,
     userDetails,
     isLoadingUserDetails,

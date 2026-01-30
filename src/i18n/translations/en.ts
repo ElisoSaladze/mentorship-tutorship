@@ -271,8 +271,11 @@ export const en = {
     startDate: "Start",
     endDate: "End",
     joiningAs: "You will join as",
-    joinSuccess: "Successfully joined the program!",
+    joinSuccess: "Joined!",
     joinProgram: "Join Program",
+    courses: "Available Courses",
+    noCourses: "No courses available for this program",
+    joinCourse: "Join Course",
   },
   academicStaff: {
     pageTitle: "Our Mentors",

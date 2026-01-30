@@ -1,12 +1,13 @@
 import { request } from "~/lib/request";
 const REACT_APP_API_URL = import.meta.env["VITE_API_URL"];
 
-export const addUsersToProgramScheme = async (
-  id: string,
+// Users join courses, not program schemes directly
+export const addUserToCourse = async (
+  courseId: string,
   role: TYPES.ProgramRole
 ) =>
-  await request(`${REACT_APP_API_URL}programScheme/${id}/addUser`).put<
-    Array<TYPES.ProgramSchemeResponse>
+  await request(`${REACT_APP_API_URL}course/${courseId}/addUser`).put<
+    Array<TYPES.CourseResponse>
   >({
     body: role,
   });

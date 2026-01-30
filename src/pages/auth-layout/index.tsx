@@ -45,7 +45,7 @@ const DashboardLayout = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const location = useLocation();
-  const { unauthorize, isAdmin } = useAuthContext();
+  const { unauthorize, isAdmin, isLoggingOut } = useAuthContext();
   const { t } = useLanguage();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -63,7 +63,7 @@ const DashboardLayout = () => {
     ...(isAdmin
       ? [
           {
-            title: t.admin?.users || "Users",
+            title: t.admin?.pageTitle || "User Management",
             path: paths.adminUsers,
             icon: <AdminPanelSettings />,
           },
@@ -171,6 +171,7 @@ const DashboardLayout = () => {
           color="error"
           startIcon={<Logout />}
           onClick={unauthorize}
+          disabled={isLoggingOut}
           sx={{
             borderRadius: 2,
             py: 1.2,
@@ -186,7 +187,7 @@ const DashboardLayout = () => {
             },
           }}
         >
-          {t.dashboard.logout}
+          {isLoggingOut ? "..." : t.dashboard.logout}
         </Button>
       </Box>
     </Box>

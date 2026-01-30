@@ -275,8 +275,11 @@ export const ka: Translations = {
     startDate: "დაწყება",
     endDate: "დასრულება",
     joiningAs: "თქვენ შეუერთდებით როგორც",
-    joinSuccess: "პროგრამას წარმატებით შეუერთდით!",
+    joinSuccess: "შეუერთდით!",
     joinProgram: "პროგრამასთან შეერთება",
+    courses: "ხელმისაწვდომი კურსები",
+    noCourses: "ამ პროგრამისთვის კურსები არ არის ხელმისაწვდომი",
+    joinCourse: "კურსთან შეერთება",
   },
   academicStaff: {
     pageTitle: "ჩვენი მენტორები",
