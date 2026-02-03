@@ -1,0 +1,18 @@
+version: '3.8'
+ 
+services:
+  react-app:
+    environment:
+      - VITE_API_URL=https://mentortutor-app:8080/
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mentortutor-app-front
+    ports:
+      - "8090:80"
+    networks:
+      - mentortutor-network
+ 
+networks:
+  mentortutor-network:
+    driver: bridge
