@@ -15,4 +15,4 @@ services:
  
 networks:
   mentortutor-network:
-    driver: bridge
+    external: true
