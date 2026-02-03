@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: /
+        VITE_API_URL: api/v1/
     container_name: mentortutor-app-front
     ports:
       - "8092:80"
