@@ -15,6 +15,7 @@ export const ka: Translations = {
     submit: "გაგზავნა",
     or: "ან",
     appTitle: "ბსუ-ს ტუტორობის და  მენტორობის პლატფორმა",
+    backToHome: "მთავარზე დაბრუნება",
   },
   errors: {
     generic: "რაღაც არასწორად წავიდა. გთხოვთ სცადოთ თავიდან.",

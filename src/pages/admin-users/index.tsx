@@ -26,6 +26,7 @@ import {
   Stack,
   Tooltip,
   Rating,
+  InputAdornment,
 } from "@mui/material";
 import {
   CheckCircle,
@@ -35,6 +36,8 @@ import {
   Close,
   HourglassEmpty,
   Block,
+  Visibility,
+  VisibilityOff,
 } from "@mui/icons-material";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -55,6 +58,7 @@ const AdminUsersPage = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [editingUser, setEditingUser] = useState<TYPES.UserFullResponse | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<Partial<TYPES.UserRequest>>({
     email: "",
     username: "",
@@ -154,6 +158,7 @@ const AdminUsersPage = () => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setEditingUser(null);
+    setShowPassword(false);
     setFormData({
       email: "",
       username: "",
@@ -484,12 +489,27 @@ const AdminUsersPage = () => {
 
             <TextField
               label={t.register?.passwordField || "Password"}
-              type="password"
+              type={showPassword ? "text" : "password"}
               fullWidth
               value={formData.password || ""}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required={!editingUser}
               helperText={editingUser ? t.admin?.passwordHelper || "Leave empty to keep current password" : ""}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword((show) => !show)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
             />
 
             <FormControl fullWidth>

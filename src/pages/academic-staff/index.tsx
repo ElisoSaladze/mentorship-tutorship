@@ -19,6 +19,7 @@ import {
   Interests,
   Star,
 } from "@mui/icons-material";
+import { TextArea } from "~/components/form/basic/text-area";
 import { useQuery } from "@tanstack/react-query";
 import { getMentors } from "~/api/users/api";
 import { keys } from "~/api/keys";
@@ -227,36 +228,36 @@ const AcademicStaffPage = () => {
                     {mentor.experience && (
                       <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
                         <Psychology sx={{ fontSize: 18, color: "text.disabled", mt: 0.25 }} />
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{
-                            display: "-webkit-box",
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
+                        <TextArea
+                          value={mentor.experience}
+                          multiline
+                          rows={3}
+                          disabled
+                          fullWidth
+                          size="small"
+                          variant="standard"
+                          slotProps={{
+                            input: { disableUnderline: true },
                           }}
-                        >
-                          {mentor.experience}
-                        </Typography>
+                        />
                       </Box>
                     )}
 
                     {mentor.hobbies && (
                       <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
                         <Interests sx={{ fontSize: 18, color: "text.disabled", mt: 0.25 }} />
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{
-                            display: "-webkit-box",
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
+                        <TextArea
+                          value={mentor.hobbies}
+                          multiline
+                          rows={2}
+                          disabled
+                          fullWidth
+                          size="small"
+                          variant="standard"
+                          slotProps={{
+                            input: { disableUnderline: true },
                           }}
-                        >
-                          {mentor.hobbies}
-                        </Typography>
+                        />
                       </Box>
                     )}
                   </Stack>

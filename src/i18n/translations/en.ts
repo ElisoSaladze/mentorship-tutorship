@@ -13,6 +13,7 @@ export const en = {
     submit: "Submit",
     or: "Or",
     appTitle: "BSU Tutoring & Mentorship Hub",
+    backToHome: "Back to Home",
   },
   errors: {
     generic: "Something went wrong. Please try again.",

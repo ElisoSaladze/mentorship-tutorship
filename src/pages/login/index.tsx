@@ -15,7 +15,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Visibility, VisibilityOff, ArrowBack } from "@mui/icons-material";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
 import { auth, AuthInput } from "~/api/auth/api";
 import { paths } from "~/app/routes/paths";
@@ -70,6 +70,18 @@ const LoginPage = () => {
         }}
       >
         <Container maxWidth="sm" sx={{ px: { xs: 0, sm: 2 } }}>
+          <Button
+            startIcon={<ArrowBack />}
+            onClick={() => navigate(paths.home)}
+            sx={{
+              mb: 2,
+              color: "text.secondary",
+              textTransform: "none",
+              "&:hover": { bgcolor: "transparent", color: "primary.main" },
+            }}
+          >
+            {t.common.backToHome}
+          </Button>
           <Card
             elevation={3}
             sx={{
@@ -151,7 +163,7 @@ const LoginPage = () => {
                             aria-label={t.login.togglePasswordVisibility}
                             onClick={() => setShowPassword((show) => !show)}
                             edge="end"
-                            sx={{ width: 44, height: 44 }}
+                            sx={{ width: 44, height: 44, color: "text.secondary" }}
                           >
                             {showPassword ? <VisibilityOff /> : <Visibility />}
                           </IconButton>

@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { register } from "~/api/auth/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
+import { ControlledTextArea } from "~/components/form/controlled/controlled-text-area";
 import {
   Visibility,
   VisibilityOff,
@@ -388,7 +389,7 @@ const RegisterPage = () => {
                 error={!!errors.year}
               />
 
-              <ControlledTextField
+              <ControlledTextArea
                 control={control}
                 name="hobbies"
                 label={t.register.hobbies}
@@ -399,7 +400,7 @@ const RegisterPage = () => {
               />
             </Box>
 
-            <ControlledTextField
+            <ControlledTextArea
               control={control}
               name="strengths"
               label={t.register.strengths}
@@ -408,10 +409,9 @@ const RegisterPage = () => {
               rows={2}
               placeholder={t.register.academicStrengthsHelper}
               rules={{ required: t.register.fieldRequired }}
-              error={!!errors.strengths}
             />
 
-            <ControlledTextField
+            <ControlledTextArea
               control={control}
               name="motivation"
               label={t.register.motivation}
@@ -420,10 +420,9 @@ const RegisterPage = () => {
               rows={3}
               placeholder={t.register.motivationHelper}
               rules={{ required: t.register.fieldRequired }}
-              error={!!errors.motivation}
             />
 
-            <ControlledTextField
+            <ControlledTextArea
               control={control}
               name="courseDescription"
               label={t.register.offerToSeeker}
@@ -432,10 +431,9 @@ const RegisterPage = () => {
               rows={3}
               placeholder={t.register.offerToSeekerHelper}
               rules={{ required: t.register.fieldRequired }}
-              error={!!errors.courseDescription}
             />
 
-            <ControlledTextField
+            <ControlledTextArea
               control={control}
               name="keywords"
               label={t.register.keywords}
@@ -444,7 +442,6 @@ const RegisterPage = () => {
               rows={2}
               placeholder={t.register.keywordsHelper}
               rules={{ required: t.register.fieldRequired }}
-              error={!!errors.keywords}
             />
 
             <Alert severity="info" sx={{ mb: 2 }}>
@@ -485,7 +482,7 @@ const RegisterPage = () => {
               error={!!errors.workingPosition}
             />
 
-            <ControlledTextField
+            <ControlledTextArea
               control={control}
               name="experience"
               label={t.register.experience}
@@ -494,10 +491,9 @@ const RegisterPage = () => {
               rows={3}
               placeholder={t.register.experienceHelper}
               rules={{ required: t.register.fieldRequired }}
-              error={!!errors.experience}
             />
 
-            <ControlledTextField
+            <ControlledTextArea
               control={control}
               name="strengths"
               label={t.register.strengths}
@@ -506,7 +502,6 @@ const RegisterPage = () => {
               rows={2}
               placeholder={t.register.professionalStrengthsHelper}
               rules={{ required: t.register.fieldRequired }}
-              error={!!errors.strengths}
             />
 
             <ControlledTextField
@@ -519,7 +514,7 @@ const RegisterPage = () => {
               error={!!errors.mentoringCourseName}
             />
 
-            <ControlledTextField
+            <ControlledTextArea
               control={control}
               name="courseDescription"
               label={t.register.courseDescription}
@@ -528,7 +523,6 @@ const RegisterPage = () => {
               rows={4}
               placeholder={t.register.courseDescriptionHelper}
               rules={{ required: t.register.fieldRequired }}
-              error={!!errors.courseDescription}
             />
           </>
         )}
@@ -555,7 +549,7 @@ const RegisterPage = () => {
               error={!!errors.year}
             />
 
-            <ControlledTextField
+            <ControlledTextArea
               control={control}
               name="expectations"
               label={t.register.expectations}
@@ -564,7 +558,6 @@ const RegisterPage = () => {
               rows={3}
               placeholder={t.register.expectationsHelper}
               rules={{ required: t.register.fieldRequired }}
-              error={!!errors.expectations}
             />
           </>
         )}
@@ -581,7 +574,7 @@ const RegisterPage = () => {
               {t.register.seekerFeedback}
             </Typography>
 
-            <ControlledTextField
+            <ControlledTextArea
               control={control}
               name="userFeedback"
               label={t.register.programEvaluation}
@@ -649,7 +642,7 @@ const RegisterPage = () => {
                       aria-label="toggle password visibility"
                       onClick={() => setShowPassword((show) => !show)}
                       edge="end"
-                      sx={{ width: 44, height: 44 }}
+                      sx={{ width: 44, height: 44, color: "text.secondary" }}
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -680,7 +673,7 @@ const RegisterPage = () => {
                       aria-label="toggle password visibility"
                       onClick={() => setShowRepeatPassword((show) => !show)}
                       edge="end"
-                      sx={{ width: 44, height: 44 }}
+                      sx={{ width: 44, height: 44, color: "text.secondary" }}
                     >
                       {showRepeatPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>

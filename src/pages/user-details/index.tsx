@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateUser } from "~/api/users/api";
 import { ControlledTextField } from "~/components/form/controlled/controlled-text-field";
+import { ControlledTextArea } from "~/components/form/controlled/controlled-text-area";
 import { Edit, Save, Cancel, CloudUpload, Close } from "@mui/icons-material";
 import { useLanguage } from "~/providers/language-provider";
 import { useAuthContext } from "~/providers/auth";
@@ -359,7 +360,7 @@ const UserProfile = () => {
                   disabled={!isEditing}
                 />
 
-                <ControlledTextField
+                <ControlledTextArea
                   control={control}
                   name="hobbies"
                   label={t.register.hobbies}
@@ -370,7 +371,7 @@ const UserProfile = () => {
                 />
               </Box>
 
-              <ControlledTextField
+              <ControlledTextArea
                 control={control}
                 name="strengths"
                 label={t.register.strengths}
@@ -380,7 +381,7 @@ const UserProfile = () => {
                 disabled={!isEditing}
               />
 
-              <ControlledTextField
+              <ControlledTextArea
                 control={control}
                 name="motivation"
                 label={t.register.motivation}
@@ -390,7 +391,7 @@ const UserProfile = () => {
                 disabled={!isEditing}
               />
 
-              <ControlledTextField
+              <ControlledTextArea
                 control={control}
                 name="courseDescription"
                 label={t.register.offerToSeeker}
@@ -400,7 +401,7 @@ const UserProfile = () => {
                 disabled={!isEditing}
               />
 
-              <ControlledTextField
+              <ControlledTextArea
                 control={control}
                 name="keywords"
                 label={t.register.keywords}
@@ -450,7 +451,7 @@ const UserProfile = () => {
                 disabled={!isEditing}
               />
 
-              <ControlledTextField
+              <ControlledTextArea
                 control={control}
                 name="experience"
                 label={t.register.experience}
@@ -460,7 +461,7 @@ const UserProfile = () => {
                 disabled={!isEditing}
               />
 
-              <ControlledTextField
+              <ControlledTextArea
                 control={control}
                 name="strengths"
                 label={t.register.strengths}
@@ -478,7 +479,7 @@ const UserProfile = () => {
                 disabled={!isEditing}
               />
 
-              <ControlledTextField
+              <ControlledTextArea
                 control={control}
                 name="courseDescription"
                 label={t.register.courseDescription}
@@ -519,7 +520,7 @@ const UserProfile = () => {
                 disabled={!isEditing}
               />
 
-              <ControlledTextField
+              <ControlledTextArea
                 control={control}
                 name="expectations"
                 label={t.register.expectations}
