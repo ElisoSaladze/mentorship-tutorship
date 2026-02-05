@@ -393,6 +393,8 @@ const RegisterPage = () => {
                 name="hobbies"
                 label={t.register.hobbies}
                 fullWidth
+                multiline
+                rows={2}
                 placeholder={t.register.hobbiesHelper}
               />
             </Box>
@@ -438,6 +440,8 @@ const RegisterPage = () => {
               name="keywords"
               label={t.register.keywords}
               fullWidth
+              multiline
+              rows={2}
               placeholder={t.register.keywordsHelper}
               rules={{ required: t.register.fieldRequired }}
               error={!!errors.keywords}

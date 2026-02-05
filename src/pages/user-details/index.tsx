@@ -364,6 +364,8 @@ const UserProfile = () => {
                   name="hobbies"
                   label={t.register.hobbies}
                   fullWidth
+                  multiline
+                  rows={2}
                   disabled={!isEditing}
                 />
               </Box>
@@ -403,6 +405,8 @@ const UserProfile = () => {
                 name="keywords"
                 label={t.register.keywords}
                 fullWidth
+                multiline
+                rows={2}
                 disabled={!isEditing}
                 helperText={t.userProfile.keywordsHelper}
               />
