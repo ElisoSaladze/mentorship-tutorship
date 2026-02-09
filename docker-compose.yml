@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: api/v1/
+        VITE_API_URL: /api/v1/
     container_name: mentortutor-app-front
     networks:
       - mentortutor-network
