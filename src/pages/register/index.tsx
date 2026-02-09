@@ -139,7 +139,7 @@ const RegisterPage = () => {
     }) => register(data, files),
     onSuccess: (data) => {
       authorize(data);
-      navigate("/dashboard");
+      navigate("/homepage");
     },
     onError: (error: Error) => {
       setError(error.message);

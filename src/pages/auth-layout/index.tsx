@@ -316,7 +316,7 @@ const DashboardLayout = () => {
       >
         <MenuItem
           onClick={() => {
-            handleNavigation("/dashboard/profile");
+            handleNavigation("/homepage/profile");
             handleProfileMenuClose();
           }}
         >
@@ -327,7 +327,7 @@ const DashboardLayout = () => {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            handleNavigation("/dashboard/settings");
+            handleNavigation("/homepage/settings");
             handleProfileMenuClose();
           }}
         >

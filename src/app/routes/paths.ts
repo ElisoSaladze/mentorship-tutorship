@@ -7,11 +7,11 @@ export const paths = {
   contact: "/contact",
   schemes: "/schemes",
   schemeDetails: "/schemes/:id",
-  userDetails: "/dashboard/profile",
-  main: "/dashboard",
-  adminUsers: "/dashboard/admin/users",
-  manageSchemes: "/dashboard/schemas",
-  academicStaff: "/dashboard/staff",
+  userDetails: "/homepage/profile",
+  main: "/homepage",
+  adminUsers: "/homepage/admin/users",
+  manageSchemes: "/homepage/schemas",
+  academicStaff: "/homepage/staff",
 };
 
 export type PathKey = keyof typeof paths;
