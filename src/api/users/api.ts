@@ -53,8 +53,9 @@ export const getMentors = async () =>
   await request(`${REACT_APP_API_URL}users/mentors`).get<Array<TYPES.UserResponse>>();
 
 export const getResource = async (id: string): Promise<string> => {
+  const { globalAccessToken } = await import("~/lib/request/token");
   const cookies = new (await import("universal-cookie")).default();
-  const token = cookies.get("refreshToken");
+  const token = globalAccessToken || cookies.get("refreshToken");
 
   const response = await fetch(`${REACT_APP_API_URL}resource/${id}`, {
     headers: {
