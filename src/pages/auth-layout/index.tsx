@@ -25,6 +25,7 @@ import {
   Logout,
   AdminPanelSettings,
   Group,
+  School,
 } from "@mui/icons-material";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "~/providers/auth";
@@ -66,6 +67,11 @@ const DashboardLayout = () => {
             title: t.admin?.pageTitle || "User Management",
             path: paths.adminUsers,
             icon: <AdminPanelSettings />,
+          },
+          {
+            title: t.adminSchemes?.pageTitle || "Schemes & Courses",
+            path: paths.adminSchemes,
+            icon: <School />,
           },
         ]
       : []),

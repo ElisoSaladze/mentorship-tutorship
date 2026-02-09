@@ -10,6 +10,7 @@ export const paths = {
   userDetails: "/homepage/profile",
   main: "/homepage",
   adminUsers: "/homepage/admin/users",
+  adminSchemes: "/homepage/admin/schemes",
   manageSchemes: "/homepage/schemas",
   academicStaff: "/homepage/staff",
 };
