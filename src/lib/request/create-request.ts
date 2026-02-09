@@ -3,6 +3,7 @@ import { generatePath, ParamParseKey } from "react-router-dom";
 import Cookies from "universal-cookie";
 
 import { createRequestBody } from "./create-request-body";
+import { globalAccessToken } from "./token";
 
 type RequestMethods = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -24,9 +25,8 @@ export const createRequest =
 
     const inputType = input?.type ?? "json";
     const cookies = new Cookies();
-    const token = cookies.get("refreshToken");
+    const token = globalAccessToken || cookies.get("refreshToken");
 
-    // Set Authorization header for all request types
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }

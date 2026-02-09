@@ -10,6 +10,7 @@ import Cookies from "universal-cookie";
 
 import { useLogoutAcrossTabs } from "./logout-across-tabs";
 import { getUser } from "~/api/users/api";
+import { setGlobalAccessToken } from "~/lib/request/token";
 
 type NotAuthUser = {
   state: "unauthenticated";
@@ -26,17 +27,7 @@ type AuthUser = {
 
 type User = NotAuthUser | AuthUser;
 
-export let globalAccessToken: string | null = null;
-
-/**
- * Sets the global access token.
- *
- * @param accessToken The access token to set.
- */
-export const setGlobalAccessToken = (accessToken: string | null) => {
-  console.log("Setting global access token:", accessToken);
-  globalAccessToken = accessToken;
-};
+export { setGlobalAccessToken };
 
 const cookies = new Cookies();
 
@@ -48,18 +39,33 @@ const cookies = new Cookies();
 const useAuth = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const hasRefreshToken = Boolean(cookies.get("refreshToken"));
   const [user, setUser] = useState<User>({
-    state: cookies.get("refreshToken") ? "authenticated" : "unauthenticated",
+    state: "unauthenticated",
   } as User);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(hasRefreshToken);
   const refreshTimeoutRef = useRef<number | null>(null);
 
-  const { data: tokenData } = useQuery({
+  const {
+    data: tokenData,
+    isSuccess: isTokenSuccess,
+    isError: isTokenError,
+  } = useQuery({
     queryKey: keys.reissueToken.token(),
     queryFn: reissueToken,
-    enabled: Boolean(cookies.get("refreshToken")) && !isLoggingOut,
+    enabled: hasRefreshToken && !isLoggingOut,
     staleTime: Infinity,
   });
+
+  useEffect(() => {
+    if (isTokenSuccess || isTokenError) {
+      setIsInitializing(false);
+    }
+    if (isTokenError) {
+      cookies.remove("refreshToken", { path: "/" });
+    }
+  }, [isTokenSuccess, isTokenError]);
 
   const {
     data: userDetails,
@@ -171,6 +177,7 @@ const useAuth = () => {
     isAuthenticated: user.state === "authenticated" && !isLoggingOut,
     isAdmin,
     isLoggingOut,
+    isInitializing,
     state: user.state,
     userDetails,
     isLoadingUserDetails,
