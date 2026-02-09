@@ -126,7 +126,7 @@ const AdminUsersPage = () => {
         password: "",
         name: user.name,
         surname: user.surname,
-        roles: ["STUDENT"],
+        roles: user.roles,
         programRoles: user.programRoles,
         year: user.year,
         strengths: user.strengths,
@@ -327,6 +327,15 @@ const AdminUsersPage = () => {
                   <TableCell>{user.username}</TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={0.5} flexWrap="wrap" gap={0.5}>
+                      {user.roles?.map((role) => (
+                        <Chip
+                          key={role}
+                          label={role}
+                          size="small"
+                          color={role === "ADMIN" ? "error" : role === "TEACHER" ? "info" : "default"}
+                          variant="outlined"
+                        />
+                      ))}
                       {user.programRoles?.map((role) => (
                         <Chip
                           key={role}

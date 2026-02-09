@@ -302,10 +302,7 @@ const RegisterPage = () => {
         }}
       >
         {/* Profile Image */}
-        <UploadImage
-          value={profileImage}
-          onChange={setProfileImage}
-        />
+        <UploadImage value={profileImage} onChange={setProfileImage} />
 
         <Divider />
 
@@ -432,17 +429,6 @@ const RegisterPage = () => {
               placeholder={t.register.offerToSeekerHelper}
               rules={{ required: t.register.fieldRequired }}
             />
-
-            {/* <ControlledTextArea
-              control={control}
-              name="keywords"
-              label={t.register.keywords}
-              fullWidth
-              multiline
-              rows={2}
-              placeholder={t.register.keywordsHelper}
-              rules={{ required: t.register.fieldRequired }}
-            /> */}
 
             <Alert severity="info" sx={{ mb: 2 }}>
               <Typography variant="body2">{t.register.tutorNote}</Typography>

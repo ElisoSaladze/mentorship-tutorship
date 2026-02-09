@@ -93,7 +93,7 @@ declare namespace TYPES {
     username: string;
     confirmed: boolean;
     programRoles: ProgramRole[];
-    roles?: UserRole[];
+    roles: UserRole[];
     data?: string[];
     file0?: string[];
     rating?: number;
