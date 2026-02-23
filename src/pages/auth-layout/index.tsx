@@ -62,6 +62,7 @@ const DashboardLayout = () => {
       path: paths.academicStaff,
       icon: <Group />,
     },
+    { title: t.news?.pageTitle || "News", path: paths.news, icon: <Newspaper /> },
     ...(isAdmin
       ? [
           {
