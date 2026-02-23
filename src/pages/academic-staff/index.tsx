@@ -33,7 +33,7 @@ import { useLanguage } from "~/providers/language-provider";
 import { useResourceUrl } from "~/hooks/useResourceUrl";
 
 const MentorAvatar = ({ mentor, size = 56 }: { mentor: TYPES.UserPublicResponse; size?: number }) => {
-  const { url } = useResourceUrl(mentor.file0?.[0]);
+  const { url } = useResourceUrl(mentor.file0?.[0] || mentor.data?.[0]);
 
   return (
     <Avatar

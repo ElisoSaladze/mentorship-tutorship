@@ -131,10 +131,7 @@ const UserProfile = () => {
     );
   }
 
-  // const isTutor = user?.programRole?.includes("TUTOR");
-  // const isMentor = user?.programRole?.includes("MENTOR");
-  // const isSeeker = user?.programRole?.includes("SEEKER");
-  console.log(user);
+  console.log("user image fields:", { file0: user?.file0, data: user?.data });
   return (
     <Box
       sx={{
@@ -241,7 +238,7 @@ const UserProfile = () => {
         <Paper sx={{ p: { xs: 2, sm: 3 } }}>
           <UploadImage
             value={profileImage}
-            existingImageId={user?.file0?.[0]}
+            existingImageId={user?.file0?.[0] || user?.data?.[0]}
             onChange={setProfileImage}
             disabled={!isEditing}
           />
