@@ -18,6 +18,7 @@ import {
   Button,
   IconButton,
   Divider,
+  Pagination,
 } from "@mui/material";
 import {
   School,
@@ -28,12 +29,11 @@ import {
 import { TextArea } from "~/components/form/basic/text-area";
 import { useQuery } from "@tanstack/react-query";
 import { getMentors } from "~/api/users/api";
-import { keys } from "~/api/keys";
 import { useLanguage } from "~/providers/language-provider";
 import { useResourceUrl } from "~/hooks/useResourceUrl";
 
 const MentorAvatar = ({ mentor, size = 56 }: { mentor: TYPES.UserPublicResponse; size?: number }) => {
-  const { url } = useResourceUrl(mentor.data?.[0]);
+  const { url } = useResourceUrl(mentor.file0?.[0]);
 
   return (
     <Avatar
@@ -91,17 +91,20 @@ const InfoRow = ({
   );
 };
 
+const PAGE_SIZE = 12;
+
 const AcademicStaffPage = () => {
   const { t } = useLanguage();
   const [selectedMentor, setSelectedMentor] = useState<TYPES.UserPublicResponse | null>(null);
+  const [page, setPage] = useState(0);
 
   const {
     data: mentors,
     isLoading,
     error,
   } = useQuery({
-    queryKey: keys.users.mentors(),
-    queryFn: getMentors,
+    queryKey: ["mentors", page],
+    queryFn: () => getMentors(page, PAGE_SIZE),
   });
 
   if (isLoading) {
@@ -163,7 +166,7 @@ const AcademicStaffPage = () => {
           </Typography>
         </Box>
 
-        {mentors && mentors.length > 0 ? (
+        {mentors?.content && mentors.content.length > 0 ? (
           <Box
             sx={{
               display: "grid",
@@ -175,7 +178,7 @@ const AcademicStaffPage = () => {
               gap: { xs: 3, sm: 4, md: 4 },
             }}
           >
-            {mentors.map((mentor) => (
+            {mentors?.content.map((mentor) => (
               <Card
                 key={mentor.id}
                 onClick={() => setSelectedMentor(mentor)}
@@ -268,6 +271,18 @@ const AcademicStaffPage = () => {
             <Typography variant="h6" color="text.secondary">
               {t.academicStaff?.noMentors || "No mentors available at the moment"}
             </Typography>
+          </Box>
+        )}
+
+        {mentors && mentors.totalPages > 1 && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+            <Pagination
+              count={mentors.totalPages}
+              page={page + 1}
+              onChange={(_, value) => setPage(value - 1)}
+              color="primary"
+              size="large"
+            />
           </Box>
         )}
       </Container>

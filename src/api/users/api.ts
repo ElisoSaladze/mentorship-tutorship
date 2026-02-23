@@ -30,8 +30,12 @@ export const updateUser = async (data: TYPES.UpdateUserRequest, files: File[] = 
 };
 
 // Admin API functions
-export const adminGetAllUsers = async () =>
-  await request(`${REACT_APP_API_URL}admin/users`).get<Array<TYPES.UserFullResponse>>();
+export const adminGetAllUsers = async (page = 0, size = 10) => {
+  const query = new URLSearchParams();
+  query.append("page", String(page));
+  query.append("size", String(size));
+  return await request(`${REACT_APP_API_URL}admin/users`).get<TYPES.PageResponse<TYPES.UserFullResponse>>({ query });
+};
 
 export const adminCreateUser = async (body: TYPES.UserRequest) =>
   await request(`${REACT_APP_API_URL}admin/users`).post<TYPES.UserFullResponse>({
@@ -49,8 +53,12 @@ export const adminDeleteUser = async (id: string) =>
 export const adminConfirmUser = async (id: string) =>
   await request(`${REACT_APP_API_URL}admin/users/${id}/confirm`).patch<object>();
 
-export const getMentors = async () =>
-  await request(`${REACT_APP_API_URL}users/mentors`).get<Array<TYPES.UserPublicResponse>>();
+export const getMentors = async (page = 0, size = 12) => {
+  const query = new URLSearchParams();
+  query.append("page", String(page));
+  query.append("size", String(size));
+  return await request(`${REACT_APP_API_URL}users/mentors`).get<TYPES.PageResponse<TYPES.UserPublicResponse>>({ query });
+};
 
 export const getResource = async (id: string): Promise<string> => {
   const { globalAccessToken } = await import("~/lib/request/token");

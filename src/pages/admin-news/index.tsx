@@ -21,6 +21,7 @@ import {
   Stack,
   Tooltip,
   Chip,
+  TablePagination,
 } from "@mui/material";
 import {
   Add,
@@ -30,7 +31,6 @@ import {
 } from "@mui/icons-material";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getNews, adminCreateNews, adminDeleteNews } from "~/api/news/api";
-import { keys } from "~/api/keys";
 import { useLanguage } from "~/providers/language-provider";
 import { useAuthContext } from "~/providers/auth";
 
@@ -39,6 +39,8 @@ const AdminNewsPage = () => {
   const { isAdmin } = useAuthContext();
   const queryClient = useQueryClient();
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openDialog, setOpenDialog] = useState(false);
   const [newsForm, setNewsForm] = useState<TYPES.NewsRequest>({
     title: "",
@@ -52,14 +54,14 @@ const AdminNewsPage = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: keys.news.all(),
-    queryFn: getNews,
+    queryKey: ["news", page, rowsPerPage],
+    queryFn: () => getNews(page, rowsPerPage),
   });
 
   const createMutation = useMutation({
     mutationFn: () => adminCreateNews(newsForm, files),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: keys.news.all() });
+      queryClient.invalidateQueries({ queryKey: ["news"] });
       handleCloseDialog();
     },
   });
@@ -67,7 +69,7 @@ const AdminNewsPage = () => {
   const deleteMutation = useMutation({
     mutationFn: adminDeleteNews,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: keys.news.all() });
+      queryClient.invalidateQueries({ queryKey: ["news"] });
       setDeleteConfirmId(null);
     },
   });
@@ -181,8 +183,8 @@ const AdminNewsPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {news && news.length > 0 ? (
-              news.map((item) => (
+            {news?.content && news?.content.length > 0 ? (
+              news?.content.map((item) => (
                 <TableRow
                   key={item.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -238,6 +240,18 @@ const AdminNewsPage = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        component="div"
+        count={news?.totalElements || 0}
+        page={page}
+        onPageChange={(_, newPage) => setPage(newPage)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={(e) => {
+          setRowsPerPage(parseInt(e.target.value, 10));
+          setPage(0);
+        }}
+        rowsPerPageOptions={[5, 10, 25]}
+      />
 
       {/* Create News Dialog */}
       <Dialog

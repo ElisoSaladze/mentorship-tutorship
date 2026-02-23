@@ -27,6 +27,7 @@ import {
   Tooltip,
   Rating,
   InputAdornment,
+  TablePagination,
 } from "@mui/material";
 import {
   CheckCircle,
@@ -55,6 +56,8 @@ const AdminUsersPage = () => {
   const { isAdmin } = useAuthContext();
   const queryClient = useQueryClient();
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openDialog, setOpenDialog] = useState(false);
   const [editingUser, setEditingUser] = useState<TYPES.UserFullResponse | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -77,8 +80,8 @@ const AdminUsersPage = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["adminUsers"],
-    queryFn: adminGetAllUsers,
+    queryKey: ["adminUsers", page, rowsPerPage],
+    queryFn: () => adminGetAllUsers(page, rowsPerPage),
   });
 
   // Create user mutation
@@ -312,8 +315,8 @@ const AdminUsersPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users && users.length > 0 ? (
-              users.map((user) => (
+            {users?.content && users.content.length > 0 ? (
+              users.content.map((user) => (
                 <TableRow
                   key={user.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -426,6 +429,18 @@ const AdminUsersPage = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        component="div"
+        count={users?.totalElements || 0}
+        page={page}
+        onPageChange={(_, newPage) => setPage(newPage)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={(e) => {
+          setRowsPerPage(parseInt(e.target.value, 10));
+          setPage(0);
+        }}
+        rowsPerPageOptions={[5, 10, 25]}
+      />
 
       {/* Create/Edit Dialog */}
       <Dialog

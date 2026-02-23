@@ -23,6 +23,7 @@ import {
   Collapse,
   Chip,
   Avatar,
+  TablePagination,
 } from "@mui/material";
 import {
   Add,
@@ -84,6 +85,9 @@ const AdminSchemesPage = () => {
   const { isAdmin } = useAuthContext();
   const queryClient = useQueryClient();
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   const [expandedSchemeId, setExpandedSchemeId] = useState<string | null>(null);
   const [openSchemeDialog, setOpenSchemeDialog] = useState(false);
   const [editingScheme, setEditingScheme] = useState<TYPES.ProgramSchemeResponse | null>(null);
@@ -109,8 +113,8 @@ const AdminSchemesPage = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["adminSchemes"],
-    queryFn: adminGetAllProgramSchemes,
+    queryKey: ["adminSchemes", page, rowsPerPage],
+    queryFn: () => adminGetAllProgramSchemes(page, rowsPerPage),
   });
 
   // Fetch expanded scheme details (includes courses)
@@ -329,8 +333,8 @@ const AdminSchemesPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {schemes && schemes.length > 0 ? (
-              schemes.map((scheme) => (
+            {schemes?.content && schemes.content.length > 0 ? (
+              schemes.content.map((scheme) => (
                 <>
                   <TableRow
                     key={scheme.id}
@@ -342,7 +346,7 @@ const AdminSchemesPage = () => {
                       </IconButton>
                     </TableCell>
                     <TableCell>
-                      <SchemeImage resourceId={scheme.id} />
+                      <SchemeImage resourceId={scheme.file0?.[0]} />
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" fontWeight={500}>
@@ -477,6 +481,18 @@ const AdminSchemesPage = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        component="div"
+        count={schemes?.totalElements || 0}
+        page={page}
+        onPageChange={(_, newPage) => setPage(newPage)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={(e) => {
+          setRowsPerPage(parseInt(e.target.value, 10));
+          setPage(0);
+        }}
+        rowsPerPageOptions={[5, 10, 25]}
+      />
 
       {/* Scheme Create/Edit Dialog */}
       <Dialog

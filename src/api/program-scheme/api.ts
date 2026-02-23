@@ -3,16 +3,20 @@ import { request } from "~/lib/request";
 const REACT_APP_API_URL = import.meta.env["VITE_API_URL"];
 
 // Public endpoint - get all program schemes
-export const getProgramScheme = async () =>
-  await request(`${REACT_APP_API_URL}programScheme`).get<
-    Array<TYPES.ProgramSchemeResponse>
-  >();
+export const getProgramScheme = async (page = 0, size = 12) => {
+  const query = new URLSearchParams();
+  query.append("page", String(page));
+  query.append("size", String(size));
+  return await request(`${REACT_APP_API_URL}programScheme`).get<TYPES.PageResponse<TYPES.ProgramSchemeResponse>>({ query });
+};
 
 // Admin endpoints
-export const adminGetAllProgramSchemes = async () =>
-  await request(`${REACT_APP_API_URL}admin/programScheme`).get<
-    Array<TYPES.ProgramSchemeResponse>
-  >();
+export const adminGetAllProgramSchemes = async (page = 0, size = 10) => {
+  const query = new URLSearchParams();
+  query.append("page", String(page));
+  query.append("size", String(size));
+  return await request(`${REACT_APP_API_URL}admin/programScheme`).get<TYPES.PageResponse<TYPES.ProgramSchemeResponse>>({ query });
+};
 
 export const adminGetProgramScheme = async (id: string) =>
   await request(`${REACT_APP_API_URL}admin/programScheme/${id}`).get<

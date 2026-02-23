@@ -16,6 +16,7 @@ import {
   Alert,
   Stack,
   Chip,
+  Pagination,
 } from "@mui/material";
 import { Add, Edit, Close, Visibility, Image as ImageIcon } from "@mui/icons-material";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -85,11 +86,14 @@ const SchemeCardImage = ({ resourceId }: { resourceId?: string }) => {
   );
 };
 
+const PAGE_SIZE = 12;
+
 const ManageSchemesPage = () => {
   const queryClient = useQueryClient();
   const { t } = useLanguage();
   const { userDetails: user } = useAuthContext();
 
+  const [page, setPage] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [selectedScheme, setSelectedScheme] = useState<TYPES.ProgramSchemeResponse | null>(null);
@@ -107,8 +111,8 @@ const ManageSchemesPage = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["programSchemes"],
-    queryFn: getProgramScheme,
+    queryKey: ["programSchemes", page],
+    queryFn: () => getProgramScheme(page, PAGE_SIZE),
   });
 
   // Create scheme mutation
@@ -260,7 +264,7 @@ const ManageSchemesPage = () => {
       )}
 
       {/* Schemes Display */}
-      {schemes && schemes.length > 0 ? (
+      {schemes?.content && schemes.content.length > 0 ? (
         <Box
           sx={{
             display: "grid",
@@ -272,7 +276,7 @@ const ManageSchemesPage = () => {
             gap: { xs: 2, sm: 2.5, md: 3 },
           }}
         >
-          {schemes.map((scheme) => (
+          {schemes.content.map((scheme) => (
             <Card
               key={scheme.id}
               sx={{
@@ -288,7 +292,7 @@ const ManageSchemesPage = () => {
                 },
               }}
             >
-              <SchemeCardImage resourceId={scheme.id} />
+              <SchemeCardImage resourceId={scheme.file0?.[0]} />
               <CardContent sx={{ flexGrow: 1, p: { xs: 2, sm: 2.5, md: 3 } }}>
                 <Typography
                   variant="h6"
@@ -367,6 +371,18 @@ const ManageSchemesPage = () => {
               {t.manageSchemes.newScheme}
             </Button>
           )}
+        </Box>
+      )}
+
+      {schemes && schemes.totalPages > 1 && (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+          <Pagination
+            count={schemes.totalPages}
+            page={page + 1}
+            onChange={(_, value) => setPage(value - 1)}
+            color="primary"
+            size="large"
+          />
         </Box>
       )}
 
