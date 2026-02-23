@@ -241,7 +241,7 @@ const UserProfile = () => {
         <Paper sx={{ p: { xs: 2, sm: 3 } }}>
           <UploadImage
             value={profileImage}
-            existingImageId={user?.data?.[0]}
+            existingImageId={user?.file0?.[0]}
             onChange={setProfileImage}
             disabled={!isEditing}
           />
