@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Box, Avatar, IconButton, Typography, Alert } from "@mui/material";
 import { CameraAlt, Close } from "@mui/icons-material";
 import { useResourceUrl } from "~/hooks/useResourceUrl";
@@ -12,6 +12,9 @@ interface UploadImageProps {
   disabled?: boolean;
 }
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
 const UploadImage = ({
   value,
   existingImageId,
@@ -20,25 +23,28 @@ const UploadImage = ({
   helperText,
   disabled = false,
 }: UploadImageProps) => {
-  const [preview, setPreview] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { url: existingImageUrl } = useResourceUrl(existingImageId);
 
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-  const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+  const { url: existingImageUrl, isLoading } = useResourceUrl(existingImageId);
 
+  // 🔥 Create preview URL only when new file selected
+  const filePreviewUrl = useMemo(() => {
+    if (!value) return null;
+    return URL.createObjectURL(value);
+  }, [value]);
+
+  // 🔥 Cleanup file preview URL
   useEffect(() => {
-    // If a new file is selected, show its preview
-    if (value) {
-      const url = URL.createObjectURL(value);
-      setPreview(url);
-      return () => URL.revokeObjectURL(url);
-    }
-    // Otherwise show existing image if available
-    setPreview(existingImageUrl || null);
-    return undefined;
-  }, [value, existingImageUrl]);
+    return () => {
+      if (filePreviewUrl) {
+        URL.revokeObjectURL(filePreviewUrl);
+      }
+    };
+  }, [filePreviewUrl]);
+
+  // Final image source
+  const imageSrc = filePreviewUrl || existingImageUrl || undefined;
 
   const validateFile = (file: File): string | null => {
     if (!ALLOWED_TYPES.includes(file.type)) {
@@ -56,18 +62,22 @@ const UploadImage = ({
 
     setValidationError(null);
     const validationErr = validateFile(file);
+
     if (validationErr) {
       setValidationError(validationErr);
       return;
     }
+
     onChange?.(file);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (disabled) return;
+
     setValidationError(null);
     onChange?.(null);
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -99,12 +109,12 @@ const UploadImage = ({
           }}
         >
           <Avatar
-            src={preview || undefined}
+            src={imageSrc}
             sx={{
               width: 80,
               height: 80,
               bgcolor: "grey.200",
-              border: hasError ? "2px solid" : "2px solid",
+              border: "2px solid",
               borderColor: hasError ? "error.main" : "divider",
               opacity: disabled ? 0.6 : 1,
             }}
@@ -115,12 +125,9 @@ const UploadImage = ({
               className="upload-overlay"
               sx={{
                 position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
+                inset: 0,
                 borderRadius: "50%",
-                bgcolor: "rgba(0, 0, 0, 0.5)",
+                bgcolor: "rgba(0,0,0,0.5)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -144,22 +151,25 @@ const UploadImage = ({
 
         <Box sx={{ flex: 1 }}>
           <Typography variant="body2" color="text.primary">
-            {preview ? "Change photo" : "Upload photo"}
+            {imageSrc ? "Change photo" : "Upload photo"}
           </Typography>
           <Typography variant="caption" color="text.secondary">
             JPG, PNG or WebP. Max 5MB
           </Typography>
+          {isLoading && (
+            <Typography variant="caption" color="text.secondary">
+              Loading image...
+            </Typography>
+          )}
         </Box>
 
-        {preview && !disabled && (
+        {imageSrc && !disabled && (
           <IconButton
             onClick={handleDelete}
             size="small"
             sx={{
               color: "text.secondary",
-              "&:hover": {
-                color: "error.main",
-              },
+              "&:hover": { color: "error.main" },
             }}
           >
             <Close fontSize="small" />
