@@ -169,7 +169,7 @@ const ProgramSchemeDetails = ({ scheme, isOpen, onClose }: Props) => {
       <DialogContent sx={{ p: { xs: 2, sm: 3 } }}>
         <Stack spacing={{ xs: 2, sm: 3 }}>
           {/* Scheme Image */}
-          <SchemeDetailImage resourceId={scheme.data?.[0]} />
+          <SchemeDetailImage resourceId={scheme.id} />
 
           {/* Title Section */}
           <Box>

@@ -342,7 +342,7 @@ const AdminSchemesPage = () => {
                       </IconButton>
                     </TableCell>
                     <TableCell>
-                      <SchemeImage resourceId={scheme.data?.[0]} />
+                      <SchemeImage resourceId={scheme.id} />
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" fontWeight={500}>

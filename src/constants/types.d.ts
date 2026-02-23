@@ -26,7 +26,6 @@ declare namespace TYPES {
     title: string;
     description: string;
     creatorUserData: UserData;
-    data?: string[];
   };
 
   type ProgramSchemeDb = {
@@ -41,7 +40,6 @@ declare namespace TYPES {
     description: string;
     creatorUserData: UserData;
     courses: CourseResponse[];
-    data?: string[];
   };
 
   // Course types (belongs to a program scheme)

@@ -288,7 +288,7 @@ const ManageSchemesPage = () => {
                 },
               }}
             >
-              <SchemeCardImage resourceId={scheme.data?.[0]} />
+              <SchemeCardImage resourceId={scheme.id} />
               <CardContent sx={{ flexGrow: 1, p: { xs: 2, sm: 2.5, md: 3 } }}>
                 <Typography
                   variant="h6"
