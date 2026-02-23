@@ -29,6 +29,35 @@ import { getCoursesByProgramId } from "~/api/course/api";
 import { useAuthContext } from "~/providers/auth";
 import { useLanguage } from "~/providers/language-provider";
 import { useState } from "react";
+import { useResourceUrl } from "~/hooks/useResourceUrl";
+
+const SchemeDetailImage = ({ resourceId }: { resourceId?: string }) => {
+  const { url } = useResourceUrl(resourceId);
+  if (!resourceId || !url) return null;
+
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        borderRadius: 2,
+        overflow: "hidden",
+        bgcolor: "grey.100",
+      }}
+    >
+      <Box
+        component="img"
+        src={url}
+        alt=""
+        sx={{
+          width: "100%",
+          maxHeight: 300,
+          objectFit: "cover",
+          display: "block",
+        }}
+      />
+    </Box>
+  );
+};
 
 type Props = {
   scheme: TYPES.ProgramSchemeResponse | null;
@@ -139,6 +168,9 @@ const ProgramSchemeDetails = ({ scheme, isOpen, onClose }: Props) => {
 
       <DialogContent sx={{ p: { xs: 2, sm: 3 } }}>
         <Stack spacing={{ xs: 2, sm: 3 }}>
+          {/* Scheme Image */}
+          <SchemeDetailImage resourceId={scheme.data?.[0]} />
+
           {/* Title Section */}
           <Box>
             <Typography

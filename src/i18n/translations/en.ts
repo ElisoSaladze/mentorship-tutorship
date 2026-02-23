@@ -331,6 +331,8 @@ export const en = {
     deleteCourseTitle: "Delete Course",
     deleteCourseMessage: "Are you sure you want to delete this course?",
     scheme: "Scheme",
+    image: "Image",
+    uploadImage: "Upload Image",
   },
   adminNews: {
     pageTitle: "News Management",

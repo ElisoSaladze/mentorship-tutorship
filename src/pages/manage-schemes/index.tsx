@@ -14,8 +14,10 @@ import {
   IconButton,
   CircularProgress,
   Alert,
+  Stack,
+  Chip,
 } from "@mui/material";
-import { Add, Edit, Close, Visibility } from "@mui/icons-material";
+import { Add, Edit, Close, Visibility, Image as ImageIcon } from "@mui/icons-material";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getProgramScheme,
@@ -25,6 +27,63 @@ import {
 import { useLanguage } from "~/providers/language-provider";
 import { useAuthContext } from "~/providers/auth";
 import ProgramSchemeDetails from "~/components/program-scheme";
+import { useResourceUrl } from "~/hooks/useResourceUrl";
+
+const SchemeCardImage = ({ resourceId }: { resourceId?: string }) => {
+  const { url, isLoading } = useResourceUrl(resourceId);
+
+  if (!resourceId || (!url && !isLoading)) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          paddingTop: "50%",
+          bgcolor: "grey.100",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+        }}
+      >
+        <ImageIcon sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontSize: 48, color: "grey.300" }} />
+      </Box>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <Box sx={{ width: "100%", paddingTop: "50%", bgcolor: "grey.100", position: "relative" }}>
+        <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />
+      </Box>
+    );
+  }
+
+  return (
+    <Box
+      sx={{
+        position: "relative",
+        width: "100%",
+        paddingTop: "50%",
+        overflow: "hidden",
+        bgcolor: "grey.100",
+      }}
+    >
+      <Box
+        component="img"
+        src={url || undefined}
+        alt=""
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+        }}
+      />
+    </Box>
+  );
+};
 
 const ManageSchemesPage = () => {
   const queryClient = useQueryClient();
@@ -40,6 +99,7 @@ const ManageSchemesPage = () => {
     title: "",
     description: "",
   });
+  const [schemeFiles, setSchemeFiles] = useState<File[]>([]);
 
   // Fetch all schemes
   const {
@@ -53,7 +113,8 @@ const ManageSchemesPage = () => {
 
   // Create scheme mutation
   const createMutation = useMutation({
-    mutationFn: createProgramScheme,
+    mutationFn: ({ body, files }: { body: TYPES.ProgramSchemeRequest; files: File[] }) =>
+      createProgramScheme(body, files),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["programSchemes"] });
       handleCloseDialog();
@@ -62,8 +123,8 @@ const ManageSchemesPage = () => {
 
   // Update scheme mutation
   const updateMutation = useMutation({
-    mutationFn: ({ id, body }: { id: string; body: TYPES.ProgramSchemeRequest }) =>
-      updateProgramScheme(id, body),
+    mutationFn: ({ id, body, files }: { id: string; body: TYPES.ProgramSchemeRequest; files: File[] }) =>
+      updateProgramScheme(id, body, files),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["programSchemes"] });
       handleCloseDialog();
@@ -88,6 +149,7 @@ const ManageSchemesPage = () => {
     setOpenDialog(false);
     setEditingScheme(null);
     setFormData({ title: "", description: "" });
+    setSchemeFiles([]);
   };
 
   const handleOpenDetailsModal = (scheme: TYPES.ProgramSchemeResponse) => {
@@ -105,9 +167,13 @@ const ManageSchemesPage = () => {
       updateMutation.mutate({
         id: editingScheme.id,
         body: formData as TYPES.ProgramSchemeRequest,
+        files: schemeFiles,
       });
     } else {
-      createMutation.mutate(formData as TYPES.ProgramSchemeRequest);
+      createMutation.mutate({
+        body: formData as TYPES.ProgramSchemeRequest,
+        files: schemeFiles,
+      });
     }
   };
 
@@ -214,6 +280,7 @@ const ManageSchemesPage = () => {
                 display: "flex",
                 flexDirection: "column",
                 borderRadius: { xs: 1.5, sm: 2 },
+                overflow: "hidden",
                 transition: "all 0.3s ease",
                 "&:hover": {
                   transform: { xs: "none", sm: "translateY(-4px)" },
@@ -221,6 +288,7 @@ const ManageSchemesPage = () => {
                 },
               }}
             >
+              <SchemeCardImage resourceId={scheme.data?.[0]} />
               <CardContent sx={{ flexGrow: 1, p: { xs: 2, sm: 2.5, md: 3 } }}>
                 <Typography
                   variant="h6"
@@ -371,6 +439,32 @@ const ManageSchemesPage = () => {
                 },
               }}
             />
+            <Button
+              variant="outlined"
+              component="label"
+              startIcon={<ImageIcon />}
+              sx={{ textTransform: "none", borderRadius: 2 }}
+            >
+              {t.adminSchemes?.uploadImage || "Upload Image"}
+              <input
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={(e) => setSchemeFiles(Array.from(e.target.files || []))}
+              />
+            </Button>
+            {schemeFiles.length > 0 && (
+              <Stack direction="row" spacing={0.5} flexWrap="wrap" gap={0.5}>
+                {schemeFiles.map((file, i) => (
+                  <Chip
+                    key={i}
+                    label={file.name}
+                    size="small"
+                    onDelete={() => setSchemeFiles(schemeFiles.filter((_, idx) => idx !== i))}
+                  />
+                ))}
+              </Stack>
+            )}
           </Box>
         </DialogContent>
 

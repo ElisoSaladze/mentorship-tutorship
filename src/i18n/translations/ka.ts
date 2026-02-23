@@ -335,6 +335,8 @@ export const ka: Translations = {
     deleteCourseTitle: "კურსის წაშლა",
     deleteCourseMessage: "დარწმუნებული ხართ, რომ გსურთ ამ კურსის წაშლა?",
     scheme: "სქემა",
+    image: "სურათი",
+    uploadImage: "სურათის ატვირთვა",
   },
   adminNews: {
     pageTitle: "სიახლეების მართვა",

@@ -22,6 +22,7 @@ import {
   Tooltip,
   Collapse,
   Chip,
+  Avatar,
 } from "@mui/material";
 import {
   Add,
@@ -31,6 +32,7 @@ import {
   ExpandLess,
   School,
   Block,
+  Image as ImageIcon,
 } from "@mui/icons-material";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -45,6 +47,37 @@ import {
 } from "~/api/course/api";
 import { useLanguage } from "~/providers/language-provider";
 import { useAuthContext } from "~/providers/auth";
+import { useResourceUrl } from "~/hooks/useResourceUrl";
+
+const SchemeImage = ({ resourceId }: { resourceId?: string }) => {
+  const { url, isLoading } = useResourceUrl(resourceId);
+
+  if (!resourceId) {
+    return (
+      <Avatar variant="rounded" sx={{ width: 48, height: 48, bgcolor: "grey.200" }}>
+        <ImageIcon sx={{ color: "grey.400" }} />
+      </Avatar>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <Avatar variant="rounded" sx={{ width: 48, height: 48, bgcolor: "grey.100" }}>
+        <CircularProgress size={16} />
+      </Avatar>
+    );
+  }
+
+  return (
+    <Avatar
+      variant="rounded"
+      src={url || undefined}
+      sx={{ width: 48, height: 48, bgcolor: "grey.200" }}
+    >
+      <ImageIcon sx={{ color: "grey.400" }} />
+    </Avatar>
+  );
+};
 
 const AdminSchemesPage = () => {
   const { t } = useLanguage();
@@ -58,6 +91,8 @@ const AdminSchemesPage = () => {
     title: "",
     description: "",
   });
+
+  const [schemeFiles, setSchemeFiles] = useState<File[]>([]);
 
   const [openCourseDialog, setOpenCourseDialog] = useState(false);
   const [editingCourse, setEditingCourse] = useState<TYPES.CourseResponse | null>(null);
@@ -87,7 +122,8 @@ const AdminSchemesPage = () => {
 
   // Scheme mutations
   const createSchemeMutation = useMutation({
-    mutationFn: (body: TYPES.ProgramSchemeRequest) => createProgramScheme(body),
+    mutationFn: ({ body, files }: { body: TYPES.ProgramSchemeRequest; files: File[] }) =>
+      createProgramScheme(body, files),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminSchemes"] });
       handleCloseSchemeDialog();
@@ -95,8 +131,8 @@ const AdminSchemesPage = () => {
   });
 
   const updateSchemeMutation = useMutation({
-    mutationFn: ({ id, body }: { id: string; body: TYPES.ProgramSchemeRequest }) =>
-      updateProgramScheme(id, body),
+    mutationFn: ({ id, body, files }: { id: string; body: TYPES.ProgramSchemeRequest; files: File[] }) =>
+      updateProgramScheme(id, body, files),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminSchemes"] });
       queryClient.invalidateQueries({ queryKey: ["adminScheme"] });
@@ -138,14 +174,15 @@ const AdminSchemesPage = () => {
     setOpenSchemeDialog(false);
     setEditingScheme(null);
     setSchemeForm({ title: "", description: "" });
+    setSchemeFiles([]);
   };
 
   const handleSubmitScheme = () => {
     const data = schemeForm as TYPES.ProgramSchemeRequest;
     if (editingScheme) {
-      updateSchemeMutation.mutate({ id: editingScheme.id, body: data });
+      updateSchemeMutation.mutate({ id: editingScheme.id, body: data, files: schemeFiles });
     } else {
-      createSchemeMutation.mutate(data);
+      createSchemeMutation.mutate({ body: data, files: schemeFiles });
     }
   };
 
@@ -281,6 +318,7 @@ const AdminSchemesPage = () => {
           <TableHead>
             <TableRow sx={{ bgcolor: "grey.50" }}>
               <TableCell sx={{ fontWeight: 600, width: 48 }} />
+              <TableCell sx={{ fontWeight: 600, width: 64 }}>{t.adminSchemes?.image || "Image"}</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>{t.adminSchemes?.title || "Title"}</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>{t.adminSchemes?.description || "Description"}</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>{t.adminSchemes?.creator || "Creator"}</TableCell>
@@ -302,6 +340,9 @@ const AdminSchemesPage = () => {
                       <IconButton size="small" onClick={() => toggleExpand(scheme.id)}>
                         {expandedSchemeId === scheme.id ? <ExpandLess /> : <ExpandMore />}
                       </IconButton>
+                    </TableCell>
+                    <TableCell>
+                      <SchemeImage resourceId={scheme.data?.[0]} />
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" fontWeight={500}>
@@ -358,7 +399,7 @@ const AdminSchemesPage = () => {
 
                   {/* Expanded Courses Row */}
                   <TableRow key={`${scheme.id}-courses`}>
-                    <TableCell colSpan={6} sx={{ py: 0, borderBottom: expandedSchemeId === scheme.id ? 1 : 0, borderColor: "divider" }}>
+                    <TableCell colSpan={7} sx={{ py: 0, borderBottom: expandedSchemeId === scheme.id ? 1 : 0, borderColor: "divider" }}>
                       <Collapse in={expandedSchemeId === scheme.id} timeout="auto" unmountOnExit>
                         <Box sx={{ py: 2, px: { xs: 1, sm: 2 } }}>
                           <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
@@ -426,7 +467,7 @@ const AdminSchemesPage = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
                   <Typography color="text.secondary">
                     {t.adminSchemes?.noSchemes || "No program schemes found"}
                   </Typography>
@@ -482,6 +523,32 @@ const AdminSchemesPage = () => {
               value={schemeForm.description || ""}
               onChange={(e) => setSchemeForm({ ...schemeForm, description: e.target.value })}
             />
+            <Button
+              variant="outlined"
+              component="label"
+              startIcon={<ImageIcon />}
+              sx={{ textTransform: "none", borderRadius: 1.5 }}
+            >
+              {t.adminSchemes?.uploadImage || "Upload Image"}
+              <input
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={(e) => setSchemeFiles(Array.from(e.target.files || []))}
+              />
+            </Button>
+            {schemeFiles.length > 0 && (
+              <Stack direction="row" spacing={0.5} flexWrap="wrap" gap={0.5}>
+                {schemeFiles.map((file, i) => (
+                  <Chip
+                    key={i}
+                    label={file.name}
+                    size="small"
+                    onDelete={() => setSchemeFiles(schemeFiles.filter((_, idx) => idx !== i))}
+                  />
+                ))}
+              </Stack>
+            )}
           </Box>
         </DialogContent>
 
