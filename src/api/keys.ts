@@ -5,4 +5,7 @@ export const keys = {
   reissueToken: {
     token: () => ['reissue-token'],
   },
+  news: {
+    all: () => ['news'],
+  },
 }

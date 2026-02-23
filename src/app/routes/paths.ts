@@ -13,6 +13,7 @@ export const paths = {
   adminSchemes: "/homepage/admin/schemes",
   manageSchemes: "/homepage/schemas",
   academicStaff: "/homepage/staff",
+  adminNews: "/homepage/admin/news",
 };
 
 export type PathKey = keyof typeof paths;

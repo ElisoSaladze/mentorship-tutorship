@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { reissueToken } from "~/api/auth/api";
+import { reissueToken, logout } from "~/api/auth/api";
 import { keys } from "~/api/keys";
 import { paths } from "~/app/routes/paths";
 import constate from "constate";
@@ -146,6 +146,9 @@ const useAuth = () => {
         window.clearTimeout(refreshTimeoutRef.current);
         refreshTimeoutRef.current = null;
       }
+
+      // Call backend logout endpoint (fire-and-forget)
+      logout().catch(() => {});
 
       // Clear token and cookie
       setGlobalAccessToken(null);

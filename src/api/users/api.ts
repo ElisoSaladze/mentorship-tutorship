@@ -50,7 +50,7 @@ export const adminConfirmUser = async (id: string) =>
   await request(`${REACT_APP_API_URL}admin/users/${id}/confirm`).patch<object>();
 
 export const getMentors = async () =>
-  await request(`${REACT_APP_API_URL}users/mentors`).get<Array<TYPES.UserResponse>>();
+  await request(`${REACT_APP_API_URL}users/mentors`).get<Array<TYPES.UserPublicResponse>>();
 
 export const getResource = async (id: string): Promise<string> => {
   const { globalAccessToken } = await import("~/lib/request/token");

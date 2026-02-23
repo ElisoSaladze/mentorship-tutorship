@@ -19,12 +19,30 @@ export const adminGetProgramScheme = async (id: string) =>
     TYPES.ProgramSchemeFullResponse
   >();
 
-export const createProgramScheme = async (body: TYPES.ProgramSchemeRequest) =>
-  await request(`${REACT_APP_API_URL}admin/programScheme`).post<TYPES.ProgramSchemeDb>({
-    body,
-  });
+export const createProgramScheme = async (body: TYPES.ProgramSchemeRequest, files: File[] = []) => {
+  const query = new URLSearchParams();
+  query.append("files", files.map(f => f.name).join(",") || "");
 
-export const updateProgramScheme = async (id: string, body: TYPES.ProgramSchemeRequest) =>
-  await request(`${REACT_APP_API_URL}admin/programScheme/${id}`).put<TYPES.ProgramSchemeDb>({
-    body,
+  return await request(`${REACT_APP_API_URL}admin/programScheme`).post<TYPES.ProgramSchemeDb>({
+    body: {
+      data: body,
+      ...files.reduce((acc, file, index) => ({ ...acc, [`file${index}`]: file }), {}),
+    },
+    query,
+    type: "file",
   });
+};
+
+export const updateProgramScheme = async (id: string, body: TYPES.ProgramSchemeRequest, files: File[] = []) => {
+  const query = new URLSearchParams();
+  query.append("files", files.map(f => f.name).join(",") || "");
+
+  return await request(`${REACT_APP_API_URL}admin/programScheme/${id}`).put<TYPES.ProgramSchemeDb>({
+    body: {
+      data: body,
+      ...files.reduce((acc, file, index) => ({ ...acc, [`file${index}`]: file }), {}),
+    },
+    query,
+    type: "file",
+  });
+};

@@ -20,6 +20,13 @@ export const reissueToken = async () =>
     body: { refreshToken: cookies.get("refreshToken") },
   });
 
+export const logout = async () => {
+  const refreshToken = cookies.get("refreshToken");
+  return await request(`${REACT_APP_API_URL}auth/logout`).post<void>({
+    body: { refreshToken },
+  });
+};
+
 export const register = async (data: TYPES.RegisterRequest, files: File[]) => {
   const query = new URLSearchParams();
   // Add file names to query param

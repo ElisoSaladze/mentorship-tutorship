@@ -336,6 +336,18 @@ export const ka: Translations = {
     deleteCourseMessage: "დარწმუნებული ხართ, რომ გსურთ ამ კურსის წაშლა?",
     scheme: "სქემა",
   },
+  adminNews: {
+    pageTitle: "სიახლეების მართვა",
+    addNews: "სიახლის დამატება",
+    loadError: "სიახლეების ჩატვირთვის შეცდომა",
+    noNews: "სიახლეები ვერ მოიძებნა",
+    title: "სათაური",
+    description: "აღწერა",
+    date: "თარიღი",
+    deleteTitle: "სიახლის წაშლა",
+    deleteMessage: "დარწმუნებული ხართ, რომ გსურთ ამ სიახლის წაშლა?",
+    uploadFiles: "ფაილების ატვირთვა",
+  },
   footer: {
     aboutSection: {
       title: "ბსუ-ს ტუტორობის და  მენტორობის პლატფორმა",

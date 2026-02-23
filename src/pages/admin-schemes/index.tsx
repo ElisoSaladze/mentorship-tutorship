@@ -87,7 +87,7 @@ const AdminSchemesPage = () => {
 
   // Scheme mutations
   const createSchemeMutation = useMutation({
-    mutationFn: createProgramScheme,
+    mutationFn: (body: TYPES.ProgramSchemeRequest) => createProgramScheme(body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminSchemes"] });
       handleCloseSchemeDialog();

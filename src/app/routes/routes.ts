@@ -74,6 +74,11 @@ export const routes = [
         factory: () => import("~/pages/admin-schemes"),
         state: "admin",
       },
+      {
+        path: paths.adminNews,
+        factory: () => import("~/pages/admin-news"),
+        state: "admin",
+      },
     ],
   }),
 ];

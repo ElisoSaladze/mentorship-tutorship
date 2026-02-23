@@ -26,6 +26,7 @@ import {
   AdminPanelSettings,
   Group,
   School,
+  Newspaper,
 } from "@mui/icons-material";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "~/providers/auth";
@@ -72,6 +73,11 @@ const DashboardLayout = () => {
             title: t.adminSchemes?.pageTitle || "Schemes & Courses",
             path: paths.adminSchemes,
             icon: <School />,
+          },
+          {
+            title: t.adminNews?.pageTitle || "News Management",
+            path: paths.adminNews,
+            icon: <Newspaper />,
           },
         ]
       : []),

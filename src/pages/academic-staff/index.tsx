@@ -20,18 +20,9 @@ import {
   Divider,
 } from "@mui/material";
 import {
-  Email,
-  Work,
   School,
-  Psychology,
-  Interests,
   Star,
   Close,
-  CalendarMonth,
-  Tag,
-  EmojiObjects,
-  RateReview,
-  MenuBook,
   Description,
 } from "@mui/icons-material";
 import { TextArea } from "~/components/form/basic/text-area";
@@ -41,7 +32,7 @@ import { keys } from "~/api/keys";
 import { useLanguage } from "~/providers/language-provider";
 import { useResourceUrl } from "~/hooks/useResourceUrl";
 
-const MentorAvatar = ({ mentor, size = 56 }: { mentor: TYPES.UserResponse; size?: number }) => {
+const MentorAvatar = ({ mentor, size = 56 }: { mentor: TYPES.UserPublicResponse; size?: number }) => {
   const { url } = useResourceUrl(mentor.data?.[0]);
 
   return (
@@ -102,7 +93,7 @@ const InfoRow = ({
 
 const AcademicStaffPage = () => {
   const { t } = useLanguage();
-  const [selectedMentor, setSelectedMentor] = useState<TYPES.UserResponse | null>(null);
+  const [selectedMentor, setSelectedMentor] = useState<TYPES.UserPublicResponse | null>(null);
 
   const {
     data: mentors,
@@ -224,11 +215,6 @@ const AcademicStaffPage = () => {
                       >
                         {mentor.name} {mentor.surname}
                       </Typography>
-                      {mentor.workingPosition && (
-                        <Typography variant="body2" color="text.secondary">
-                          {mentor.workingPosition}
-                        </Typography>
-                      )}
                       {mentor.rating != null && mentor.rating > 0 && (
                         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.5 }}>
                           <Rating
@@ -248,32 +234,6 @@ const AcademicStaffPage = () => {
                   </Box>
 
                   <Stack spacing={1}>
-                    {mentor.email && (
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <Email sx={{ fontSize: 18, color: "text.disabled" }} />
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {mentor.email}
-                        </Typography>
-                      </Box>
-                    )}
-
-                    {mentor.workingPlace && (
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <Work sx={{ fontSize: 18, color: "text.disabled" }} />
-                        <Typography variant="body2" color="text.secondary">
-                          {mentor.workingPlace}
-                        </Typography>
-                      </Box>
-                    )}
-
                     {mentor.mentoringCourseName && (
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                         <School sx={{ fontSize: 18, color: "text.disabled" }} />
@@ -338,11 +298,6 @@ const AcademicStaffPage = () => {
                   <Typography variant="h6" fontWeight={700}>
                     {selectedMentor.name} {selectedMentor.surname}
                   </Typography>
-                  {selectedMentor.workingPosition && (
-                    <Typography variant="body2" color="text.secondary">
-                      {selectedMentor.workingPosition}
-                    </Typography>
-                  )}
                   {selectedMentor.rating != null && selectedMentor.rating > 0 && (
                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.5 }}>
                       <Rating
@@ -376,17 +331,8 @@ const AcademicStaffPage = () => {
 
             <DialogContent sx={{ px: { xs: 2, sm: 3 }, py: 2 }}>
               <Stack spacing={2}>
-                <InfoRow icon={<Email sx={{ fontSize: 20 }} />} label={t.register?.email || "Email"} value={selectedMentor.email} />
-                <InfoRow icon={<Work sx={{ fontSize: 20 }} />} label={t.register?.workplace || "Workplace"} value={selectedMentor.workingPlace} />
                 <InfoRow icon={<School sx={{ fontSize: 20 }} />} label={t.register?.mentoringCourseName || "Mentoring Course"} value={selectedMentor.mentoringCourseName} />
                 <InfoRow icon={<Description sx={{ fontSize: 20 }} />} label={t.register?.courseDescription || "Course Description"} value={selectedMentor.courseDescription} multiline />
-                <InfoRow icon={<CalendarMonth sx={{ fontSize: 20 }} />} label={t.register?.educationalProgram || "Year / Program"} value={selectedMentor.year} />
-                <InfoRow icon={<Psychology sx={{ fontSize: 20 }} />} label={t.register?.experience || "Experience"} value={selectedMentor.experience} multiline />
-                <InfoRow icon={<EmojiObjects sx={{ fontSize: 20 }} />} label={t.register?.strengths || "Strengths"} value={selectedMentor.strengths} multiline />
-                <InfoRow icon={<MenuBook sx={{ fontSize: 20 }} />} label={t.register?.motivation || "Motivation"} value={selectedMentor.motivation} multiline />
-                <InfoRow icon={<Tag sx={{ fontSize: 20 }} />} label={t.register?.keywords || "Keywords"} value={selectedMentor.keywords} />
-                <InfoRow icon={<Interests sx={{ fontSize: 20 }} />} label={t.register?.hobbies || "Hobbies"} value={selectedMentor.hobbies} multiline />
-                <InfoRow icon={<RateReview sx={{ fontSize: 20 }} />} label={t.register?.expectations || "Expectations"} value={selectedMentor.expectations} multiline />
               </Stack>
             </DialogContent>
 

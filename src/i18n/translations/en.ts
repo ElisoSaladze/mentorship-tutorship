@@ -332,6 +332,18 @@ export const en = {
     deleteCourseMessage: "Are you sure you want to delete this course?",
     scheme: "Scheme",
   },
+  adminNews: {
+    pageTitle: "News Management",
+    addNews: "Add News",
+    loadError: "Error loading news",
+    noNews: "No news found",
+    title: "Title",
+    description: "Description",
+    date: "Date",
+    deleteTitle: "Delete News",
+    deleteMessage: "Are you sure you want to delete this news item?",
+    uploadFiles: "Upload Files",
+  },
   footer: {
     aboutSection: {
       title: "BSU Tutoring & Mentorship Hub",

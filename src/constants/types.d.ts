@@ -173,6 +173,32 @@ declare namespace TYPES {
     repeatPassword: string;
   };
 
+  // Public response type for mentors endpoint (limited fields)
+  type UserPublicResponse = {
+    id: string;
+    name: string;
+    surname: string;
+    programRoles: ProgramRole[];
+    mentoringCourseName?: string;
+    courseDescription?: string;
+    rating?: number;
+    data?: string[];
+  };
+
+  // News types
+  type NewsRequest = {
+    title: string;
+    description: string;
+  };
+
+  type NewsResponse = {
+    id: string;
+    title: string;
+    description: string;
+    addDate: string;
+    data?: string[];
+  };
+
   // Alias for backward compatibility
   type user = UserResponse;
 }
