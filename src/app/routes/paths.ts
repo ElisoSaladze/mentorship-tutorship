@@ -13,6 +13,7 @@ export const paths = {
   adminSchemes: "/homepage/admin/schemes",
   manageSchemes: "/homepage/schemas",
   academicStaff: "/homepage/staff",
+  news: "/homepage/news",
   adminNews: "/homepage/admin/news",
 };
 

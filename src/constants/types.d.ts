@@ -1,5 +1,18 @@
 // types.d.ts
 declare namespace TYPES {
+  // Spring Boot Page response
+  type PageResponse<T> = {
+    content: T[];
+    totalPages: number;
+    totalElements: number;
+    size: number;
+    number: number;
+    first: boolean;
+    last: boolean;
+    numberOfElements: number;
+    empty: boolean;
+  };
+
   type ProgramRole = "TUTOR" | "MENTOR" | "SEEKER";
 
   type RegistrationDates = {
@@ -26,6 +39,8 @@ declare namespace TYPES {
     title: string;
     description: string;
     creatorUserData: UserData;
+    data?: string[];
+    file0?: string[];
   };
 
   type ProgramSchemeDb = {
@@ -40,6 +55,8 @@ declare namespace TYPES {
     description: string;
     creatorUserData: UserData;
     courses: CourseResponse[];
+    data?: string[];
+    file0?: string[];
   };
 
   // Course types (belongs to a program scheme)
@@ -183,6 +200,7 @@ declare namespace TYPES {
     courseDescription?: string;
     rating?: number;
     data?: string[];
+    file0?: string[];
   };
 
   // News types
@@ -197,6 +215,7 @@ declare namespace TYPES {
     description: string;
     addDate: string;
     data?: string[];
+    file0?: string[];
   };
 
   // Alias for backward compatibility

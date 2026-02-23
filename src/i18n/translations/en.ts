@@ -334,6 +334,11 @@ export const en = {
     image: "Image",
     uploadImage: "Upload Image",
   },
+  news: {
+    pageTitle: "News",
+    loadError: "Error loading news",
+    noNews: "No news yet",
+  },
   adminNews: {
     pageTitle: "News Management",
     addNews: "Add News",

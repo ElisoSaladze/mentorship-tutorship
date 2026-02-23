@@ -65,6 +65,11 @@ export const routes = [
         state: "authenticated",
       },
       {
+        path: paths.news,
+        factory: () => import("~/pages/news"),
+        state: "authenticated",
+      },
+      {
         path: paths.adminUsers,
         factory: () => import("~/pages/admin-users"),
         state: "admin",

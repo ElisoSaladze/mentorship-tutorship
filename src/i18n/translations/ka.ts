@@ -338,6 +338,11 @@ export const ka: Translations = {
     image: "სურათი",
     uploadImage: "სურათის ატვირთვა",
   },
+  news: {
+    pageTitle: "სიახლეები",
+    loadError: "სიახლეების ჩატვირთვის შეცდომა",
+    noNews: "სიახლეები ჯერ არ არის",
+  },
   adminNews: {
     pageTitle: "სიახლეების მართვა",
     addNews: "სიახლის დამატება",
