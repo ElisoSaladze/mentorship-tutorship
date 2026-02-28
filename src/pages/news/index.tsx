@@ -31,8 +31,11 @@ const NewsPage = () => {
     queryFn: () => getNews(page, PAGE_SIZE),
   });
 
-  const handleOpenDialog = (item: TYPES.NewsResponse) => {
-    setSelectedNews(item);
+  const handleOpenDialog = (id: string) => {
+    const selectedItem = news?.content.find((item) => item.id === id);
+    if (selectedItem) {
+      setSelectedNews(selectedItem);
+    }
   };
 
   const handleCloseDialog = () => {

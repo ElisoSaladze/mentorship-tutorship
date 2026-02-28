@@ -60,7 +60,9 @@ export const getMentors = async (page = 0, size = 12) => {
   return await request(`${REACT_APP_API_URL}users/mentors`).get<TYPES.PageResponse<TYPES.UserPublicResponse>>({ query });
 };
 
-export const getResource = async (id: string): Promise<string> => {
+export const getResource = async (
+  id: string,
+): Promise<{ url: string; contentType: string }> => {
   const { globalAccessToken } = await import("~/lib/request/token");
   const cookies = new (await import("universal-cookie")).default();
   const token = globalAccessToken || cookies.get("refreshToken");
@@ -75,6 +77,13 @@ export const getResource = async (id: string): Promise<string> => {
     throw new Error("Failed to fetch resource");
   }
 
+  const contentType = response.headers.get("content-type") || "";
+
   const blob = await response.blob();
-  return URL.createObjectURL(blob);
+  const blobUrl = URL.createObjectURL(blob);
+
+  return {
+    url: blobUrl,
+    contentType,
+  };
 };

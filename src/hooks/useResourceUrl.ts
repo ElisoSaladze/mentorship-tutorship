@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { getResource } from "~/api/users/api";
 
 export const useResourceUrl = (resourceId: string | undefined | null) => {
   const [url, setUrl] = useState<string | null>(null);
+  const [contentType, setContentType] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const urlRef = useRef<string | null>(null);
 
@@ -13,31 +14,32 @@ export const useResourceUrl = (resourceId: string | undefined | null) => {
         urlRef.current = null;
       }
       setUrl(null);
+      setContentType(null);
       return;
     }
 
     let isMounted = true;
     setIsLoading(true);
 
-    // Revoke previous URL before fetching new one
     if (urlRef.current) {
       URL.revokeObjectURL(urlRef.current);
       urlRef.current = null;
     }
 
     getResource(resourceId)
-      .then((blobUrl) => {
+      .then(({ url, contentType }) => {
         if (isMounted) {
-          urlRef.current = blobUrl;
-          setUrl(blobUrl);
+          urlRef.current = url;
+          setUrl(url);
+          setContentType(contentType);
         } else {
-          URL.revokeObjectURL(blobUrl);
+          URL.revokeObjectURL(url);
         }
       })
-      .catch((err) => {
-        console.error("Failed to load resource:", resourceId, err);
+      .catch(() => {
         if (isMounted) {
           setUrl(null);
+          setContentType(null);
         }
       })
       .finally(() => {
@@ -51,7 +53,6 @@ export const useResourceUrl = (resourceId: string | undefined | null) => {
     };
   }, [resourceId]);
 
-  // Revoke on unmount
   useEffect(() => {
     return () => {
       if (urlRef.current) {
@@ -60,5 +61,5 @@ export const useResourceUrl = (resourceId: string | undefined | null) => {
     };
   }, []);
 
-  return { url, isLoading };
+  return { url, contentType, isLoading };
 };
