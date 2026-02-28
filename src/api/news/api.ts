@@ -13,6 +13,9 @@ export const getNews = async (page = 0, size = 10) => {
   >({ query });
 };
 
+export const getNewsById = async (id: string) =>
+  await request(`${REACT_APP_API_URL}news/${id}`).get<TYPES.NewsResponse>();
+
 // Admin endpoints
 export const adminCreateNews = async (
   body: TYPES.NewsRequest,

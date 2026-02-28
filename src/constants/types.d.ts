@@ -216,6 +216,7 @@ declare namespace TYPES {
     addDate: string;
     data?: string[];
     file0?: string[];
+    [key: `file${number}`]: string[] | undefined; // Only file properties can use index signature
   };
 
   // Alias for backward compatibility
