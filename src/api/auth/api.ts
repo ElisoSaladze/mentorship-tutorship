@@ -30,12 +30,17 @@ export const logout = async () => {
 export const register = async (data: TYPES.RegisterRequest, files: File[]) => {
   const query = new URLSearchParams();
   // Add file names to query param
-  query.append("files", files.map(f => f.name).join(",") || "");
+  query.append("files", files.map((f) => f.name).join(",") || "");
 
-  return await request(`${REACT_APP_API_URL}auth/register`).post<AuthUserResponse>({
+  return await request(
+    `${REACT_APP_API_URL}auth/register`,
+  ).post<AuthUserResponse>({
     body: {
       data,
-      ...files.reduce((acc, file, index) => ({ ...acc, [`file${index}`]: file }), {}),
+      ...files.reduce(
+        (acc, file, index) => ({ ...acc, [`file${index}`]: file }),
+        {},
+      ),
     },
     query,
     type: "file",

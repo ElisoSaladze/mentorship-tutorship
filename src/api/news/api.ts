@@ -19,21 +19,16 @@ export const adminCreateNews = async (
   files: File[] = [],
 ) => {
   const query = new URLSearchParams();
-  query.append("files", files.map((f) => f.name).join(","));
-
-  const formData = new FormData();
-
-  formData.append(
-    "data",
-    new Blob([JSON.stringify(body)], { type: "application/json" }),
-  );
-
-  files.forEach((file, index) => {
-    formData.append(`file${index}`, file);
-  });
 
   return await request(`${REACT_APP_API_URL}admin/news`).post({
-    body: formData,
+    body: {
+      data: body,
+      ...files.reduce(
+        (acc, file, index) => ({ ...acc, [`file${index}`]: file }),
+        {},
+      ),
+    },
+    type: "file",
     query,
   });
 };
