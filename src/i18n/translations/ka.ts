@@ -241,7 +241,7 @@ export const ka: Translations = {
     settings: "პარამეტრები",
     logout: "გასვლა",
     profile: "პროფილი",
-    academicStaff: "აკადემიური პერსონალი"
+    academicStaff: "აკადემიური პერსონალი",
   },
   userProfile: {
     pageTitle: "ჩემი პროფილი",
@@ -284,7 +284,8 @@ export const ka: Translations = {
   },
   academicStaff: {
     pageTitle: "ჩვენი მენტორები",
-    pageSubtitle: "გაიცანით ჩვენი გამოცდილი მენტორები, რომლებიც მზად არიან დაგეხმარონ",
+    pageSubtitle:
+      "გაიცანით ჩვენი გამოცდილი მენტორები, რომლებიც მზად არიან დაგეხმარონ",
     noMentors: "მენტორები ამჟამად მიუწვდომელია",
   },
   admin: {
@@ -354,6 +355,10 @@ export const ka: Translations = {
     deleteTitle: "სიახლის წაშლა",
     deleteMessage: "დარწმუნებული ხართ, რომ გსურთ ამ სიახლის წაშლა?",
     uploadFiles: "ფაილების ატვირთვა",
+    documents: "დოკუმენტები",
+    uploadDocuments: "ატვირთეთ საჭირო დოკუმენტები (CV, სერთიფიკატები და ა.შ.)",
+    images: "სურათები",
+    uploadImages: "ატვირთეთ სურათები სიახლისთვის",
   },
   footer: {
     aboutSection: {

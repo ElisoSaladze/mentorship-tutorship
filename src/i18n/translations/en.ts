@@ -350,6 +350,10 @@ export const en = {
     deleteTitle: "Delete News",
     deleteMessage: "Are you sure you want to delete this news item?",
     uploadFiles: "Upload Files",
+    documents: "Documents",
+    uploadDocuments: "Upload required documents (CV, certificates, etc.)",
+    images: "Images",
+    uploadImages: "Upload images related to the news",
   },
   footer: {
     aboutSection: {

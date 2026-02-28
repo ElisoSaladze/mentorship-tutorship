@@ -22,12 +22,17 @@ import {
   Tooltip,
   Chip,
   TablePagination,
+  Card,
+  CardMedia,
 } from "@mui/material";
 import {
   Add,
   Delete,
   Close,
   Block,
+  Image as ImageIcon,
+  AttachFile,
+  CloudUpload,
 } from "@mui/icons-material";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getNews, adminCreateNews, adminDeleteNews } from "~/api/news/api";
@@ -46,7 +51,8 @@ const AdminNewsPage = () => {
     title: "",
     description: "",
   });
-  const [files, setFiles] = useState<File[]>([]);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [documentFiles, setDocumentFiles] = useState<File[]>([]);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const {
@@ -59,7 +65,8 @@ const AdminNewsPage = () => {
   });
 
   const createMutation = useMutation({
-    mutationFn: () => adminCreateNews(newsForm, files),
+    mutationFn: () =>
+      adminCreateNews(newsForm, [...imageFiles, ...documentFiles]),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["news"] });
       handleCloseDialog();
@@ -77,11 +84,39 @@ const AdminNewsPage = () => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setNewsForm({ title: "", description: "" });
-    setFiles([]);
+    setImageFiles([]);
+    setDocumentFiles([]);
   };
 
   const handleSubmit = () => {
     createMutation.mutate();
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+    setImageFiles((prev) => [...prev, ...imageFiles]);
+  };
+
+  const handleDocumentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setDocumentFiles((prev) => [...prev, ...files]);
+  };
+
+  const removeImage = (index: number) => {
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const removeDocument = (index: number) => {
+    setDocumentFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
   };
 
   const formatDate = (dateString?: string) => {
@@ -115,7 +150,14 @@ const AdminNewsPage = () => {
 
   if (isLoading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "50vh",
+        }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -125,7 +167,8 @@ const AdminNewsPage = () => {
     return (
       <Box sx={{ p: 3 }}>
         <Alert severity="error">
-          {t.adminNews?.loadError || "Error loading news"}: {(error as Error).message}
+          {t.adminNews?.loadError || "Error loading news"}:{" "}
+          {(error as Error).message}
         </Alert>
       </Box>
     );
@@ -170,13 +213,22 @@ const AdminNewsPage = () => {
       </Box>
 
       {/* News Table */}
-      <TableContainer component={Paper} sx={{ borderRadius: { xs: 1.5, sm: 2 }, overflow: "auto" }}>
+      <TableContainer
+        component={Paper}
+        sx={{ borderRadius: { xs: 1.5, sm: 2 }, overflow: "auto" }}
+      >
         <Table sx={{ minWidth: 650 }}>
           <TableHead>
             <TableRow sx={{ bgcolor: "grey.50" }}>
-              <TableCell sx={{ fontWeight: 600 }}>{t.adminNews?.title || "Title"}</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>{t.adminNews?.description || "Description"}</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>{t.adminNews?.date || "Date"}</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>
+                {t.adminNews?.title || "Title"}
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>
+                {t.adminNews?.description || "Description"}
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>
+                {t.adminNews?.date || "Date"}
+              </TableCell>
               <TableCell sx={{ fontWeight: 600 }} align="right">
                 {t.admin?.actions || "Actions"}
               </TableCell>
@@ -257,9 +309,11 @@ const AdminNewsPage = () => {
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
-        maxWidth="sm"
+        maxWidth="md"
         fullWidth
-        PaperProps={{ sx: { borderRadius: { xs: 2, sm: 3 }, m: { xs: 2, sm: 3 } } }}
+        PaperProps={{
+          sx: { borderRadius: { xs: 2, sm: 3 }, m: { xs: 2, sm: 3 } },
+        }}
       >
         <DialogTitle
           sx={{
@@ -280,12 +334,15 @@ const AdminNewsPage = () => {
         </DialogTitle>
 
         <DialogContent sx={{ pt: { xs: 1, sm: 2 }, px: { xs: 2, sm: 3 } }}>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
+          <Stack spacing={3} sx={{ mt: 1 }}>
+            {/* Title and Description */}
             <TextField
               label={t.adminNews?.title || "Title"}
               fullWidth
               value={newsForm.title}
-              onChange={(e) => setNewsForm({ ...newsForm, title: e.target.value })}
+              onChange={(e) =>
+                setNewsForm({ ...newsForm, title: e.target.value })
+              }
               required
             />
             <TextField
@@ -294,46 +351,165 @@ const AdminNewsPage = () => {
               multiline
               rows={4}
               value={newsForm.description}
-              onChange={(e) => setNewsForm({ ...newsForm, description: e.target.value })}
+              onChange={(e) =>
+                setNewsForm({ ...newsForm, description: e.target.value })
+              }
               required
             />
-            <Button
-              variant="outlined"
-              component="label"
-              sx={{ textTransform: "none", borderRadius: 1.5 }}
-            >
-              {t.adminNews?.uploadFiles || "Upload Files"}
-              <input
-                type="file"
-                hidden
-                multiple
-                onChange={(e) => setFiles(Array.from(e.target.files || []))}
-              />
-            </Button>
-            {files.length > 0 && (
-              <Stack direction="row" spacing={0.5} flexWrap="wrap" gap={0.5}>
-                {files.map((file, i) => (
-                  <Chip
-                    key={i}
-                    label={file.name}
-                    size="small"
-                    onDelete={() => setFiles(files.filter((_, idx) => idx !== i))}
-                  />
-                ))}
-              </Stack>
-            )}
-          </Box>
+
+            {/* Image Upload Section */}
+            <Box>
+              <Typography
+                variant="subtitle2"
+                fontWeight={600}
+                sx={{ mb: 1, display: "flex", alignItems: "center", gap: 1 }}
+              >
+                <ImageIcon fontSize="small" />
+                {t.adminNews?.images || "Images"}
+              </Typography>
+              <Button
+                variant="outlined"
+                component="label"
+                startIcon={<CloudUpload />}
+                sx={{ textTransform: "none", borderRadius: 1.5, mb: 2 }}
+                fullWidth
+              >
+                {t.adminNews?.uploadImages || "Upload Images"}
+                <input
+                  type="file"
+                  hidden
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
+              </Button>
+              {imageFiles.length > 0 && (
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns:
+                      "repeat(auto-fill, minmax(100px, 1fr))",
+                    gap: 1,
+                  }}
+                >
+                  {imageFiles.map((file, i) => (
+                    <Card key={i} sx={{ position: "relative" }}>
+                      <CardMedia
+                        component="img"
+                        height="100"
+                        image={URL.createObjectURL(file)}
+                        alt={file.name}
+                        sx={{ objectFit: "cover" }}
+                      />
+                      <IconButton
+                        size="small"
+                        onClick={() => removeImage(i)}
+                        sx={{
+                          position: "absolute",
+                          top: 4,
+                          right: 4,
+                          bgcolor: "rgba(0, 0, 0, 0.6)",
+                          color: "white",
+                          "&:hover": { bgcolor: "rgba(0, 0, 0, 0.8)" },
+                        }}
+                      >
+                        <Close fontSize="small" />
+                      </IconButton>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          bgcolor: "rgba(0, 0, 0, 0.6)",
+                          color: "white",
+                          p: 0.5,
+                          fontSize: "0.65rem",
+                          textAlign: "center",
+                        }}
+                      >
+                        {formatFileSize(file.size)}
+                      </Typography>
+                    </Card>
+                  ))}
+                </Box>
+              )}
+            </Box>
+
+            {/* Document Upload Section */}
+            <Box>
+              <Typography
+                variant="subtitle2"
+                fontWeight={600}
+                sx={{ mb: 1, display: "flex", alignItems: "center", gap: 1 }}
+              >
+                <AttachFile fontSize="small" />
+                {t.adminNews?.documents || "Documents"}
+              </Typography>
+              <Button
+                variant="outlined"
+                component="label"
+                startIcon={<CloudUpload />}
+                sx={{ textTransform: "none", borderRadius: 1.5, mb: 2 }}
+                fullWidth
+              >
+                {t.adminNews?.uploadDocuments || "Upload Documents"}
+                <input
+                  type="file"
+                  hidden
+                  multiple
+                  onChange={handleDocumentUpload}
+                />
+              </Button>
+              {documentFiles.length > 0 && (
+                <Stack spacing={0.5}>
+                  {documentFiles.map((file, i) => (
+                    <Chip
+                      key={i}
+                      icon={<AttachFile />}
+                      label={`${file.name} (${formatFileSize(file.size)})`}
+                      onDelete={() => removeDocument(i)}
+                      sx={{ justifyContent: "space-between" }}
+                    />
+                  ))}
+                </Stack>
+              )}
+            </Box>
+          </Stack>
         </DialogContent>
 
-        <DialogActions sx={{ p: { xs: 2, sm: 3 }, pt: { xs: 1, sm: 2 }, flexDirection: { xs: "column-reverse", sm: "row" }, gap: 1 }}>
-          <Button onClick={handleCloseDialog} sx={{ textTransform: "none", minHeight: 44, width: { xs: "100%", sm: "auto" } }}>
+        <DialogActions
+          sx={{
+            p: { xs: 2, sm: 3 },
+            pt: { xs: 1, sm: 2 },
+            flexDirection: { xs: "column-reverse", sm: "row" },
+            gap: 1,
+          }}
+        >
+          <Button
+            onClick={handleCloseDialog}
+            sx={{
+              textTransform: "none",
+              minHeight: 44,
+              width: { xs: "100%", sm: "auto" },
+            }}
+          >
             {t.common?.cancel || "Cancel"}
           </Button>
           <Button
             variant="contained"
             onClick={handleSubmit}
-            disabled={!newsForm.title || !newsForm.description || createMutation.isPending}
-            sx={{ textTransform: "none", minHeight: 44, width: { xs: "100%", sm: "auto" } }}
+            disabled={
+              !newsForm.title ||
+              !newsForm.description ||
+              createMutation.isPending
+            }
+            sx={{
+              textTransform: "none",
+              minHeight: 44,
+              width: { xs: "100%", sm: "auto" },
+            }}
           >
             {createMutation.isPending ? (
               <CircularProgress size={20} color="inherit" />
@@ -350,24 +526,30 @@ const AdminNewsPage = () => {
         onClose={() => setDeleteConfirmId(null)}
         maxWidth="xs"
         fullWidth
-        PaperProps={{ sx: { borderRadius: { xs: 2, sm: 3 }, m: { xs: 2, sm: 3 } } }}
+        PaperProps={{
+          sx: { borderRadius: { xs: 2, sm: 3 }, m: { xs: 2, sm: 3 } },
+        }}
       >
-        <DialogTitle>
-          {t.adminNews?.deleteTitle || "Delete News"}
-        </DialogTitle>
+        <DialogTitle>{t.adminNews?.deleteTitle || "Delete News"}</DialogTitle>
         <DialogContent>
           <Typography>
-            {t.adminNews?.deleteMessage || "Are you sure you want to delete this news item?"}
+            {t.adminNews?.deleteMessage ||
+              "Are you sure you want to delete this news item?"}
           </Typography>
         </DialogContent>
         <DialogActions sx={{ p: 2, gap: 1 }}>
-          <Button onClick={() => setDeleteConfirmId(null)} sx={{ textTransform: "none" }}>
+          <Button
+            onClick={() => setDeleteConfirmId(null)}
+            sx={{ textTransform: "none" }}
+          >
             {t.common?.cancel || "Cancel"}
           </Button>
           <Button
             variant="contained"
             color="error"
-            onClick={() => deleteConfirmId && deleteMutation.mutate(deleteConfirmId)}
+            onClick={() =>
+              deleteConfirmId && deleteMutation.mutate(deleteConfirmId)
+            }
             disabled={deleteMutation.isPending}
             sx={{ textTransform: "none" }}
           >
